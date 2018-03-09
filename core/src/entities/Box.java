@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * Created by Jørgen on 09.03.2018.
  */
 
+// Fundamental blocks for the castle
+
 public class Box implements Drawable {
 
     private int x;
