@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
  * Created by erikkjernlie on 13/03/2018.
  */
 
-    public class TestScreen extends SuperMenu {
+public class TestScreen extends states.menuStates.SuperMenu {
 
     private Skin skin;
     private Stage stage;
@@ -73,7 +73,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
     @Override
     protected void handleInput() {
-        if (singlePlayer.isPressed()){
+        if (removeButton.isPressed()){
             // Gdx.input.setInputProcessor(stage);
             //gsm.set(new TestMenu(gsm));
             System.out.println("Pressed....");

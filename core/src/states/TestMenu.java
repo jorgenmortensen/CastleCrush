@@ -15,13 +15,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
  * Created by erikkjernlie on 13/03/2018.
  */
 
-public class TestMenu extends SuperMenu {
+public class TestMenu extends states.menuStates.SuperMenu {
     private Skin skin;
     private Stage stage;
     private TextButton removeButton;
     private TextButton singlePlayer;
     private TextButton localMultiplayer;
     private TextButton onlineMultiplayer;
+
 
     public TestMenu(GameStateManager gsm) {
         super(gsm);
@@ -75,7 +76,7 @@ public class TestMenu extends SuperMenu {
 
     @Override
     protected void handleInput() {
-        if (singlePlayer.isPressed()){
+        if (removeButton.isPressed()){
             // Gdx.input.setInputProcessor(stage);
             //gsm.set(new TestMenu(gsm));
             System.out.println("Pressed....");
@@ -96,6 +97,7 @@ public class TestMenu extends SuperMenu {
     public void render(SpriteBatch sb) {
 
     }
+
 
     @Override
     public void dispose() {
