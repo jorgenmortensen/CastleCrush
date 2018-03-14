@@ -27,5 +27,4 @@ public interface Drawable {
     public int getHeight();
 
 
-
 }
