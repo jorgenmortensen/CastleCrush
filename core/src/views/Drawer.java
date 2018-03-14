@@ -1,4 +1,4 @@
-package views.game_world;
+package views;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -15,10 +15,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 public abstract class Drawer {
 
     protected OrthographicCamera cam;
-    private BitmapFont font = new BitmapFont();
-    private SpriteBatch batch;
+  //  private BitmapFont font = new BitmapFont();
+    protected SpriteBatch batch;
 
     public Drawer() {
+        batch = new SpriteBatch();
+        cam = new OrthographicCamera();
     }
 
     //vi tenker at:

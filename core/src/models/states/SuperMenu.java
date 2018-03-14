@@ -1,4 +1,4 @@
-package states;
+package models.states;
 
 /**
  * Created by Jørgen on 09.03.2018.
