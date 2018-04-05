@@ -10,10 +10,11 @@ import states.menuStates.MenuScreen;
 
 public class CastleCrush extends ApplicationAdapter {
 
+	public static final int WIDTH = 600;
+	public static final int HEIGHT = 500;
 
 	private SpriteBatch batch;
 	private GameStateManager gsm;
-
 
 	@Override
 	public void create () {
