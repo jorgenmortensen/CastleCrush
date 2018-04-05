@@ -6,6 +6,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
+import states.GameStateManager;
+
 /**
  * Created by Jørgen on 12.03.2018.
  */
@@ -13,18 +15,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public class MenuScreen implements Screen {
 
 
-    private Game game;
     private Stage stage;
-
-    public MenuScreen(Game g) {
-        game = g;
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
-
-        Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+    private int btn1Coordinates;
+    private int btn2Coordinates;
+    private int btn3Coordinates;
 
 
-
+    public MenuScreen(GameStateManager gsm) {
     }
 
 
