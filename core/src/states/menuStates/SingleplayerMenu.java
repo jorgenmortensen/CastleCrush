@@ -1,5 +1,6 @@
 package states.menuStates;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -22,12 +23,15 @@ public class SingleplayerMenu extends State{
 
     @Override
     protected void handleInput() {
-
+        if (Gdx.input.justTouched()) {
+            gsm.set(new PlayMenu(gsm));
+            dispose();
+        }
     }
 
     @Override
     public void update(float dt) {
-
+        handleInput();
     }
 
     @Override

@@ -6,12 +6,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import states.GameStateManager;
-import states.menuStates.MenuScreen;
+import states.menuStates.PlayMenu;
 
 public class CastleCrush extends ApplicationAdapter {
 
 	public static final int WIDTH = 600;
-	public static final int HEIGHT = 500;
+	public static final int HEIGHT = 400;
 
 	private SpriteBatch batch;
 	private GameStateManager gsm;
@@ -21,7 +21,7 @@ public class CastleCrush extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		gsm = new GameStateManager();
 		Gdx.gl.glClearColor(1, 1, 0, 1);
-		gsm.push(new MenuScreen(gsm));
+		gsm.push(new PlayMenu(gsm));
 	}
 
 	@Override
