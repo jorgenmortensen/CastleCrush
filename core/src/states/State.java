@@ -1,6 +1,5 @@
 package states;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
@@ -9,7 +8,7 @@ import com.badlogic.gdx.math.Vector3;
  * Created by Jørgen on 24.01.2018.
  */
 
-public abstract class State extends Game {
+public abstract class State {
 
     protected OrthographicCamera cam;
     protected Vector3 mouse;

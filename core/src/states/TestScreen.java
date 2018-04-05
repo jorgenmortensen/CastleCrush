@@ -29,7 +29,7 @@ public class TestScreen extends states.menuStates.SuperMenu {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);// Make the stage consume events
         createBasicSkin();
-        removeButton = new TextButton("Fjern denne knappen", skin);
+        removeButton = new TextButton("A button was removed.", skin);
         removeButton.setPosition(Gdx.graphics.getWidth()/2 - Gdx.graphics.getWidth()/8 , Gdx.graphics.getHeight() - 2*removeButton.getHeight());
         stage.addActor(removeButton);
         singlePlayer = new TextButton("Play singleplayer", skin);

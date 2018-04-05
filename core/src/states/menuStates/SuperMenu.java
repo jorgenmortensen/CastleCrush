@@ -12,7 +12,6 @@ public abstract class SuperMenu extends State {
 
     protected SuperMenu(GameStateManager gsm) {
         super(gsm);
-
     }
 
 
