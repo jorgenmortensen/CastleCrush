@@ -11,7 +11,7 @@ import states.State;
  * Created by Jørgen on 05.04.2018.
  */
 
-public class PlayMenu extends State{
+public class PlayMenu extends State {
 
     Sprite btnSingle;
 

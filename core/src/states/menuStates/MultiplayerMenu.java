@@ -13,11 +13,9 @@ import states.State;
 
 public class MultiplayerMenu extends State {
 
-    Sprite btnMulti;
 
     public MultiplayerMenu(GameStateManager gsm) {
         super(gsm);
-        btnMulti = new Sprite(new Texture("multiBtn.PNG"));
     }
 
     @Override
@@ -33,7 +31,6 @@ public class MultiplayerMenu extends State {
     @Override
     public void render(SpriteBatch sb) {
         sb.begin();
-        sb.draw(btnMulti, 0, 0);
         sb.end();
     }
 
