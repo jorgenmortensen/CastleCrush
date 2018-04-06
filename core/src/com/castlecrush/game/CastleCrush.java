@@ -7,8 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import states.GameStateManager;
-import states.menuStates.PlayMenu;
-import states.menuStates.StartMenuScreen;
+import states.Splashscreen;
 
 public class CastleCrush extends ApplicationAdapter {
 
@@ -32,13 +31,13 @@ public class CastleCrush extends ApplicationAdapter {
 		music.setLooping(true);
 		music.setVolume(0.5f);
 		music.play();
-		Gdx.gl.glClearColor(1, 1, 0, 1);
-		gsm.push(new StartMenuScreen(gsm));
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		gsm.push(new Splashscreen(gsm));
 	}
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		gsm.update(Gdx.graphics.getDeltaTime());
 		gsm.render(batch);

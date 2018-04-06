@@ -1,12 +1,10 @@
 package states.menuStates;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.castlecrush.game.CastleCrush;
-
 
 import components.Button;
 import states.GameStateManager;
@@ -36,8 +34,8 @@ public class StartMenuScreen extends states.State {
     }
 
     private void makeMovingBackground(){
-        background1 = new Texture(Gdx.files.internal("loop_background.png"));
-        background2 = new Texture(Gdx.files.internal("loop_background.png")); // identical
+        background1 = new Texture(Gdx.files.internal("loop_background_castles.png"));
+        background2 = new Texture(Gdx.files.internal("loop_background_castles.png")); // identical
         xMax = CastleCrush.WIDTH;
         xCoordBg1 = xMax;
         xCoordBg2 = 0;
