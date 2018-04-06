@@ -20,7 +20,7 @@ public class SingleplayerMenu extends State{
 
     public SingleplayerMenu(GameStateManager gsm) {
         super(gsm);
-        gravityButton = new GravityButton(CastleCrush.WIDTH/2-CastleCrush.WIDTH/60, 0, CastleCrush.WIDTH/30, CastleCrush.WIDTH/30, new Sprite(new Texture("sound.png")), CastleCrush.HEIGHT);
+        gravityButton = new GravityButton(CastleCrush.WIDTH/2-CastleCrush.WIDTH/10, 0, CastleCrush.WIDTH/5, CastleCrush.WIDTH/5, new Sprite(new Texture("feather.png")), CastleCrush.HEIGHT);
 
     }
 
@@ -41,7 +41,7 @@ public class SingleplayerMenu extends State{
     @Override
     public void render(SpriteBatch sb) {
         sb.begin();
-        sb.draw(gravityButton.getBtn(), gravityButton.getXpos(), gravityButton.getYpos(),CastleCrush.WIDTH/30, CastleCrush.WIDTH/30);
+        sb.draw(gravityButton.getBtn(), gravityButton.getXpos(), gravityButton.getYpos(),gravityButton.getBtnWidth(), gravityButton.getBtnHeight());
         sb.end();
     }
 

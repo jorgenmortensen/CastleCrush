@@ -18,7 +18,7 @@ public class MultiplayerMenu extends State {
 
     public MultiplayerMenu(GameStateManager gsm) {
         super(gsm);
-        btnMulti = new Sprite(new Texture("multi_online.PNG"));
+        btnMulti = new Sprite(new Texture("game.png"));
     }
 
     @Override
@@ -37,7 +37,7 @@ public class MultiplayerMenu extends State {
     @Override
     public void render(SpriteBatch sb) {
         sb.begin();
-        sb.draw(btnMulti, 0, 0);
+        sb.draw(btnMulti, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         sb.end();
     }
 

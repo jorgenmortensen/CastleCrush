@@ -45,8 +45,8 @@ public class PlayMenu extends State {
     }
 
     private void makeMovingBackground(){
-        background1 = new Texture(Gdx.files.internal("loop_background.png"));
-        background2 = new Texture(Gdx.files.internal("loop_background.png")); // identical
+        background1 = new Texture(Gdx.files.internal("loop_background_castles.png"));
+        background2 = new Texture(Gdx.files.internal("loop_background_castles.png")); // identical
         xMax = CastleCrush.WIDTH;
         xCoordBg1 = xMax;
         xCoordBg2 = 0;
@@ -177,6 +177,8 @@ public class PlayMenu extends State {
                 btnLocal.getYpos(),
                 btnLocal.getBtnWidth(),
                 btnLocal.getBtnHeight());
+
+
 
 
         sb.draw(logo, 0, CastleCrush.HEIGHT * 7 / 10, CastleCrush.WIDTH, 3*CastleCrush.HEIGHT/10);
