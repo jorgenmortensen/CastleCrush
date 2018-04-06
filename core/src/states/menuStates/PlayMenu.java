@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.castlecrush.game.CastleCrush;
 
 import components.Button;
+import components.GravityButton;
 import states.GameStateManager;
 import states.State;
 
@@ -19,43 +20,59 @@ import states.State;
 
 public class PlayMenu extends State {
 
-    private Button btnSingle;
-    private Button btnMulti;
-    private Button btnLocal;
+    float xMax, xCoordBg1, xCoordBg2;
+    private Texture background1;
+    private Texture background2;
+    final int BACKGROUND_MOVE_SPEED = -30;
+
+    private GravityButton btnSingle;
+    private GravityButton btnMulti;
+    private GravityButton btnLocal;
     private Texture logo;
-    private Texture small_logo;
-    private Texture background;
+
+    private Button btnSound;
 
 
+    // remember to change every .PNG to .png.
 
     public PlayMenu(GameStateManager gsm) {
         super(gsm);
-        //logo = new Texture("logo.PNG");
-        small_logo = new Texture("small_logo.PNG");
-        background = new Texture("background.PNG");
+        logo = new Texture("logo.png");
+        //background1 = new Texture("background.png");
+
+        makeMovingBackground();
         makeButtons();
+    }
+
+    private void makeMovingBackground(){
+        background1 = new Texture(Gdx.files.internal("loop_background.png"));
+        background2 = new Texture(Gdx.files.internal("loop_background.png")); // identical
+        xMax = CastleCrush.WIDTH;
+        xCoordBg1 = xMax;
+        xCoordBg2 = 0;
     }
 
 
     private void makeButtons() {
         //Single-menu button
-        btnSingle = new Button(CastleCrush.WIDTH / 3,
+        btnSingle = new GravityButton(CastleCrush.WIDTH / 3,
                 5*CastleCrush.HEIGHT / 10,
                 CastleCrush.WIDTH / 3,
                 CastleCrush.HEIGHT / 10,
-                new Sprite(new Texture("singleBtn.PNG")));
+                new Sprite(new Texture("single.png")), CastleCrush.HEIGHT);
 
-        btnLocal = new Button(CastleCrush.WIDTH / 3,
+        btnLocal = new GravityButton(CastleCrush.WIDTH / 3,
                 3*CastleCrush.HEIGHT / 10,
                 CastleCrush.WIDTH / 3,
                 CastleCrush.HEIGHT / 10,
-                new Sprite(new Texture("multiBtn_local.PNG")));
+                new Sprite(new Texture("multi_local.png")), CastleCrush.HEIGHT);
 
-        btnMulti = new Button(CastleCrush.WIDTH / 3,
+        btnMulti = new GravityButton(CastleCrush.WIDTH / 3,
                 1*CastleCrush.HEIGHT / 10,
                 CastleCrush.WIDTH / 3,
                 CastleCrush.HEIGHT / 10,
-                new Sprite(new Texture("multiBtn.PNG")));
+                new Sprite(new Texture("multi_online.png")), CastleCrush.HEIGHT);
+        btnSound = new Button(0,0, CastleCrush.WIDTH / 30, CastleCrush.WIDTH/30, new Sprite(new Texture("sound.png")));
     }
 
     @Override
@@ -74,8 +91,20 @@ public class PlayMenu extends State {
             gsm.set(new MultiplayerMenu(gsm));
             System.out.println("Local pressed");
             dispose();
+        } else if (Gdx.input.justTouched() && isOnSoundBtn()){
+            gsm.set(new MultiplayerMenu(gsm));
+            System.out.println("Sound pressed");
+            dispose();
         }
 
+    }
+
+    private boolean isOnSoundBtn(){
+        if (((Gdx.input.getX() > btnSound.getXpos() && (Gdx.input.getX() < (btnSound.getXpos() + btnSound.getBtnWidth())))
+                && ((CastleCrush.HEIGHT - Gdx.input.getY() - 1) > btnSound.getYpos()) && ((CastleCrush.HEIGHT - Gdx.input.getY() - 1) < (btnSound.getYpos() + btnSound.getBtnHeight())))){
+            return true;
+        }
+        return false;
     }
 
     private boolean isOnSingleBtn() {
@@ -107,33 +136,56 @@ public class PlayMenu extends State {
     @Override
     public void update(float dt) {
         handleInput();
+        btnSingle.update(dt);
+        btnMulti.update(dt);
+        btnLocal.update(dt);
+
+        // makes the background move to the left
+        xCoordBg1 += BACKGROUND_MOVE_SPEED * Gdx.graphics.getDeltaTime();
+        xCoordBg2 = xCoordBg1 - xMax;  // We move the background, not the camera
+        if (xCoordBg1 <= 0) {
+            xCoordBg1 = xMax;
+            xCoordBg2 = 0;
+        }
     }
+
 
     @Override
     public void render(SpriteBatch sb) {
+
         sb.begin();
-        sb.draw(background, 0, 0, CastleCrush.WIDTH, CastleCrush.HEIGHT);
-        sb.draw(btnSingle.getBtn(), CastleCrush.WIDTH / 3,
-                CastleCrush.HEIGHT / 2,
-                CastleCrush.WIDTH / 3,
-                CastleCrush.HEIGHT / 10);
+        sb.draw(background1, xCoordBg1, 0, CastleCrush.WIDTH, CastleCrush.HEIGHT);
+        sb.draw(background2, xCoordBg2, 0, CastleCrush.WIDTH, CastleCrush.HEIGHT);
+        sb.draw(btnSingle.getBtn(), btnSingle.getXpos(),
+                btnSingle.getYpos(),
+                btnSingle.getBtnWidth(),
+                btnSingle.getBtnHeight());
 
-        sb.draw(btnMulti.getBtn(), CastleCrush.WIDTH / 3,
-                CastleCrush.HEIGHT / 10,
-                CastleCrush.WIDTH / 3,
-                CastleCrush.HEIGHT / 10);
 
-        sb.draw(btnLocal.getBtn(), CastleCrush.WIDTH / 3,
-                3*CastleCrush.HEIGHT/10,
-                CastleCrush.WIDTH / 3,
-                CastleCrush.HEIGHT / 10);
 
-        sb.draw(small_logo, 0, CastleCrush.HEIGHT * 7 / 10, CastleCrush.WIDTH, 3*CastleCrush.HEIGHT/10);
+        sb.draw(btnMulti.getBtn(), btnMulti.getXpos(),
+                btnMulti.getYpos(),
+                btnMulti.getBtnWidth(),
+                btnMulti.getBtnHeight());
 
+        sb.draw(btnLocal.getBtn(), btnLocal.getXpos(),
+                btnLocal.getYpos(),
+                btnLocal.getBtnWidth(),
+                btnLocal.getBtnHeight());
+
+
+        sb.draw(logo, 0, CastleCrush.HEIGHT * 7 / 10, CastleCrush.WIDTH, 3*CastleCrush.HEIGHT/10);
+
+        sb.draw(btnSound.getBtn(), btnSound.getXpos(), btnSound.getYpos(),btnSound.getBtnWidth(), btnSound.getBtnHeight());
         sb.end();
     }
 
+
+    //dispose textures / buttons
     @Override
     public void dispose() {
+        logo.dispose();
     }
+
+
 }

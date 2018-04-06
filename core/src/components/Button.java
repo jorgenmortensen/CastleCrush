@@ -1,6 +1,7 @@
 package components;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector3;
 
 /**
  * Created by Jørgen on 12.03.2018.
@@ -8,34 +9,33 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Button {
 
-    private int Xpos;
-    private int Ypos;
+
+    protected Vector3 position;
     private int btnWidth;
     private int btnHeight;
     private Sprite btn;
 
-    public Button(int xpos, int ypos, int btnWidth, int btnHeight, Sprite btn) {
-        this.Xpos = xpos;
-        this.Ypos = ypos;
+    public Button(float xpos, float ypos, int btnWidth, int btnHeight, Sprite btn) {
+        position = new Vector3(xpos,ypos,0);
         this.btnWidth = btnWidth;
         this.btnHeight = btnHeight;
         this.btn = btn;
     }
 
-    public int getXpos() {
-        return Xpos;
+    public float getXpos() {
+        return position.x;
     }
 
-    public void setXpos(int xpos) {
-        Xpos = xpos;
+    public void setXpos(float xpos) {
+        position.x = xpos;
     }
 
-    public int getYpos() {
-        return Ypos;
+    public float getYpos() {
+        return position.y;
     }
 
-    public void setYpos(int ypos) {
-        Ypos = ypos;
+    public void setYpos(float ypos) {
+        position.y = ypos;
     }
 
     public int getBtnWidth() {
@@ -61,4 +61,6 @@ public class Button {
     public void setBtn(Sprite btn) {
         this.btn = btn;
     }
+
+
 }

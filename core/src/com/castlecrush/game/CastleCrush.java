@@ -10,8 +10,10 @@ import states.menuStates.PlayMenu;
 
 public class CastleCrush extends ApplicationAdapter {
 
-	public static final int WIDTH = 600;
-	public static final int HEIGHT = 400;
+	public static int WIDTH;
+	public static int HEIGHT;
+
+	public static final String TITLE = "Castle Crush";
 
 	private SpriteBatch batch;
 	private GameStateManager gsm;
@@ -20,6 +22,8 @@ public class CastleCrush extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		gsm = new GameStateManager();
+		WIDTH = Gdx.graphics.getWidth();
+		HEIGHT = Gdx.graphics.getHeight();
 		Gdx.gl.glClearColor(1, 1, 0, 1);
 		gsm.push(new PlayMenu(gsm));
 	}
