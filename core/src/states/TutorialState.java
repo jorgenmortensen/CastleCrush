@@ -3,10 +3,12 @@ package states;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.castlecrush.game.CastleCrush;
 
-import entities.Castle;
+import components.Button;
+import states.menuStates.StartMenuScreen;
 
 /**
  * Created by Jørgen on 05.04.2018.
@@ -18,19 +20,25 @@ public class TutorialState extends State {
     Texture texture2;
     Texture texture3;
     Texture texture4;
+    Button back;
 
     OrthographicCamera cam;
-
-
+    OrthographicCamera fullScreenCam;
 
     public TutorialState(GameStateManager gsm) {
         super(gsm);
         cam = new OrthographicCamera();
+        fullScreenCam = new OrthographicCamera();
         cam.setToOrtho(false, CastleCrush.WIDTH / 4, CastleCrush.HEIGHT);
+        fullScreenCam.setToOrtho(false, CastleCrush.WIDTH, CastleCrush.HEIGHT);
         texture1 = new Texture("texture1.png");
         texture2 = new Texture("texture2.png");
         texture3 = new Texture("texture3.png");
         texture4 = new Texture("texture4.png");
+        back = new Button(CastleCrush.WIDTH - CastleCrush.WIDTH / 8, CastleCrush.HEIGHT / 15,
+                CastleCrush.WIDTH / 10,
+                CastleCrush.HEIGHT / 10,
+                new Sprite(new Texture("backBtn.png")));
     }
 
     @Override
@@ -41,8 +49,26 @@ public class TutorialState extends State {
             cam.update();
         }
         if (Gdx.input.justTouched()) {
-            System.out.println(cam.position.x) ;
+            System.out.println(Gdx.input.getY());
+            System.out.println(CastleCrush.HEIGHT -Gdx.input.getY());
+            System.out.println(Gdx.input.getX());
+            System.out.println(back.getXpos());
+            System.out.println(back.getBtnWidth());
+
         }
+        if (isOnBackBtn()) {
+            gsm.set(new StartMenuScreen(gsm));
+        }
+
+    }
+
+    private boolean isOnBackBtn() {
+        if (((CastleCrush.HEIGHT - Gdx.input.getY()) > back.getYpos()) &&
+                ((CastleCrush.HEIGHT - Gdx.input.getY()) < (back.getYpos() + back.getBtnHeight())) &&
+                (Gdx.input.getX() > back.getXpos()) && (Gdx.input.getX() < (back.getXpos() + back.getBtnWidth()))) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -52,15 +78,16 @@ public class TutorialState extends State {
 
     @Override
     public void render(SpriteBatch sb) {
-        sb.setProjectionMatrix(cam.combined);
         sb.begin();
-
+        sb.setProjectionMatrix(cam.combined);
         sb.draw(texture1, 0, 0, CastleCrush.WIDTH / 4, CastleCrush.HEIGHT);
         sb.draw(texture2, CastleCrush.WIDTH / 4, 0, CastleCrush.WIDTH / 4, CastleCrush.HEIGHT);
         sb.draw(texture3, CastleCrush.WIDTH * 2 / 4, 0, CastleCrush.WIDTH / 4, CastleCrush.HEIGHT);
         sb.draw(texture4, CastleCrush.WIDTH * 3 / 4, 0, CastleCrush.WIDTH / 4, CastleCrush.HEIGHT);
-
+        sb.draw(back.getBtn(), back.getXpos(), back.getYpos(), back.getBtnWidth(), back.getBtnHeight());
+        sb.setProjectionMatrix(fullScreenCam.combined);
         sb.end();
+
     }
 
     @Override
