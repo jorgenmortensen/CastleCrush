@@ -74,7 +74,9 @@ public class PlayMenu extends State {
                 CastleCrush.WIDTH / 3,
                 CastleCrush.HEIGHT / 10,
                 new Sprite(new Texture("multi_online.png")), CastleCrush.HEIGHT);
-        btnSound = new Button(0,0, CastleCrush.WIDTH / 30, CastleCrush.WIDTH/30, new Sprite(new Texture("sound.png")));
+        btnSound = new Button(CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
+                CastleCrush.WIDTH / 15,
+                CastleCrush.HEIGHT / 15, new Sprite(new Texture("sound_on.png")));
     }
 
     @Override
@@ -85,7 +87,7 @@ public class PlayMenu extends State {
             dispose();
         }
         else if (Gdx.input.justTouched() && isOnMultiBtn()) {
-            gsm.set(new MultiplayerMenu(gsm));
+            gsm.set(new StartMenuScreen(gsm));
             System.out.println("Multi pressed");
             dispose();
         }
@@ -93,12 +95,18 @@ public class PlayMenu extends State {
             gsm.set(new StartMenuScreen(gsm));
             System.out.println("Local pressed");
             dispose();
-        } else if (Gdx.input.justTouched() && isOnSoundBtn()){
-            gsm.set(new MultiplayerMenu(gsm));
-            System.out.println("Sound pressed");
-            dispose();
+        } else if (Gdx.input.justTouched() && isOnSoundBtn()) {
+            //Turn off sound if already on and vice versa
+            if (CastleCrush.soundOn) {
+                CastleCrush.music.setVolume(0);
+                CastleCrush.soundOn = false;
+                btnSound.setBtn(new Sprite(new Texture("sound_off.png")));
+            } else {
+                CastleCrush.music.setVolume(0.5f);
+                CastleCrush.soundOn = true;
+                btnSound.setBtn(new Sprite(new Texture("sound_on.png")));
+            }
         }
-
     }
 
     private boolean isOnSoundBtn(){
@@ -159,7 +167,6 @@ public class PlayMenu extends State {
             logo = new Texture("logo_with_u.png");
         }
     }
-
 
     @Override
     public void render(SpriteBatch sb) {
