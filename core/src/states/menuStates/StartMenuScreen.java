@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.castlecrush.game.CastleCrush;
 
 import components.Button;
@@ -26,9 +27,13 @@ public class StartMenuScreen extends states.State {
     private Texture background2;
     final int BACKGROUND_MOVE_SPEED = -30;
 
+    public static long startTime;
+
+
     public StartMenuScreen(GameStateManager gsm) {
         super(gsm);
         logo = new Texture("logo.png");
+        this.startTime = TimeUtils.millis();
         makeButtons();
         makeMovingBackground();
     }
@@ -125,6 +130,16 @@ public class StartMenuScreen extends states.State {
             xCoordBg1 = xMax;
             xCoordBg2 = 0;
         }
+        long time = TimeUtils.timeSinceMillis(startTime);
+        if (time > 3500 && time < 7000) {
+            logo = new Texture("logo_little_crushed.png");
+        } else if (time > 7000 && time < 10000) {
+            logo = new Texture("logo_crushed.png");
+        } else if (time > 10000 && time < 13000) {
+            logo = new Texture("logo_without_castle.png");
+        } else if (time > 13000) {
+            logo = new Texture("logo_with_u.png");
+        }
     }
 
     @Override
@@ -149,6 +164,10 @@ public class StartMenuScreen extends states.State {
         sb.draw(logo, 0, CastleCrush.HEIGHT * 7 / 10, CastleCrush.WIDTH, CastleCrush.HEIGHT * 3 / 10);
 
         sb.end();
+    }
+
+    public long getStartTime(){
+        return this.startTime;
     }
 
     @Override
