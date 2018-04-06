@@ -87,7 +87,7 @@ public class PlayMenu extends State {
             dispose();
         }
         else if (Gdx.input.justTouched() && isOnMultiBtn()) {
-            gsm.set(new StartMenuScreen(gsm));
+            gsm.set(new MultiplayerMenu(gsm));
             System.out.println("Multi pressed");
             dispose();
         }
