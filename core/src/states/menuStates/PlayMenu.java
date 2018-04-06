@@ -4,12 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.castlecrush.game.CastleCrush;
 
 import components.Button;
 import components.GravityButton;
 import states.GameStateManager;
 import states.State;
+
+import static states.menuStates.StartMenuScreen.startTime;
 
 /**
  * Created by erikkjernlie on 05/04/2018.
@@ -39,7 +42,6 @@ public class PlayMenu extends State {
         super(gsm);
         logo = new Texture("logo.png");
         //background1 = new Texture("background.png");
-
         makeMovingBackground();
         makeButtons();
     }
@@ -85,7 +87,7 @@ public class PlayMenu extends State {
             dispose();
         }
         else if (Gdx.input.justTouched() && isOnMultiBtn()) {
-            gsm.set(new StartMenuScreen(gsm));
+            gsm.set(new MultiplayerMenu(gsm));
             System.out.println("Multi pressed");
             dispose();
         }
@@ -152,6 +154,17 @@ public class PlayMenu extends State {
         if (xCoordBg1 <= 0) {
             xCoordBg1 = xMax;
             xCoordBg2 = 0;
+        }
+
+        long time = TimeUtils.timeSinceMillis(startTime);
+        if (time > 3500 && time < 7000) {
+            logo = new Texture("logo_little_crushed.png");
+        } else if (time > 7000 && time < 10000) {
+            logo = new Texture("logo_crushed.png");
+        } else if (time > 10000 && time < 13000) {
+            logo = new Texture("logo_without_castle.png");
+        } else if (time > 13000) {
+            logo = new Texture("logo_with_u.png");
         }
     }
 
