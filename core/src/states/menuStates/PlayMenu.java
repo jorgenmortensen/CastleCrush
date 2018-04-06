@@ -131,8 +131,6 @@ public class PlayMenu extends State {
         return false;
     }
 
-
-
     @Override
     public void update(float dt) {
         handleInput();
