@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.castlecrush.game.CastleCrush;
 
 import components.Button;
+import entities.Castle;
 import states.menuStates.StartMenuScreen;
 
 /**
@@ -48,24 +49,17 @@ public class TutorialState extends State {
             cam.translate(-Gdx.input.getDeltaX() / 2, 0);
             cam.update();
         }
-        if (Gdx.input.justTouched()) {
-            System.out.println(Gdx.input.getY());
-            System.out.println(CastleCrush.HEIGHT -Gdx.input.getY());
-            System.out.println(Gdx.input.getX());
-            System.out.println(back.getXpos());
-            System.out.println(back.getBtnWidth());
-
-        }
-        if (isOnBackBtn()) {
+        if ((cam.position.x > CastleCrush.WIDTH * 3 / 4) && isOnBackBtn()) {
             gsm.set(new StartMenuScreen(gsm));
+            dispose();
         }
-
     }
 
     private boolean isOnBackBtn() {
         if (((CastleCrush.HEIGHT - Gdx.input.getY()) > back.getYpos()) &&
                 ((CastleCrush.HEIGHT - Gdx.input.getY()) < (back.getYpos() + back.getBtnHeight())) &&
-                (Gdx.input.getX() > back.getXpos()) && (Gdx.input.getX() < (back.getXpos() + back.getBtnWidth()))) {
+                (((CastleCrush.WIDTH * 3 / 4) + (Gdx.input.getX() * CastleCrush.WIDTH / 4) / CastleCrush.WIDTH) > back.getXpos())&&
+                (((CastleCrush.WIDTH * 3 / 4) + (Gdx.input.getX() * CastleCrush.WIDTH / 4) / CastleCrush.WIDTH) < (back.getXpos() + back.getBtnWidth()))) {
             return true;
         }
         return false;
