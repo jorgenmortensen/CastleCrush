@@ -6,14 +6,23 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import googleplayservice.PlayServices;
+
 public class CastleCrush extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
+
+	public static PlayServices playServices;
+
+	public CastleCrush(PlayServices playServices) {
+		this.playServices = playServices;
+	}
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
+
 	}
 
 	@Override
