@@ -14,7 +14,7 @@ import views.Drawer;
  */
 
 public class GameWorldDrawer extends Drawer {
-    private Texture background = new Texture("badlogic.jpg");
+    private Texture background = new Texture("basic_green_bg.png");
     private Castle castleLeft, castleRight;
     private Cannon cannonLeft, cannonRight;
     private GameWinningObject heartLeft, heartRight;
@@ -27,7 +27,7 @@ public class GameWorldDrawer extends Drawer {
     public void render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(background, 0,0);
+        batch.draw(background, 0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         batch.end();
     }
