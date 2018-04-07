@@ -43,6 +43,7 @@ import com.google.android.gms.plus.Plus;
 public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
+
     static final String TAG = "GameHelper";
 
     /** Listener for sign-in success or failure events. */
