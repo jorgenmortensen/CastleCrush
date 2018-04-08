@@ -1,5 +1,6 @@
 package entities;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
@@ -16,6 +17,20 @@ public class Cannon implements Drawable{
 
     private float angle;
     private float power;
+
+    Sprite cannon;
+    Sprite wheel;
+
+    public Cannon(int x, int y, int width, int height, float angle, float power, Sprite cannon, Sprite wheel) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.angle = angle;
+        this.power = power;
+        this.cannon = cannon;
+        this.wheel = wheel;
+    }
 
     @Override
     public void Draw(SpriteBatch batch) {
@@ -62,6 +77,37 @@ public class Cannon implements Drawable{
         return this.height;
     }
 
+    public float getAngle() {
+        return angle;
+    }
+
+    public void setAngle(float angle) {
+        this.angle = angle;
+    }
+
+    public float getPower() {
+        return power;
+    }
+
+    public void setPower(float power) {
+        this.power = power;
+    }
+
+    public Sprite getCannon() {
+        return cannon;
+    }
+
+    public void setCannon(Sprite cannon) {
+        this.cannon = cannon;
+    }
+
+    public Sprite getWheel() {
+        return wheel;
+    }
+
+    public void setWheel(Sprite wheel) {
+        this.wheel = wheel;
+    }
 
     //Fires the shot, with a given angle and power
     public void Fire() {
