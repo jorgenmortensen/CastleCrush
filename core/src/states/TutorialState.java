@@ -22,7 +22,7 @@ import states.menuStates.StartMenuScreen;
 public class TutorialState extends State {
 
     List<Texture> textures;
-    
+
     Button back;
 
     OrthographicCamera cam;
@@ -51,13 +51,64 @@ public class TutorialState extends State {
     protected void handleInput() {
         if (!((cam.position.x - Gdx.input.getDeltaX())> CastleCrush.WIDTH - (CastleCrush.WIDTH / 8))
                 && !(cam.position.x - Gdx.input.getDeltaX() <= CastleCrush.WIDTH / 8)) {
-            cam.translate(-Gdx.input.getDeltaX() / 2, 0);
-            cam.update();
+            if (Gdx.input.getDeltaX() < 0) {
+                slideForward(10);
+            }
         }
         if ((cam.position.x > CastleCrush.WIDTH * 3 / 4) && isOnBackBtn()) {
             gsm.set(new StartMenuScreen(gsm));
             dispose();
         }
+    }
+
+    //If gdx.input.getDeltaX() < 0
+    private void slideForward(int slideSpeed) {
+        int offset = CastleCrush.WIDTH / 20;
+
+        //From 3 to 4
+        if ((cam.position.x >= CastleCrush.WIDTH * 5 / 8) &&
+                (cam.position.x != CastleCrush.WIDTH * 7 / 8)){
+            System.out.println("AAA");
+            cam.translate(slideSpeed, 0);
+            cam.update();
+            if (cam.position.x >= CastleCrush.WIDTH * 7 / 8 - offset) {
+                System.out.println("BBB");
+                cam.translate(0, 0);
+                cam.position.x = CastleCrush.WIDTH * 7 / 8;
+                cam.update();
+            }
+        }
+
+        //From 2 to 3
+        else if ((cam.position.x >= CastleCrush.WIDTH * 3 / 8) &&
+                (cam.position.x != CastleCrush.WIDTH * 5 / 8)) {
+            System.out.println("CCC");
+            cam.translate(slideSpeed, 0);
+            cam.update();
+            if (cam.position.x >= CastleCrush.WIDTH * 5 / 8) {
+                System.out.println("DDD");
+                cam.translate(0, 0);
+                cam.position.x = CastleCrush.WIDTH * 5 / 8;
+                cam.update();
+            }
+        }
+
+        //From 1 to 2
+        else if ((cam.position.x >= CastleCrush.WIDTH * 1 / 8) &&
+                (cam.position.x != CastleCrush.WIDTH * 3 / 8)) {
+            System.out.println("EEE");
+            cam.translate(slideSpeed, 0);
+            cam.update();
+            if (cam.position.x >= CastleCrush.WIDTH * 3 / 8) {
+                System.out.println("FFF");
+                cam.position.x = CastleCrush.WIDTH * 3 / 8;
+                cam.update();
+            }
+        }
+    }
+
+    private void slideBackward(int slideSpeed) {
+
     }
 
     private boolean isOnBackBtn() {
@@ -84,6 +135,7 @@ public class TutorialState extends State {
         for (Texture texture : textures) {
             sb.draw(texture, counter * CastleCrush.WIDTH / 4, 0,
                     CastleCrush.WIDTH / 4, CastleCrush.HEIGHT);
+            counter++;
         }
         sb.draw(back.getBtn(), back.getXpos(), back.getYpos(), back.getBtnWidth(), back.getBtnHeight());
         sb.setProjectionMatrix(fullScreenCam.combined);
