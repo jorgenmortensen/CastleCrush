@@ -76,10 +76,11 @@ public class PlayMenu extends State {
                 1*CastleCrush.HEIGHT / 10,
                 CastleCrush.WIDTH / 3,
                 CastleCrush.HEIGHT / 10,
-                new Sprite(new Texture("multi_online.png")), CastleCrush.HEIGHT);
-        btnSound = new Button(CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
-                CastleCrush.WIDTH / 15,
-                CastleCrush.HEIGHT / 15, new Sprite(new Texture("sound_on.png")));
+                new Sprite(new Texture("multi_online_2.png")), CastleCrush.HEIGHT);
+
+        btnSound = new Button(0, 0, CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
+                CastleCrush.soundOn ? new Sprite(new Texture("sound_on.png")) : new Sprite(new Texture("sound_off.png")));
+
     }
 
     @Override
@@ -103,11 +104,11 @@ public class PlayMenu extends State {
             if (CastleCrush.soundOn) {
                 CastleCrush.music.setVolume(0);
                 CastleCrush.soundOn = false;
-                btnSound.setBtn(new Sprite(new Texture("sound_off.png")));
+                btnSound.setBtn(new Sprite(new Texture("sound_off_2.png")));
             } else {
                 CastleCrush.music.setVolume(0.5f);
                 CastleCrush.soundOn = true;
-                btnSound.setBtn(new Sprite(new Texture("sound_on.png")));
+                btnSound.setBtn(new Sprite(new Texture("sound_on_2.png")));
             }
         }
     }

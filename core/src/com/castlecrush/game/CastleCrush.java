@@ -20,6 +20,7 @@ public class CastleCrush extends ApplicationAdapter {
 
 	public static final String TITLE = "Castle Crush";
 
+
 	private SpriteBatch batch;
 	private GameStateManager gsm;
 	@Override

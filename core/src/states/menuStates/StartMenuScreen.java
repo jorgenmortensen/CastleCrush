@@ -70,20 +70,18 @@ public class StartMenuScreen extends states.State {
                 CastleCrush.HEIGHT / 2 - CastleCrush.HEIGHT / 10,
                 CastleCrush.WIDTH / 8,
                 CastleCrush.HEIGHT * 2 / 10,
-                new Sprite(new Texture("playBtn.png")));
+                new Sprite(new Texture("test_play.png")));
 
         //Help button
         btnHelp = new Button(CastleCrush.WIDTH * 3 / 4 - CastleCrush.WIDTH / 8,
                 CastleCrush.HEIGHT / 2 - CastleCrush.HEIGHT / 10,
                 CastleCrush.WIDTH / 8,
                 CastleCrush.HEIGHT * 2 / 10,
-                new Sprite(new Texture("helpBtn.png")));
+                new Sprite(new Texture("test_help.png")));
 
-        //Settings button
-        btnSound = new Button(CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
-                CastleCrush.WIDTH / 15,
-                CastleCrush.HEIGHT / 15,
-                new Sprite(new Texture("sound_on.png")));
+        btnSound = new Button(0, 0, CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
+                CastleCrush.soundOn ? new Sprite(new Texture("sound_on.png")) : new Sprite(new Texture("sound_off.png")));
+
     }
 
     @Override
