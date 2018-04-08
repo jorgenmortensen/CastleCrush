@@ -1,5 +1,6 @@
 package models.entities;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
@@ -8,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public interface Drawable {
 
-    public void Draw(SpriteBatch batch);
+    public Sprite getDrawable();
 
     public void setX(int x);
 

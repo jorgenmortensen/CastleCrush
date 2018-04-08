@@ -5,4 +5,12 @@ package controllers;
  */
 
 public abstract class Controller {
+
+    public Controller() {
+
+    }
+
+    public void update() {
+
+    }
 }

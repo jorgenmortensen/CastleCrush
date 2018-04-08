@@ -1,5 +1,6 @@
 package models.entities;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
@@ -16,9 +17,17 @@ public class Projectile implements Drawable {
 
     private Vector3 velocity;
 
-    @Override
-    public void Draw(SpriteBatch batch) {
+    public Projectile(int x, int y, int width, int height, Vector3 velocity) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.velocity = velocity;
+    }
 
+    @Override
+    public Sprite getDrawable() {
+        return null;
     }
 
     @Override

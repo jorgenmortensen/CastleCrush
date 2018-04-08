@@ -1,5 +1,6 @@
 package models.entities;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
@@ -16,8 +17,8 @@ public class GameWinningObject implements Drawable {
     private boolean isHit;
 
     @Override
-    public void Draw(SpriteBatch batch) {
-
+    public Sprite getDrawable() {
+        return null;
     }
 
     @Override

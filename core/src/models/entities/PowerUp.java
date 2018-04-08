@@ -1,5 +1,6 @@
 package models.entities;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -18,9 +19,10 @@ public class PowerUp implements Drawable {
     private Vector3 velocity;
     private Image image;
 
-    @Override
-    public void Draw(SpriteBatch batch) {
 
+    @Override
+    public Sprite getDrawable() {
+        return null;
     }
 
     @Override

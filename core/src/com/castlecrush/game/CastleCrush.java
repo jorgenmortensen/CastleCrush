@@ -6,17 +6,21 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import models.MockGameWorld;
 import views.Drawer;
 import views.game_world.GameWorldDrawer;
 
 public class CastleCrush extends ApplicationAdapter {
 	Drawer tegner;
-	
+	MockGameWorld world;
+
+
 	@Override
 	public void create () {
 
-		tegner = new GameWorldDrawer();
-	//	batch = new SpriteBatch();
+		SpriteBatch batch = new SpriteBatch();
+		world = new MockGameWorld();
+		tegner = new GameWorldDrawer(batch, world);
 	//	img = new Texture("badlogic.jpg");
 	}
 

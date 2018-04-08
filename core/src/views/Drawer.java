@@ -18,8 +18,8 @@ public abstract class Drawer {
   //  private BitmapFont font = new BitmapFont();
     protected SpriteBatch batch;
 
-    public Drawer() {
-        batch = new SpriteBatch();
+    public Drawer(SpriteBatch batch) {
+        this.batch = batch;
         cam = new OrthographicCamera();
     }
 

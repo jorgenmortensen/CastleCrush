@@ -1,5 +1,6 @@
 package models.entities;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
@@ -13,13 +14,22 @@ public class Cannon implements Drawable{
     private int y;
     private int width;
     private int height;
+    private Sprite sprite;
 
     private float angle;
     private float power;
 
-    @Override
-    public void Draw(SpriteBatch batch) {
+    public Cannon(int x, int y, int width, int height, Sprite sprite) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.sprite = sprite;
+    }
 
+    @Override
+    public Sprite getDrawable() {
+        return sprite;
     }
 
     @Override
