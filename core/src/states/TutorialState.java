@@ -7,6 +7,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.castlecrush.game.CastleCrush;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import components.Button;
 import entities.Castle;
 import states.menuStates.StartMenuScreen;
@@ -17,10 +21,8 @@ import states.menuStates.StartMenuScreen;
 
 public class TutorialState extends State {
 
-    Texture texture1;
-    Texture texture2;
-    Texture texture3;
-    Texture texture4;
+    List<Texture> textures;
+    
     Button back;
 
     OrthographicCamera cam;
@@ -32,10 +34,13 @@ public class TutorialState extends State {
         fullScreenCam = new OrthographicCamera();
         cam.setToOrtho(false, CastleCrush.WIDTH / 4, CastleCrush.HEIGHT);
         fullScreenCam.setToOrtho(false, CastleCrush.WIDTH, CastleCrush.HEIGHT);
-        texture1 = new Texture("texture1.png");
-        texture2 = new Texture("texture2.png");
-        texture3 = new Texture("texture3.png");
-        texture4 = new Texture("texture4.png");
+
+        Texture texture1 = new Texture("texture1.png");
+        Texture texture2 = new Texture("texture2.png");
+        Texture texture3 = new Texture("texture3.png");
+        Texture texture4 = new Texture("texture4.png");
+        textures = new ArrayList<Texture>(Arrays.asList(texture1, texture2, texture3, texture4));
+
         back = new Button(CastleCrush.WIDTH - CastleCrush.WIDTH / 8, CastleCrush.HEIGHT / 15,
                 CastleCrush.WIDTH / 10,
                 CastleCrush.HEIGHT / 10,
@@ -74,10 +79,12 @@ public class TutorialState extends State {
     public void render(SpriteBatch sb) {
         sb.begin();
         sb.setProjectionMatrix(cam.combined);
-        sb.draw(texture1, 0, 0, CastleCrush.WIDTH / 4, CastleCrush.HEIGHT);
-        sb.draw(texture2, CastleCrush.WIDTH / 4, 0, CastleCrush.WIDTH / 4, CastleCrush.HEIGHT);
-        sb.draw(texture3, CastleCrush.WIDTH * 2 / 4, 0, CastleCrush.WIDTH / 4, CastleCrush.HEIGHT);
-        sb.draw(texture4, CastleCrush.WIDTH * 3 / 4, 0, CastleCrush.WIDTH / 4, CastleCrush.HEIGHT);
+        int counter = 0;
+        //Draw all textures to the spriteBatch
+        for (Texture texture : textures) {
+            sb.draw(texture, counter * CastleCrush.WIDTH / 4, 0,
+                    CastleCrush.WIDTH / 4, CastleCrush.HEIGHT);
+        }
         sb.draw(back.getBtn(), back.getXpos(), back.getYpos(), back.getBtnWidth(), back.getBtnHeight());
         sb.setProjectionMatrix(fullScreenCam.combined);
         sb.end();
