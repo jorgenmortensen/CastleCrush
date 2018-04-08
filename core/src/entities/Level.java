@@ -1,6 +1,7 @@
 package entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 
 import java.util.List;
 
@@ -26,23 +27,13 @@ public class Level implements Drawable {
     }
 
     @Override
-    public void setX(int x) {
-        this.x = x;
+    public void setPosition(Vector3 position) {
+
     }
 
     @Override
-    public int getX() {
-        return this.x;
-    }
-
-    @Override
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    @Override
-    public int getY() {
-        return y;
+    public Vector3 getPosition() {
+        return null;
     }
 
     @Override

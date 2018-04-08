@@ -2,6 +2,8 @@ package entities;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector;
+import com.badlogic.gdx.math.Vector3;
 
 /**
  * Created by Jørgen on 09.03.2018.
@@ -10,8 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Cannon implements Drawable{
 
-    private int x;
-    private int y;
+    private Vector3 position;
     private int width;
     private int height;
 
@@ -21,40 +22,32 @@ public class Cannon implements Drawable{
     Sprite cannon;
     Sprite wheel;
 
-    public Cannon(int x, int y, int width, int height, float angle, float power, Sprite cannon, Sprite wheel) {
-        this.x = x;
-        this.y = y;
+    Projectile projectile;
+
+    public Cannon(Vector3 position, int width, int height, float angle, float power,
+                  Sprite cannon, Sprite wheel, Projectile projectile) {
+        this.position = position;
         this.width = width;
         this.height = height;
         this.angle = angle;
         this.power = power;
         this.cannon = cannon;
         this.wheel = wheel;
+        this.projectile = projectile;
     }
 
     @Override
     public void Draw(SpriteBatch batch) {
-
     }
 
     @Override
-    public void setX(int x) {
-        this.x = x;
+    public void setPosition(Vector3 position) {
+        this.position = position;
     }
 
     @Override
-    public int getX() {
-        return this.x;
-    }
-
-    @Override
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    @Override
-    public int getY() {
-        return y;
+    public Vector3 getPosition() {
+        return position;
     }
 
     @Override
@@ -109,16 +102,27 @@ public class Cannon implements Drawable{
         this.wheel = wheel;
     }
 
-    //Fires the shot, with a given angle and power
-    public void Fire() {
+    public Projectile getProjectile() {
+        return projectile;
+    }
 
+    public void setProjectile(Projectile projectile) {
+        this.projectile = projectile;
+    }
+
+    //Fires the shot, with a given angle and power
+    public void fire() {
+        projectile.setVelocity(new Vector3((float)Math.cos(angle*Math.PI/180) * power, (float)Math.sin(angle*Math.PI/180) * power, (float)0));
     }
 
     //Updates the game with the interval dt
     public void update(float dt) {
+        projectile.velocity.scl(dt);
+        projectile.position.add(projectile.velocity.x, projectile.velocity.y, 0);
+        projectile.velocity.scl(1/dt);
+        cannon.setOrigin(cannon.getWidth() / 2, cannon.getHeight() / 2);
+        cannon.setRotation(getAngle());
 
     }
-
-
 
 }

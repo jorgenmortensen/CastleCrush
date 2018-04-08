@@ -64,7 +64,7 @@ public class StartMenuScreen extends states.State {
         //Settings button
         btnSound = new Button(CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
                 CastleCrush.WIDTH / 15,
-                CastleCrush.HEIGHT / 15,
+                CastleCrush.WIDTH / 15,
                 new Sprite(new Texture("sound_on.png")));
     }
 

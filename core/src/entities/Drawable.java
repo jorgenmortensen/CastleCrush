@@ -1,6 +1,7 @@
 package entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 
 /**
  * Created by Jørgen on 09.03.2018.
@@ -10,13 +11,9 @@ public interface Drawable {
 
     public void Draw(SpriteBatch batch);
 
-    public void setX(int x);
+    public void setPosition(Vector3 position);
 
-    public int getX();
-
-    public void setY(int y);
-
-    public int getY();
+    public Vector3 getPosition();
 
     public void setWidth(int width);
 

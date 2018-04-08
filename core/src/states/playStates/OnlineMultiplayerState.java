@@ -5,4 +5,5 @@ package states.playStates;
  */
 
 public class OnlineMultiplayerState {
+
 }

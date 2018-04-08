@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import states.GameStateManager;
 
 import states.Splashscreen;
+import states.playStates.SinglePlayerState;
 
 
 public class CastleCrush extends ApplicationAdapter {
@@ -34,7 +35,7 @@ public class CastleCrush extends ApplicationAdapter {
 		music.setVolume(0.5f);
 		music.play();
 		Gdx.gl.glClearColor(0, 0, 0, 1);
-		gsm.push(new Splashscreen(gsm));
+		gsm.push(new SinglePlayerState(gsm));
 	}
 
 	@Override

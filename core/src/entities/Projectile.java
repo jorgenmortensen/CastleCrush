@@ -11,17 +11,15 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Projectile implements Drawable {
 
-    private int x;
-    private int y;
+    Vector3 position;
     private int width;
     private int height;
 
-    private Vector3 velocity;
+    Vector3 velocity;
     private Sprite sprite;
 
-    public Projectile(int x, int y, int width, int height, Vector3 velocity, Sprite sprite) {
-        this.x = x;
-        this.y = y;
+    public Projectile(Vector3 position, int width, int height, Vector3 velocity, Sprite sprite) {
+        this.position = position;
         this.width = width;
         this.height = height;
         this.velocity = velocity;
@@ -33,24 +31,12 @@ public class Projectile implements Drawable {
 
     }
 
-    @Override
-    public void setX(int x) {
-        this.x = x;
+    public Vector3 getPosition() {
+        return position;
     }
 
-    @Override
-    public int getX() {
-        return this.x;
-    }
-
-    @Override
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    @Override
-    public int getY() {
-        return y;
+    public void setPosition(Vector3 position) {
+        this.position = position;
     }
 
     @Override
