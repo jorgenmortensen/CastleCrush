@@ -20,7 +20,7 @@ import views.Drawer;
  */
 
 public class GameWorldDrawer extends Drawer {
-    private Texture background = new Texture("basic_green_bg.png");
+    private Texture background = new Texture("background_without_ground.png");
     private Castle castleLeft, castleRight;
     private Cannon cannonLeft, cannonRight;
     private GameWinningObject heartLeft, heartRight;
@@ -52,8 +52,12 @@ public class GameWorldDrawer extends Drawer {
             drawObject(obj);
         }
 
+        drawObject(mockWorld.getProsjektil());
+
         batch.end();
        // debugRenderer.render(physicsWorld, camera.combined);
+
+        mockWorld.getPhysicsWorld().step(1/60f, 6, 2);
     }
 
     private void drawObject(Drawable object) {

@@ -3,6 +3,7 @@ package models.entities;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
 
 /**
  * Created by Jørgen on 09.03.2018.
@@ -10,24 +11,28 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Projectile implements Drawable {
 
-    private int x;
-    private int y;
+    private int x, y;
     private int width;
     private int height;
+    private Body body;
+    private Sprite sprite;
 
     private Vector3 velocity;
 
-    public Projectile(int x, int y, int width, int height, Vector3 velocity) {
-        this.x = x;
-        this.y = y;
+    public Projectile(Body body, Sprite sprite, int width, int height) {
         this.width = width;
         this.height = height;
-        this.velocity = velocity;
+        this.body = body;
+        this.sprite = sprite;
+    }
+
+    public Body getBody() {
+        return body;
     }
 
     @Override
     public Sprite getDrawable() {
-        return null;
+        return sprite;
     }
 
     @Override
@@ -37,7 +42,7 @@ public class Projectile implements Drawable {
 
     @Override
     public int getX() {
-        return this.x;
+        return (int) this.body.getPosition().x;
     }
 
     @Override
@@ -47,7 +52,7 @@ public class Projectile implements Drawable {
 
     @Override
     public int getY() {
-        return y;
+        return (int) this.body.getPosition().y;
     }
 
     @Override
