@@ -38,7 +38,7 @@ public class Splashscreen extends State {
     @Override
     public void update(float dt) {
         handleInput();
-        if(am.update() && TimeUtils.timeSinceMillis(startTime) > 4000){
+        if(am.update() && TimeUtils.timeSinceMillis(startTime) > 1000){
             gsm.set(new StartMenuScreen(gsm));
         }
 
