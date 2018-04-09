@@ -3,6 +3,7 @@ package models.entities;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 /**
@@ -15,6 +16,8 @@ public class PowerUp implements Drawable {
     private int y;
     private int width;
     private int height;
+    private Sprite sprite;
+    private Body body;
 
     private Vector3 velocity;
     private Image image;
@@ -22,7 +25,12 @@ public class PowerUp implements Drawable {
 
     @Override
     public Sprite getDrawable() {
-        return null;
+        return sprite;
+    }
+
+    @Override
+    public Body getBody() {
+        return body;
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import models.MockGameWorld;
 import models.entities.Cannon;
@@ -27,6 +28,7 @@ public class GameWorldDrawer extends Drawer {
     private MockGameWorld mockWorld;
     private World physicsWorld;
     private static OrthographicCamera camera;
+    private ExtendViewport viewport;
 
     Box2DDebugRenderer debugRenderer;
 
@@ -37,6 +39,8 @@ public class GameWorldDrawer extends Drawer {
         this.physicsWorld = mockWorld.getPhysicsWorld();
 
         camera = new OrthographicCamera();
+        viewport = new ExtendViewport(80, 60, camera);
+
     }
 
     @Override

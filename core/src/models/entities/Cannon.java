@@ -2,6 +2,7 @@ package models.entities;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.physics.box2d.Body;
 
 /**
  * Created by Jørgen on 09.03.2018.
@@ -15,6 +16,7 @@ public class Cannon implements Drawable{
     private int width;
     private int height;
     private Sprite sprite;
+    private Body body;
 
     private float angle;
     private float power;
@@ -25,11 +27,17 @@ public class Cannon implements Drawable{
         this.width = width;
         this.height = height;
         this.sprite = sprite;
+        this.body = body;
     }
 
     @Override
     public Sprite getDrawable() {
         return sprite;
+    }
+
+    @Override
+    public Body getBody() {
+        return body;
     }
 
     @Override
