@@ -42,7 +42,8 @@ public class TutorialState extends State {
         back = new Button(CastleCrush.WIDTH - CastleCrush.WIDTH / 8, CastleCrush.HEIGHT / 15,
                 CastleCrush.WIDTH / 10,
                 CastleCrush.HEIGHT / 10,
-                new Sprite(new Texture("backBtn.png")));
+                new Sprite(new Texture("return_menu.png")));
+        
         sf = new SlidingObjectXdirection(-CastleCrush.HEIGHT/4, 3*CastleCrush.HEIGHT/4, CastleCrush.HEIGHT/4, CastleCrush.HEIGHT/4, new Sprite(new Texture("sliding_finger.png")),5*CastleCrush.WIDTH/4, -900);
         screenTouched = false;
     }

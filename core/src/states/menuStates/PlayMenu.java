@@ -76,7 +76,7 @@ public class PlayMenu extends State {
                 1*CastleCrush.HEIGHT / 10,
                 CastleCrush.WIDTH / 3,
                 CastleCrush.HEIGHT / 10,
-                new Sprite(new Texture("multi_online_2.png")), CastleCrush.HEIGHT);
+                new Sprite(new Texture("invite_friends.png")), CastleCrush.HEIGHT);
 
         btnSound = new Button(0, 0, CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
                 CastleCrush.soundOn ? new Sprite(new Texture("sound_on.png")) : new Sprite(new Texture("sound_off.png")));
