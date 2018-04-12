@@ -5,7 +5,10 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.castlecrush.game.CastleCrush;
 
+import entities.Castle;
+import states.menuStates.LogInMenu;
 import states.menuStates.StartMenuScreen;
 
 /**
@@ -21,13 +24,15 @@ public class Splashscreen extends State {
     // long uses 64-bit, int uses 32-bit -> long can hold more numbers
     private long startTime;
     private Texture t;
+    private CastleCrush crush;
 
 
-    public Splashscreen(GameStateManager gsm) {
+    public Splashscreen(GameStateManager gsm, CastleCrush crush) {
         super(gsm);
         this.am = new AssetManager();
         this.startTime = TimeUtils.millis();
         t = new Texture("splashscreen.png");
+        this.crush=crush;
     }
 
     @Override
@@ -39,7 +44,7 @@ public class Splashscreen extends State {
     public void update(float dt) {
         handleInput();
         if(am.update() && TimeUtils.timeSinceMillis(startTime) > 4000){
-            gsm.set(new StartMenuScreen(gsm));
+            gsm.set(new StartMenuScreen(gsm,crush));
         }
 
     }

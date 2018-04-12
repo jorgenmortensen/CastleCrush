@@ -24,7 +24,7 @@ public class MultiplayerMenu extends State {
     @Override
     protected void handleInput() {
         if (Gdx.input.justTouched()) {
-            gsm.set(new PlayMenu(gsm));
+           // gsm.set(new PlayMenu(gsm));
             dispose();
         }
     }

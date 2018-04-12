@@ -50,9 +50,10 @@ public class TutorialState extends State {
             cam.update();
         }
         if ((cam.position.x > CastleCrush.WIDTH * 3 / 4) && isOnBackBtn()) {
-            gsm.set(new StartMenuScreen(gsm));
+            //gsm.set(new StartMenuScreen(gsm));
             dispose();
         }
+
     }
 
     private boolean isOnBackBtn() {

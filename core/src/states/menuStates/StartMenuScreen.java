@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.castlecrush.game.CastleCrush;
 
 import components.Button;
+import entities.Castle;
 import states.GameStateManager;
 import states.TutorialState;
 
@@ -20,6 +21,7 @@ public class StartMenuScreen extends states.State {
     Button btnPlay;
     Button btnHelp;
     Button btnSound;
+    Button btnLogOutIn;
     Texture logo;
 
     float xMax, xCoordBg1, xCoordBg2;
@@ -28,14 +30,24 @@ public class StartMenuScreen extends states.State {
     final int BACKGROUND_MOVE_SPEED = -30;
 
     public static long startTime;
+    CastleCrush crush;
 
 
-    public StartMenuScreen(GameStateManager gsm) {
+    public StartMenuScreen(GameStateManager gsm, CastleCrush crush) {
         super(gsm);
+        this.crush = crush;
         logo = new Texture("logo.png");
         this.startTime = TimeUtils.millis();
         makeButtons();
         makeMovingBackground();
+
+
+
+        if (crush.playServices.isSignedIn()) {
+            //crush.playServices.toast();
+        }else{
+            crush.playServices.signIn();
+        }
     }
 
     private void makeMovingBackground(){
@@ -66,17 +78,35 @@ public class StartMenuScreen extends states.State {
                 CastleCrush.WIDTH / 15,
                 CastleCrush.HEIGHT / 15,
                 new Sprite(new Texture("sound_on.png")));
+
+        //LogOut
+        btnLogOutIn = new Button(CastleCrush.WIDTH - CastleCrush.WIDTH / 7,
+                CastleCrush.HEIGHT - CastleCrush.HEIGHT * 2 / 9,
+                CastleCrush.WIDTH / 8,
+                CastleCrush.HEIGHT * 2 / 10,
+                new Sprite(new Texture("googlesignout.png")));
+
     }
 
     @Override
     protected void handleInput() {
         if (Gdx.input.justTouched() && isOnPlayBtn()) {
-            gsm.set(new PlayMenu(gsm));
+            gsm.set(new PlayMenu(gsm, crush));
             dispose();
         }
         else if (Gdx.input.justTouched() && isOnHelpBtn()) {
             gsm.set(new TutorialState(gsm));
             dispose();
+        }
+        else if (Gdx.input.justTouched() && isOnLogOffInBtn()) {
+
+            if (crush.playServices.isSignedIn()) {
+                crush.playServices.signOut();
+                btnLogOutIn.setBtn(new Sprite(new Texture("googlesignin.png")));
+            } else {
+                crush.playServices.signIn();
+                btnLogOutIn.setBtn(new Sprite(new Texture("googlesignout.png")));
+            }
         }
         else if (Gdx.input.justTouched() && isOnSoundBtn()) {
             //Turn off sound if already on and vice versa
@@ -115,6 +145,14 @@ public class StartMenuScreen extends states.State {
         if (((CastleCrush.HEIGHT - Gdx.input.getY()) > btnSound.getYpos()) &&
                 ((CastleCrush.HEIGHT - Gdx.input.getY()) < (btnSound.getYpos() + btnSound.getBtnHeight())) &&
                 (Gdx.input.getX() > btnSound.getXpos()) && (Gdx.input.getX() < (btnSound.getXpos() + btnSound.getBtnWidth()))) {
+            return true;
+        }
+        return false;
+    }
+    private boolean isOnLogOffInBtn() {
+        if (((CastleCrush.HEIGHT - Gdx.input.getY()) > btnLogOutIn.getYpos()) &&
+                ((CastleCrush.HEIGHT - Gdx.input.getY()) < (btnLogOutIn.getYpos() + btnLogOutIn.getBtnHeight())) &&
+                (Gdx.input.getX() > btnLogOutIn.getXpos()) && (Gdx.input.getX() < (btnLogOutIn.getXpos() + btnLogOutIn.getBtnWidth()))) {
             return true;
         }
         return false;
@@ -160,6 +198,9 @@ public class StartMenuScreen extends states.State {
         sb.draw(btnSound.getBtn(), btnSound.getXpos(),
                 btnSound.getYpos(),
                 btnSound.getBtnWidth(), btnSound.getBtnHeight());
+        sb.draw(btnLogOutIn.getBtn(), btnLogOutIn.getXpos(),
+                btnLogOutIn.getYpos(),
+                btnLogOutIn.getBtnWidth(), btnLogOutIn.getBtnHeight());
 
         sb.draw(logo, 0, CastleCrush.HEIGHT * 7 / 10, CastleCrush.WIDTH, CastleCrush.HEIGHT * 3 / 10);
 

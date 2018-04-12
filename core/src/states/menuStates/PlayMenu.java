@@ -11,6 +11,8 @@ import components.Button;
 import components.GravityButton;
 import states.GameStateManager;
 import states.State;
+import states.playStates.OnlineMultiplayerState;
+import states.playStates.SinglePlayerState;
 
 import static states.menuStates.StartMenuScreen.startTime;
 
@@ -35,15 +37,23 @@ public class PlayMenu extends State {
 
     private Button btnSound;
 
+    CastleCrush crush;
+
 
     // remember to change every .PNG to .png.
 
-    public PlayMenu(GameStateManager gsm) {
+    public PlayMenu(GameStateManager gsm, CastleCrush crush) {
         super(gsm);
         logo = new Texture("logo.png");
+        this.crush=crush;
         //background1 = new Texture("background.png");
         makeMovingBackground();
         makeButtons();
+
+        //Welcome back message as toast on screen
+        if (crush.playServices.isSignedIn()){
+            crush.playServices.toast();
+        }
     }
 
     private void makeMovingBackground(){
@@ -82,7 +92,7 @@ public class PlayMenu extends State {
     @Override
     protected void handleInput() {
         if (Gdx.input.justTouched() && isOnSingleBtn()) {
-            gsm.set(new SingleplayerMenu(gsm));
+            gsm.set(new SinglePlayerState(gsm));
             System.out.println("Single pressed");
             dispose();
         }
@@ -92,7 +102,7 @@ public class PlayMenu extends State {
             dispose();
         }
         else if (Gdx.input.justTouched() && isOnLocalMultiBtn()) {
-            gsm.set(new StartMenuScreen(gsm));
+            //gsm.set(new StartMenuScreen(gsm));
             System.out.println("Local pressed");
             dispose();
         } else if (Gdx.input.justTouched() && isOnSoundBtn()) {
