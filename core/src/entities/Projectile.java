@@ -74,4 +74,15 @@ public class Projectile implements Drawable {
     public void setSprite(Sprite sprite) {
         this.sprite = sprite;
     }
+
+    //Fires the shot, with a given angle and power
+    public void fire(float angle, float power) {
+        setVelocity(new Vector3((float)Math.cos(angle*Math.PI/180) * power, (float)Math.sin(angle*Math.PI/180) * power, (float)0));
+    }
+
+    public void update(float dt) {
+        velocity.scl(dt);
+        position.add(velocity.x, velocity.y, 0);
+        velocity.scl(1/dt);
+    }
 }

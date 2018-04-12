@@ -22,10 +22,8 @@ public class Cannon implements Drawable{
     Sprite cannon;
     Sprite wheel;
 
-    Projectile projectile;
-
     public Cannon(Vector3 position, int width, int height, float angle, float power,
-                  Sprite cannon, Sprite wheel, Projectile projectile) {
+                  Sprite cannon, Sprite wheel) {
         this.position = position;
         this.width = width;
         this.height = height;
@@ -33,7 +31,6 @@ public class Cannon implements Drawable{
         this.power = power;
         this.cannon = cannon;
         this.wheel = wheel;
-        this.projectile = projectile;
     }
 
     @Override
@@ -102,27 +99,10 @@ public class Cannon implements Drawable{
         this.wheel = wheel;
     }
 
-    public Projectile getProjectile() {
-        return projectile;
-    }
-
-    public void setProjectile(Projectile projectile) {
-        this.projectile = projectile;
-    }
-
-    //Fires the shot, with a given angle and power
-    public void fire() {
-        projectile.setVelocity(new Vector3((float)Math.cos(angle*Math.PI/180) * power, (float)Math.sin(angle*Math.PI/180) * power, (float)0));
-    }
-
     //Updates the game with the interval dt
     public void update(float dt) {
-        projectile.velocity.scl(dt);
-        projectile.position.add(projectile.velocity.x, projectile.velocity.y, 0);
-        projectile.velocity.scl(1/dt);
-        cannon.setOrigin(cannon.getWidth() / 2, cannon.getHeight() / 2);
+        //cannon.setOrigin(cannon.getWidth() / 2, cannon.getHeight() / 2);
         cannon.setRotation(getAngle());
-
     }
 
 }

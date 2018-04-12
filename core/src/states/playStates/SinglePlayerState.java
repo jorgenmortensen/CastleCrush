@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.castlecrush.game.CastleCrush;
 
 import entities.Cannon;
@@ -49,12 +52,12 @@ public class SinglePlayerState extends State{
         font = new BitmapFont();
         cannon = new Cannon(new Vector3(width / 10, width / 10, 0), width / 10, width / 20,
                 0, 0, new Sprite(new Texture("cannon.png")),
-                new Sprite(new Texture("wheel.png")), null);
+                new Sprite(new Texture("wheel.png")));
+
         projectile = new Projectile(new Vector3(cannon.getPosition().x + cannon.getWidth() / 2,
                 cannon.getPosition().y + cannon.getHeight() / 4, 0),
                 cannon.getWidth() / 10,cannon.getWidth() / 10, new Vector3(0,0,0),
                 new Sprite(new Texture("ball_cannon.png")));
-        cannon.setProjectile(projectile);
 
         makeMovingBackground();
 
@@ -84,7 +87,7 @@ public class SinglePlayerState extends State{
             }
         }
         if (!angleActive && !powerActive) {
-            cannon.fire();
+            projectile.fire(cannon.getAngle(), cannon.getPower());
             shotsFired = true;
         }
     }
@@ -101,8 +104,8 @@ public class SinglePlayerState extends State{
         }
 
         //Make the angle and power increment between respectively 0-90 and 0-100
-        float angleSpeed = (float)0.2;
-        float powerSpeed = (float)0.2;
+        float angleSpeed = (float)0.5;
+        float powerSpeed = (float)0.5;
         if (angleActive) {
             if (cannon.getAngle() >= 90) {
                 angleUp = false;
@@ -127,6 +130,7 @@ public class SinglePlayerState extends State{
             }
         }
         cannon.update(dt);
+        projectile.update(dt);
     }
 
     @Override
@@ -138,10 +142,6 @@ public class SinglePlayerState extends State{
 
         if (shotsFired) {
             sb.draw(projectile.getSprite(), projectile.getPosition().x, projectile.getPosition().y,
-                    projectile.getWidth(), projectile.getHeight());
-        } else {
-            sb.draw(projectile.getSprite(), round(cannon.getPosition().x +(cannon.getWidth() - projectile.getWidth()) * cos(cannon.getAngle() * PI / 180)),
-                    round(cannon.getPosition().y + cannon.getHeight() / 4 + (cannon.getWidth() * 7 / 10 - projectile.getWidth()) * sin(cannon.getAngle() * PI / 180)),
                     projectile.getWidth(), projectile.getHeight());
         }
 

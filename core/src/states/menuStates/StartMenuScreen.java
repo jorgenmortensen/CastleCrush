@@ -29,7 +29,6 @@ public class StartMenuScreen extends states.State {
 
     public static long startTime;
 
-
     public StartMenuScreen(GameStateManager gsm) {
         super(gsm);
         logo = new Texture("logo.png");
@@ -167,6 +166,7 @@ public class StartMenuScreen extends states.State {
     }
 
     public long getStartTime(){
+
         return this.startTime;
     }
 
