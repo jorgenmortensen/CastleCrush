@@ -14,7 +14,13 @@ import states.State;
 import states.playStates.OnlineMultiplayerState;
 import states.playStates.SinglePlayerState;
 
+import static states.menuStates.StartMenuScreen.changed_logo;
+import static states.menuStates.StartMenuScreen.crushed;
+import static states.menuStates.StartMenuScreen.little_crushed;
+import static states.menuStates.StartMenuScreen.logo;
 import static states.menuStates.StartMenuScreen.startTime;
+import static states.menuStates.StartMenuScreen.with_u;
+import static states.menuStates.StartMenuScreen.without_castle;
 
 /**
  * Created by erikkjernlie on 05/04/2018.
@@ -33,9 +39,8 @@ public class PlayMenu extends State {
     private GravityButton btnSingle;
     private GravityButton btnMulti;
     private GravityButton btnLocal;
-    private Texture logo;
-
     private Button btnSound;
+    private Texture logo;
 
     CastleCrush crush;
 
@@ -83,10 +88,11 @@ public class PlayMenu extends State {
                 1*CastleCrush.HEIGHT / 10,
                 CastleCrush.WIDTH / 3,
                 CastleCrush.HEIGHT / 10,
-                new Sprite(new Texture("multi_online.png")), CastleCrush.HEIGHT);
-        btnSound = new Button(CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
-                CastleCrush.WIDTH / 15,
-                CastleCrush.HEIGHT / 15, new Sprite(new Texture("sound_on.png")));
+                new Sprite(new Texture("invite_friends.png")), CastleCrush.HEIGHT);
+
+        btnSound = new Button(0, 0, CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
+                CastleCrush.soundOn ? new Sprite(new Texture("sound_on.png")) : new Sprite(new Texture("sound_off.png")));
+
     }
 
     @Override
@@ -102,7 +108,7 @@ public class PlayMenu extends State {
             dispose();
         }
         else if (Gdx.input.justTouched() && isOnLocalMultiBtn()) {
-            //gsm.set(new StartMenuScreen(gsm));
+            gsm.set(new StartMenuScreen(gsm));
             System.out.println("Local pressed");
             dispose();
         } else if (Gdx.input.justTouched() && isOnSoundBtn()) {
@@ -110,11 +116,11 @@ public class PlayMenu extends State {
             if (CastleCrush.soundOn) {
                 CastleCrush.music.setVolume(0);
                 CastleCrush.soundOn = false;
-                btnSound.setBtn(new Sprite(new Texture("sound_off.png")));
+                btnSound.setBtn(new Sprite(new Texture("sound_off_2.png")));
             } else {
                 CastleCrush.music.setVolume(0.5f);
                 CastleCrush.soundOn = true;
-                btnSound.setBtn(new Sprite(new Texture("sound_on.png")));
+                btnSound.setBtn(new Sprite(new Texture("sound_on_2.png")));
             }
         }
     }
@@ -166,17 +172,28 @@ public class PlayMenu extends State {
             xCoordBg2 = 0;
         }
 
+
         long time = TimeUtils.timeSinceMillis(startTime);
-        if (time > 3500 && time < 7000) {
-            logo = new Texture("logo_little_crushed.png");
-        } else if (time > 7000 && time < 10000) {
-            logo = new Texture("logo_crushed.png");
-        } else if (time > 10000 && time < 13000) {
-            logo = new Texture("logo_without_castle.png");
-        } else if (time > 13000) {
-            logo = new Texture("logo_with_u.png");
+        if (time > 3500 && little_crushed) {
+            logo = new Texture("logo_little_crushed.png");;;
+            little_crushed = false;
+            changed_logo = true;
+        } else if (time > 7000 && crushed) {
+            logo = new Texture("logo_crushed.png");;
+            crushed = false;
+            changed_logo = true;
+        } else if (time > 10000  && without_castle) {
+            logo = new Texture("logo_without_castle.png");;
+            without_castle = false;
+            changed_logo = true;
+        } else if (time > 13000 && with_u) {
+            logo = new Texture("logo_with_u.png");;
+            with_u = false;
+            changed_logo = true;
         }
     }
+
+
 
     @Override
     public void render(SpriteBatch sb) {

@@ -21,8 +21,8 @@ public class StartMenuScreen extends states.State {
     Button btnPlay;
     Button btnHelp;
     Button btnSound;
+    public static Texture logo;
     Button btnLogOutIn;
-    Texture logo;
 
     float xMax, xCoordBg1, xCoordBg2;
     private Texture background1;
@@ -30,13 +30,28 @@ public class StartMenuScreen extends states.State {
     final int BACKGROUND_MOVE_SPEED = -30;
 
     public static long startTime;
+    public static boolean little_crushed = true;
+    public static boolean crushed = true;
+    public static boolean without_castle = true;
+    public static boolean with_u = true;
+    public static boolean changed_logo;
+
+
     CastleCrush crush;
 
 
     public StartMenuScreen(GameStateManager gsm, CastleCrush crush) {
         super(gsm);
         this.crush = crush;
+        // the normal logo will appear when the user gets back to this menu, which is the intention
         logo = new Texture("logo.png");
+        if (changed_logo) {
+            little_crushed = false;
+            crushed = false;
+            without_castle = false;
+            with_u = false;
+        }
+
         this.startTime = TimeUtils.millis();
         makeButtons();
         makeMovingBackground();
@@ -64,20 +79,17 @@ public class StartMenuScreen extends states.State {
                 CastleCrush.HEIGHT / 2 - CastleCrush.HEIGHT / 10,
                 CastleCrush.WIDTH / 8,
                 CastleCrush.HEIGHT * 2 / 10,
-                new Sprite(new Texture("playBtn.png")));
+                new Sprite(new Texture("test_play.png")));
 
         //Help button
         btnHelp = new Button(CastleCrush.WIDTH * 3 / 4 - CastleCrush.WIDTH / 8,
                 CastleCrush.HEIGHT / 2 - CastleCrush.HEIGHT / 10,
                 CastleCrush.WIDTH / 8,
                 CastleCrush.HEIGHT * 2 / 10,
-                new Sprite(new Texture("helpBtn.png")));
+                new Sprite(new Texture("test_help.png")));
 
-        //Settings button
-        btnSound = new Button(CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
-                CastleCrush.WIDTH / 15,
-                CastleCrush.HEIGHT / 15,
-                new Sprite(new Texture("sound_on.png")));
+        btnSound = new Button(0, 0, CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
+                CastleCrush.soundOn ? new Sprite(new Texture("sound_on.png")) : new Sprite(new Texture("sound_off.png")));
 
         //LogOut
         btnLogOutIn = new Button(CastleCrush.WIDTH - CastleCrush.WIDTH / 7,
@@ -169,14 +181,18 @@ public class StartMenuScreen extends states.State {
             xCoordBg2 = 0;
         }
         long time = TimeUtils.timeSinceMillis(startTime);
-        if (time > 3500 && time < 7000) {
-            logo = new Texture("logo_little_crushed.png");
-        } else if (time > 7000 && time < 10000) {
-            logo = new Texture("logo_crushed.png");
-        } else if (time > 10000 && time < 13000) {
-            logo = new Texture("logo_without_castle.png");
-        } else if (time > 13000) {
-            logo = new Texture("logo_with_u.png");
+        if (time > 3500 && little_crushed) {
+            logo = new Texture("logo_little_crushed.png");;;
+            little_crushed = false;
+        } else if (time > 7000 && crushed) {
+            logo = new Texture("logo_crushed.png");;
+            crushed = false;
+        } else if (time > 10000  && without_castle) {
+            logo = new Texture("logo_without_castle.png");;
+            without_castle = false;
+        } else if (time > 13000 && with_u) {
+            logo = new Texture("logo_with_u.png");;
+            with_u = false;
         }
     }
 
