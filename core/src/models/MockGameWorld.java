@@ -3,7 +3,7 @@ package models;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -13,16 +13,14 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.codeandweb.physicseditor.PhysicsShapeCache;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import models.entities.Box;
 import models.entities.Cannon;
-import models.entities.Castle;
+import models.entities.Drawable;
 import models.entities.Projectile;
-import views.game_world.GameWorldDrawer;
 
 //import com.codeandweb.physicseditor.PhysicsShapeCache;
 
@@ -36,135 +34,125 @@ public class MockGameWorld {
     static final int VELOCITY_ITERATIONS = 6;
     static final int POSITION_ITERATIONS = 2;
     static final float SCALE = 0.05f;
-    World physicsWorld;
-    PhysicsShapeCache physicsBodies;
-    ArrayList<Body> worldBodies;
-    private Projectile prosjektil;
+    private World physicsWorld;
 
+    private TextureAtlas textureAtlas;
+
+    private final int PTM_RATIO = 100;
 
     Sprite mockSprite = new Sprite(new Texture("badlogic.jpg"));
 
-
-    private List mockBoxes;
+    private List<Drawable> mockBoxes;
     private List cannons;
-    private Body ground;
+    private Body body;
+    private Projectile prosjektil;
+    private List<Drawable> worldBodies;
 
-    public World getPhysicsWorld() {
-        return physicsWorld;
-    }
+
 
     public MockGameWorld() {
-        mockBoxes = new ArrayList<Box>();
+        mockBoxes = new ArrayList<Drawable>();
         cannons = new ArrayList<Cannon>();
-       // createMockCastle();
+        worldBodies = new ArrayList<Drawable>() {
+        };
 
-        worldBodies = new ArrayList<Body>();
+        textureAtlas = new TextureAtlas("sprites.txt");
         Box2D.init();
+
         physicsWorld = new World(new Vector2(0, -10), true);
-        //physicsBodies = new PhysicsShapeCache("physics.xml");
         this.generateBodies();
-
-
-
-    }
-
-    public void createMockCastle() {
-        Castle mockCastle;
-       // mockBoxes.add(new Box(10,0, 30,50, mockSprite));
-       // mockBoxes.add(new Box(60,0, 30,50, mockSprite));
-       // mockBoxes.add(new Box(40,0, 20,20, mockSprite));
-       // Cannon cannon = new Cannon(150, 0, 10, 10, mockSprite );
-       // cannons.add(cannon);
-      //  mockCastle = new Castle(10,11, mockBoxes, cannon);
-
-
-
     }
 
     private void generateBodies() {
-        this.createGround();
-        worldBodies.add(createBox(10, 21, 30, 50));
-        worldBodies.add(createBox(60,21, 30,50));
-        worldBodies.add(createBox(40,21, 20,20));
+        createGround();
+        createBox(10, 100, 30, 20);
+        //createBox(60,10, 30,50);
+      //  createBox(40,10, 20,20);
+       // createBox(Gdx.graphics.getWidth() - 300, 10, 60,40);
 
-        createProjectile(200, 200);
+        createProjectile(400, 20, 15);
     }
 
     private void createGround() {
-        if (ground != null) physicsWorld.destroyBody(ground);
+        if (body != null) physicsWorld.destroyBody(body);
+
+        float groundHeight = 10;
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
 
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.friction = 1;
+        fixtureDef.friction = 0.01f;
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(Gdx.graphics.getWidth(),10);
+        shape.setAsBox(Gdx.graphics.getWidth()/PTM_RATIO,groundHeight/PTM_RATIO);
         fixtureDef.shape = shape;
 
-        ground = physicsWorld.createBody(bodyDef);
-        ground.createFixture(fixtureDef);
-        ground.setTransform(0,0,0);
+        body = physicsWorld.createBody(bodyDef);
+        body.createFixture(fixtureDef);
+        body.setTransform(0,0,0);
 
         shape.dispose();
 
-        Sprite groundSprite = new Sprite(new Texture("bottom_ground.png"));
-        mockBoxes.add(new Box(ground, groundSprite, Gdx.graphics.getWidth(), 20));
+        //Sprite groundSprite = new Sprite(new Texture("bottom_ground.png"));
+        Sprite groundSprite = textureAtlas.createSprite("bottom_ground");
+        //groundSprite.setScale(Gdx.graphics.getWidth(), 1);
+        groundSprite.setSize(Gdx.graphics.getWidth(), groundHeight);
+        mockBoxes.add(new Box(body, groundSprite, Gdx.graphics.getWidth(), 20));
     }
 
-   // private Body createBody(String name, float x, float y, float rotation) {
-   //     Body body = physicsBodies.createBody(name, physicsWorld, SCALE, SCALE);
-    //    body.setTransform(x, y, rotation);
 
-      //  return body;
-    //}
 
-    private Body createBox(float xPos, float yPos, int width, int height){
-        Body boxBody;
+    private void createBox(float xPos, float yPos, int width, int height){
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+
+        bodyDef.position.set(xPos/PTM_RATIO, yPos/PTM_RATIO);
+
+        Body body = physicsWorld.createBody(bodyDef);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(width/PTM_RATIO,height/PTM_RATIO);
 
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.friction = 1;
-
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width,height);
         fixtureDef.shape = shape;
+        fixtureDef.friction = 0.1f;
+      //  fixtureDef.density = 0.5f;
+        fixtureDef.restitution = 0.9f;
 
-        boxBody = physicsWorld.createBody(bodyDef);
-        boxBody.createFixture(fixtureDef);
-        boxBody.setTransform(xPos,yPos,0);
+        Fixture fixture = body.createFixture(fixtureDef);
+
+        body.createFixture(fixtureDef);
+        body.setTransform(xPos/PTM_RATIO,yPos/PTM_RATIO,0);
 
         shape.dispose();
+        Sprite sprite = textureAtlas.createSprite("brick1");
+        sprite.setSize(width, height);
+        //sprite.setPosition(boxBody.getPosition().x/PTM_RATIO, boxBody.getPosition().y);
+        mockBoxes.add(new Box(body, sprite, width, height));
 
-        mockBoxes.add(new Box(boxBody, mockSprite, width, height));
-
-        return boxBody;
     }
 
-    private void createProjectile(float xPos, float yPos){
-        int radius = 15;
-        Body boxBody;
+    private void createProjectile(float xPos, float yPos, int radius){
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
 
         // Set our body's starting position in the world
-        bodyDef.position.set(xPos, yPos);
+        bodyDef.position.set(xPos/PTM_RATIO, yPos/PTM_RATIO);
 
 // Create our body in the world using our body definition
         Body body = physicsWorld.createBody(bodyDef);
 
 // Create a circle shape and set its radius to 6
         CircleShape circle = new CircleShape();
-        circle.setRadius(radius);
+        circle.setRadius(radius/PTM_RATIO);
 
 // Create a fixture definition to apply our shape to
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circle;
         fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 0.6f; // Make it bounce a little bit
+        fixtureDef.friction = 0.1f;
+        fixtureDef.restitution = 0.9f; // Make it bounce a little bit
 
 // Create our fixture and attach it to the body
         Fixture fixture = body.createFixture(fixtureDef);
@@ -173,21 +161,30 @@ public class MockGameWorld {
 // BodyDef and FixtureDef don't need disposing, but shapes do.
         circle.dispose();
 
-        Sprite sprite = new Sprite(new Texture("black_ball.png"));
+        Sprite sprite = textureAtlas.createSprite("ball_cannon");
+        //sprite.setPosition(body.getPosition().x*PTM_RATIO, body.getPosition().y*PTM_RATIO);
+        sprite.setSize(radius, radius);
+        //worldBodies.add(body);
 
-        worldBodies.add(body);
 
-        prosjektil = new Projectile(body, sprite, radius*2, radius*2);
+        prosjektil = new Projectile(body, sprite, radius*2, radius*2, new Vector2(100,100));
+
+        body.setLinearVelocity(-4.6f, 1.0f);
+    }
+
+    public World getPhysicsWorld() {
+        return physicsWorld;
     }
 
     public Projectile getProsjektil() {
         return prosjektil;
     }
 
-    public List<Box> getBoxes(){return mockBoxes;}
+    public List<Drawable> getBoxes(){return mockBoxes;}
 
     public List<Cannon> getCannons(){return cannons;}
 
-
-
+    public int getPTM_RATIO() {
+        return PTM_RATIO;
+    }
 }

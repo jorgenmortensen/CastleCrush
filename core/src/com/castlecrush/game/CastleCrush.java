@@ -13,10 +13,13 @@ import views.game_world.GameWorldDrawer;
 public class CastleCrush extends ApplicationAdapter {
 	Drawer tegner;
 	MockGameWorld world;
-
+	public static int WIDTH;
+	public static int HEIGHT;
 
 	@Override
 	public void create () {
+		WIDTH = Gdx.graphics.getWidth();
+		HEIGHT = Gdx.graphics.getHeight();
 
 		SpriteBatch batch = new SpriteBatch();
 		world = new MockGameWorld();

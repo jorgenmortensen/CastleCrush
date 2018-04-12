@@ -2,6 +2,7 @@ package models.entities;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 
@@ -17,13 +18,14 @@ public class Projectile implements Drawable {
     private Body body;
     private Sprite sprite;
 
-    private Vector3 velocity;
+    private Vector2 velocity;
 
-    public Projectile(Body body, Sprite sprite, int width, int height) {
+    public Projectile(Body body, Sprite sprite, int width, int height, Vector2 velocity) {
         this.width = width;
         this.height = height;
         this.body = body;
         this.sprite = sprite;
+        this.velocity = velocity;
     }
 
     public Body getBody() {
