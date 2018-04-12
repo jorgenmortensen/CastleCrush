@@ -55,10 +55,6 @@ public class PlayMenu extends State {
         makeMovingBackground();
         makeButtons();
 
-        //Welcome back message as toast on screen
-        if (crush.playServices.isSignedIn()){
-            crush.playServices.toast();
-        }
     }
 
     private void makeMovingBackground(){
@@ -108,7 +104,7 @@ public class PlayMenu extends State {
             dispose();
         }
         else if (Gdx.input.justTouched() && isOnLocalMultiBtn()) {
-            gsm.set(new StartMenuScreen(gsm));
+            gsm.set(new StartMenuScreen(gsm, crush));
             System.out.println("Local pressed");
             dispose();
         } else if (Gdx.input.justTouched() && isOnSoundBtn()) {
