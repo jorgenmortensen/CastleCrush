@@ -122,7 +122,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 		Log.d(TAG, "Select players UI succeeded.");
 
 		// get the invitee list
-		final ArrayList<String> invitees = null; // = data.getStringArrayListExtra(Games.EXTRA_PLAYER_IDS);
+		final ArrayList<String> invitees =null;// data.getStringArrayListExtra(Games.EXTRA_PLAYER_IDS);
 		Log.d(TAG, "Invitee count: " + invitees.size());
 
 		// get the automatch criteria //KAN SLETTES??????
