@@ -84,13 +84,13 @@ public class TutorialState extends State {
 
             cam.update();
         }
-        if ((cam.position.x > CastleCrush.WIDTH * 3 / 4) && isOnBackBtn()) {
+        if ((cam.position.x > CastleCrush.WIDTH * 3 / 4) && isOnButton(back)) {
             gsm.set(new StartMenuScreen(gsm));
             dispose();
         }
     }
 
-    private boolean isOnBackBtn() {
+ /*   private boolean isOnBackBtn() {
         if (((CastleCrush.HEIGHT - Gdx.input.getY()) > back.getYpos()) &&
                 ((CastleCrush.HEIGHT - Gdx.input.getY()) < (back.getYpos() + back.getBtnHeight())) &&
                 (((CastleCrush.WIDTH * 3 / 4) + (Gdx.input.getX() * CastleCrush.WIDTH / 4) / CastleCrush.WIDTH) > back.getXpos())&&
@@ -98,7 +98,7 @@ public class TutorialState extends State {
             return true;
         }
         return false;
-    }
+    }*/
 
     @Override
     public void update(float dt) {

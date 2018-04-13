@@ -20,6 +20,7 @@ public class StartMenuScreen extends states.State {
     Button btnPlay;
     Button btnHelp;
     Button btnSound;
+
     public static Texture logo;
 
     float xMax;
@@ -29,16 +30,12 @@ public class StartMenuScreen extends states.State {
     private Texture background2;
     final int BACKGROUND_MOVE_SPEED = -30;
 
-
     public static long startTime;
     public static boolean little_crushed = true;
     public static boolean crushed = true;
     public static boolean without_castle = true;
     public static boolean with_u = true;
     public static boolean changed_logo;
-
-
-
 
     public StartMenuScreen(GameStateManager gsm) {
         super(gsm);
@@ -86,15 +83,15 @@ public class StartMenuScreen extends states.State {
 
     @Override
     protected void handleInput() {
-        if (Gdx.input.justTouched() && isOnPlayBtn()) {
+        if (Gdx.input.justTouched() && isOnButton(btnPlay)) {
             gsm.set(new PlayMenu(gsm));
             dispose();
         }
-        else if (Gdx.input.justTouched() && isOnHelpBtn()) {
+        else if (Gdx.input.justTouched() && isOnButton(btnHelp)) {
             gsm.set(new TutorialState(gsm));
             dispose();
         }
-        else if (Gdx.input.justTouched() && isOnSoundBtn()) {
+        else if (Gdx.input.justTouched() && isOnButton(btnSound)) {
             //Turn off sound if already on and vice versa
             if (CastleCrush.soundOn) {
                 CastleCrush.music.setVolume(0);
@@ -108,12 +105,11 @@ public class StartMenuScreen extends states.State {
         }
     }
 
-    private boolean isOnPlayBtn() {
+    /*private boolean isOnPlayBtn() {
         if (((CastleCrush.HEIGHT - Gdx.input.getY()) > btnPlay.getYpos()) &&
                 ((CastleCrush.HEIGHT - Gdx.input.getY()) < (btnPlay.getYpos() + btnPlay.getBtnHeight())) &&
                 (Gdx.input.getX() > btnPlay.getXpos()) && (Gdx.input.getX() < (btnPlay.getXpos() + btnPlay.getBtnWidth()))) {
             return true;
-
         }
         return false;
     }
@@ -134,7 +130,7 @@ public class StartMenuScreen extends states.State {
             return true;
         }
         return false;
-    }
+    }*/
 
     @Override
     public void update(float dt) {
@@ -161,8 +157,6 @@ public class StartMenuScreen extends states.State {
             with_u = false;
         }
     }
-
-
 
     @Override
     public void render(SpriteBatch sb) {
@@ -194,5 +188,7 @@ public class StartMenuScreen extends states.State {
 
     @Override
     public void dispose() {
+        background1.dispose();
+        background2.dispose();
     }
 }

@@ -66,6 +66,7 @@ public class PlayMenu extends State {
                 CastleCrush.HEIGHT / 10,
                 new Sprite(new Texture("single.png")), CastleCrush.HEIGHT);
 
+        //Local multiplayer button
         btnLocal = new GravityButton(CastleCrush.WIDTH / 3,
                 3*CastleCrush.HEIGHT / 10,
                 CastleCrush.WIDTH / 3,
@@ -85,21 +86,21 @@ public class PlayMenu extends State {
 
     @Override
     protected void handleInput() {
-        if (Gdx.input.justTouched() && isOnSingleBtn()) {
+        if (Gdx.input.justTouched() && isOnButton(btnSingle)) {
             gsm.set(new SingleplayerMenu(gsm));
             System.out.println("Single pressed");
             dispose();
         }
-        else if (Gdx.input.justTouched() && isOnMultiBtn()) {
+        else if (Gdx.input.justTouched() && isOnButton(btnMulti)) {
             gsm.set(new MultiplayerMenu(gsm));
             System.out.println("Multi pressed");
             dispose();
         }
-        else if (Gdx.input.justTouched() && isOnLocalMultiBtn()) {
+        else if (Gdx.input.justTouched() && isOnButton(btnLocal)) {
             gsm.set(new StartMenuScreen(gsm));
             System.out.println("Local pressed");
             dispose();
-        } else if (Gdx.input.justTouched() && isOnSoundBtn()) {
+        } else if (Gdx.input.justTouched() && isOnButton(btnSound)) {
             //Turn off sound if already on and vice versa
             if (CastleCrush.soundOn) {
                 CastleCrush.music.setVolume(0);
@@ -113,7 +114,7 @@ public class PlayMenu extends State {
         }
     }
 
-    private boolean isOnSoundBtn(){
+    /*private boolean isOnSoundBtn(){
         if (((Gdx.input.getX() > btnSound.getXpos() && (Gdx.input.getX() < (btnSound.getXpos() + btnSound.getBtnWidth())))
                 && ((CastleCrush.HEIGHT - Gdx.input.getY() - 1) > btnSound.getYpos()) && ((CastleCrush.HEIGHT - Gdx.input.getY() - 1) < (btnSound.getYpos() + btnSound.getBtnHeight())))){
             return true;
@@ -143,7 +144,7 @@ public class PlayMenu extends State {
             return true;
         }
         return false;
-    }
+    }*/
 
     @Override
     public void update(float dt) {

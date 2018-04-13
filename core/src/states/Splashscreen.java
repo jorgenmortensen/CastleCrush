@@ -32,7 +32,6 @@ public class Splashscreen extends State {
 
     @Override
     protected void handleInput() {
-
     }
 
     @Override
