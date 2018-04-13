@@ -60,6 +60,7 @@ public class StartMenuScreen extends states.State {
 
         if (crush.playServices.isSignedIn()) {
             crush.playServices.toast();
+
         }else{
             crush.playServices.signIn();
         }
@@ -107,7 +108,7 @@ public class StartMenuScreen extends states.State {
             dispose();
         }
         else if (Gdx.input.justTouched() && isOnHelpBtn()) {
-            gsm.set(new TutorialState(gsm));
+            gsm.set(new TutorialState(gsm, crush));
             dispose();
         }
         else if (Gdx.input.justTouched() && isOnLogOffInBtn()) {

@@ -99,7 +99,8 @@ public class PlayMenu extends State {
             dispose();
         }
         else if (Gdx.input.justTouched() && isOnMultiBtn()) {
-            gsm.set(new MultiplayerMenu(gsm));
+            crush.playServices.startSelectOpponents();
+
             System.out.println("Multi pressed");
             dispose();
         }

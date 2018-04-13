@@ -16,7 +16,7 @@ public interface PlayServices {
     String getDisplayName();
     void sendUnreliableMessageToOthers(byte[] messageData);
 
-    void startSelectOpponents(boolean autoMatch);
+    void startSelectOpponents();
 
     void setGameListener(GameListener gameListener);
     void setNetworkListener(NetworkListener networkListener);
