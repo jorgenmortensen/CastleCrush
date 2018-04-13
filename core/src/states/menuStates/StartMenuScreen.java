@@ -25,8 +25,7 @@ public class StartMenuScreen extends states.State {
     Button btnLogOutIn;
 
     float xMax, xCoordBg1, xCoordBg2;
-    private Texture background1;
-    private Texture background2;
+    private Texture background1,background2,t;
     final int BACKGROUND_MOVE_SPEED = -30;
 
     public static long startTime;
@@ -92,12 +91,16 @@ public class StartMenuScreen extends states.State {
         btnSound = new Button(0, 0, CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
                 CastleCrush.soundOn ? new Sprite(new Texture("sound_on.png")) : new Sprite(new Texture("sound_off.png")));
 
-        //LogOut
+        if (crush.playServices.isSignedIn()) {
+            t = new Texture("googlesignout.png");
+        }else{
+            t = new Texture("googlesignin.png");
+        }
         btnLogOutIn = new Button(CastleCrush.WIDTH - CastleCrush.WIDTH / 7,
                 CastleCrush.HEIGHT - CastleCrush.HEIGHT * 2 / 9,
                 CastleCrush.WIDTH / 8,
                 CastleCrush.HEIGHT * 2 / 10,
-                new Sprite(new Texture("googlesignout.png")));
+                new Sprite(t));
 
     }
 

@@ -28,10 +28,12 @@ public class TutorialState extends State {
 
     OrthographicCamera cam;
     OrthographicCamera fullScreenCam;
+    private CastleCrush crush;
 
-    public TutorialState(GameStateManager gsm) {
+    public TutorialState(GameStateManager gsm, CastleCrush crush) {
         super(gsm);
         cam = new OrthographicCamera();
+        this.crush = crush;
         fullScreenCam = new OrthographicCamera();
         cam.setToOrtho(false, CastleCrush.WIDTH / 4, CastleCrush.HEIGHT);
         fullScreenCam.setToOrtho(false, CastleCrush.WIDTH, CastleCrush.HEIGHT);
@@ -85,7 +87,7 @@ public class TutorialState extends State {
             cam.update();
         }
         if ((cam.position.x > CastleCrush.WIDTH * 3 / 4) && isOnBackBtn()) {
-            //gsm.set(new StartMenuScreen(gsm));
+            gsm.set(new StartMenuScreen(gsm, crush));
             dispose();
         }
 
@@ -106,7 +108,7 @@ public class TutorialState extends State {
         handleInput();
         if (Gdx.input.isKeyPressed(Input.Keys.BACK)){
             System.out.println("PRESSED");
-            gsm.set(new StartMenuScreen(gsm));
+            gsm.set(new StartMenuScreen(gsm, crush));
         }
         sf.update(dt);
 
