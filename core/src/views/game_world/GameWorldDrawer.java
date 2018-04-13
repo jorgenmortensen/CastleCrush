@@ -91,6 +91,7 @@ public class GameWorldDrawer extends Drawer {
         return (int) (camera.viewportWidth *camera.zoom);
     }
 
+    @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
 
