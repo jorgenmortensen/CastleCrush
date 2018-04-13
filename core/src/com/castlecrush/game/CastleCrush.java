@@ -20,9 +20,9 @@ public class CastleCrush extends ApplicationAdapter {
 
 	public static final String TITLE = "Castle Crush";
 
-
 	private SpriteBatch batch;
 	private GameStateManager gsm;
+
 	@Override
 	public void create () {
 		WIDTH = Gdx.graphics.getWidth();
@@ -49,6 +49,5 @@ public class CastleCrush extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		batch.dispose();
-
 	}
 }

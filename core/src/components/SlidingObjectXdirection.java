@@ -12,7 +12,6 @@ public class SlidingObjectXdirection extends Button {
 
     private float startXpos;
 
-
     private Vector3 velocity;
 
     public SlidingObjectXdirection(float finalXpos, float ypos, int btnWidth, int btnHeight, Sprite btn, float startXpos, int GRAVITY_X_DIRECTION) {
