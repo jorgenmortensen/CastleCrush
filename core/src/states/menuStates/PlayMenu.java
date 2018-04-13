@@ -42,15 +42,11 @@ public class PlayMenu extends State {
     private Button btnSound;
     private Texture logo;
 
-    CastleCrush crush;
-
-
     // remember to change every .PNG to .png.
 
-    public PlayMenu(GameStateManager gsm, CastleCrush crush) {
+    public PlayMenu(GameStateManager gsm) {
         super(gsm);
         logo = new Texture("logo.png");
-        this.crush=crush;
         //background1 = new Texture("background.png");
         makeMovingBackground();
         makeButtons();
@@ -99,13 +95,13 @@ public class PlayMenu extends State {
             dispose();
         }
         else if (Gdx.input.justTouched() && isOnMultiBtn()) {
-            crush.playServices.startSelectOpponents();
+            CastleCrush.game.playServices.startSelectOpponents();
 
             System.out.println("Multi pressed");
             dispose();
         }
         else if (Gdx.input.justTouched() && isOnLocalMultiBtn()) {
-            gsm.set(new StartMenuScreen(gsm, crush));
+            gsm.set(new StartMenuScreen(gsm));
             System.out.println("Local pressed");
             dispose();
         } else if (Gdx.input.justTouched() && isOnSoundBtn()) {

@@ -46,15 +46,10 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 	private final static int RC_WAITING_ROOM = 10002;
 	private static final int MIN_PLAYERS = 1;
 	private static final int MAX_PLAYERS = 2;
-	private final Activity activity;
 	private String incomingInvitationId;
 	private GameListener gameListener;
 	private NetworkListener networkListener;
 	private String currentRoomId = null;
-
-	public AndroidLauncher(Activity activity) {
-		this.activity = activity;
-	}
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -240,7 +235,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 
 
 	public void toast(){
-		Toast.makeText(activity,"Welcome back " + gameHelper.getPlayerDisplayName(), Toast.LENGTH_LONG).show();
+		Toast.makeText(this,"Welcome back " + gameHelper.getPlayerDisplayName(), Toast.LENGTH_LONG).show();
 	}
 
 	@Override
@@ -263,11 +258,15 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 
 	}
 
-	//LITT USIKKER PÅ OM VI TRENGER DENNE
 	@Override
+	public void startSelectOpponents() {
+
+	}
+
+	//LITT USIKKER PÅ OM VI TRENGER DENNE
 	public void startSelectOpponents(boolean autoMatch) {
 		Intent intent = Games.RealTimeMultiplayer.getSelectOpponentsIntent(gameHelper.getApiClient(), MIN_PLAYERS, MAX_PLAYERS, autoMatch);
-		activity.startActivityForResult(intent, RC_SELECT_PLAYERS);
+		this.startActivityForResult(intent, RC_SELECT_PLAYERS);
 
 	}
 
@@ -410,7 +409,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 	private void showWaitingRoom(Room room) {
 
 		Intent i = Games.RealTimeMultiplayer.getWaitingRoomIntent(gameHelper.getApiClient(),room,MAX_PLAYERS);
-		activity.startActivityForResult(i,RC_WAITING_ROOM);
+		this.startActivityForResult(i,RC_WAITING_ROOM);
 	}
 
 
@@ -429,7 +428,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 	public void onInvitationReceived(Invitation invitation) {
 		Log.d(TAG, "onInvitationReceived: ");
 		incomingInvitationId = invitation.getInvitationId();
-		Toast.makeText(activity, invitation.getInviter().getDisplayName() + " has invited you. ", Toast.LENGTH_LONG).show();
+		Toast.makeText(this, invitation.getInviter().getDisplayName() + " has invited you. ", Toast.LENGTH_LONG).show();
 	}
 
 	@Override
@@ -455,15 +454,19 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 	}
 
 	void keepScreenOn() {
-		activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
 	// Clears the flag that keeps the screen on.
 	void stopKeepingScreenOn() {
-		activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
 
+	@Override
+	public void onPointerCaptureChanged(boolean hasCapture) {
+
+	}
 }
 
 

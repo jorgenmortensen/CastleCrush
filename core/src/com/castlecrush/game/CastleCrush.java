@@ -16,7 +16,6 @@ import states.playStates.OnlineMultiplayerState;
 
 public class CastleCrush extends ApplicationAdapter implements PlayServices.GameListener{
 
-
 	private static final String TAG = CastleCrush.class.getName();
 	public static Music music;
 	public static boolean soundOn;
@@ -27,6 +26,8 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 
 	private GameStateManager gsm;
 	private SpriteBatch batch;
+
+	public static CastleCrush game;
 
 	public static PlayServices playServices;
 
@@ -46,7 +47,7 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 		music.setVolume(0.5f);
 		music.play();
 		Gdx.gl.glClearColor(0, 0, 0, 1);
-		gsm.push(new Splashscreen(gsm,this));
+		gsm.push(new Splashscreen(gsm));
 	}
 
 	@Override

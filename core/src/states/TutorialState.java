@@ -10,6 +10,7 @@ import com.castlecrush.game.CastleCrush;
 
 import components.Button;
 import components.SlidingObjectXdirection;
+import entities.Castle;
 import states.menuStates.StartMenuScreen;
 
 /**

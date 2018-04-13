@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.castlecrush.game.CastleCrush;
+import com.sun.org.apache.xpath.internal.SourceTree;
 
 import components.Button;
 import entities.Castle;
@@ -36,13 +37,8 @@ public class StartMenuScreen extends states.State {
     public static boolean with_u = true;
     public static boolean changed_logo;
 
-
-    CastleCrush crush;
-
-
-    public StartMenuScreen(GameStateManager gsm, CastleCrush crush) {
+    public StartMenuScreen(GameStateManager gsm) {
         super(gsm);
-        this.crush = crush;
         // the normal logo will appear when the user gets back to this menu, which is the intention
         logo = new Texture("logo.png");
         if (changed_logo) {
@@ -58,11 +54,11 @@ public class StartMenuScreen extends states.State {
 
 
 
-        if (crush.playServices.isSignedIn()) {
-            crush.playServices.toast();
+        if (CastleCrush.game.playServices.isSignedIn()) {
+            CastleCrush.game.playServices.toast();
 
         }else{
-            crush.playServices.signIn();
+            CastleCrush.game.playServices.signIn();
         }
     }
 
@@ -104,20 +100,20 @@ public class StartMenuScreen extends states.State {
     @Override
     protected void handleInput() {
         if (Gdx.input.justTouched() && isOnPlayBtn()) {
-            gsm.set(new PlayMenu(gsm, crush));
+            gsm.set(new PlayMenu(gsm));
             dispose();
         }
         else if (Gdx.input.justTouched() && isOnHelpBtn()) {
-            gsm.set(new TutorialState(gsm, crush));
+            gsm.set(new TutorialState(gsm));
             dispose();
         }
         else if (Gdx.input.justTouched() && isOnLogOffInBtn()) {
 
-            if (crush.playServices.isSignedIn()) {
-                crush.playServices.signOut();
+            if (CastleCrush.game.playServices.isSignedIn()) {
+                CastleCrush.game.playServices.signOut();
                 btnLogOutIn.setBtn(new Sprite(new Texture("googlesignin.png")));
             } else {
-                crush.playServices.signIn();
+                CastleCrush.game.playServices.signIn();
                 btnLogOutIn.setBtn(new Sprite(new Texture("googlesignout.png")));
             }
         }
