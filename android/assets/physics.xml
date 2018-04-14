@@ -9,12 +9,12 @@
 		<allow_sleep/>
 		<fixture>
 			<density>2</density>
-			<friction>0.2</friction>
-			<restitution>0.7</restitution>
+			<friction>0</friction>
+			<restitution>0</restitution>
 			<filter_category_bits>1</filter_category_bits>
 			<filter_mask_bits>65535</filter_mask_bits>
 			<filter_group_index>0</filter_group_index>
-			<circle x="250.000" y="251.000" r="243.528"/>
+			<circle x="250.000" y="251.000" r="245.247"/>
 		</fixture>
 	</body>
 
@@ -40,7 +40,7 @@
 		<allow_sleep/>
 		<fixture>
 			<density>2</density>
-			<friction>0.3</friction>
+			<friction>0.4</friction>
 			<restitution>0.01</restitution>
 			<filter_category_bits>1</filter_category_bits>
 			<filter_mask_bits>65535</filter_mask_bits>
@@ -67,7 +67,7 @@
 
 	<metadata>
 		<format>1</format>
-		<ptm_ratio>10</ptm_ratio>
+		<ptm_ratio>32</ptm_ratio>
 	</metadata>
 
 </bodydef>
