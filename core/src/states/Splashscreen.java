@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.castlecrush.game.CastleCrush;
 
 import states.menuStates.StartMenuScreen;
 
@@ -39,6 +40,7 @@ public class Splashscreen extends State {
         handleInput();
         if(am.update() && TimeUtils.timeSinceMillis(startTime) > 1000){
             gsm.set(new StartMenuScreen(gsm));
+            dispose();
         }
 
     }
@@ -46,9 +48,8 @@ public class Splashscreen extends State {
     @Override
     public void render(SpriteBatch sb) {
         sb.begin();
-        sb.draw(t,0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        sb.draw(t,0,0, CastleCrush.WIDTH, CastleCrush.HEIGHT);
         sb.end();
-
     }
 
     @Override

@@ -44,7 +44,6 @@ public class PlayMenu extends State {
 
     public PlayMenu(GameStateManager gsm) {
         super(gsm);
-        //background1 = new Texture("background.png");
         makeMovingBackground();
         makeButtons();
     }
@@ -114,38 +113,6 @@ public class PlayMenu extends State {
         }
     }
 
-    /*private boolean isOnSoundBtn(){
-        if (((Gdx.input.getX() > btnSound.getXpos() && (Gdx.input.getX() < (btnSound.getXpos() + btnSound.getBtnWidth())))
-                && ((CastleCrush.HEIGHT - Gdx.input.getY() - 1) > btnSound.getYpos()) && ((CastleCrush.HEIGHT - Gdx.input.getY() - 1) < (btnSound.getYpos() + btnSound.getBtnHeight())))){
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isOnSingleBtn() {
-        if (((Gdx.input.getX() > btnSingle.getXpos() && (Gdx.input.getX() < (btnSingle.getXpos() + btnSingle.getBtnWidth())))
-                && ((CastleCrush.HEIGHT - Gdx.input.getY() - 1) > btnSingle.getYpos()) && ((CastleCrush.HEIGHT - Gdx.input.getY() - 1) < (btnSingle.getYpos() + btnSingle.getBtnHeight())))){
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isOnMultiBtn() {
-        if (((Gdx.input.getX() > btnMulti.getXpos()) && (Gdx.input.getX() < (btnMulti.getXpos() + btnMulti.getBtnWidth())))
-                && (((CastleCrush.HEIGHT - Gdx.input.getY() - 1) > btnMulti.getYpos()) && ((CastleCrush.HEIGHT - Gdx.input.getY() - 1) < (btnMulti.getYpos() + btnMulti.getBtnHeight())))){
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isOnLocalMultiBtn() {
-        if (((Gdx.input.getX() > btnLocal.getXpos()) && (Gdx.input.getX() < (btnLocal.getXpos() + btnLocal.getBtnWidth())))
-                && (((CastleCrush.HEIGHT - Gdx.input.getY() - 1) > btnLocal.getYpos()) && ((CastleCrush.HEIGHT - Gdx.input.getY() - 1) < (btnLocal.getYpos() + btnLocal.getBtnHeight())))){
-            return true;
-        }
-        return false;
-    }*/
-
     @Override
     public void update(float dt) {
         handleInput();
@@ -160,8 +127,20 @@ public class PlayMenu extends State {
             xCoordBg1 = xMax;
             xCoordBg2 = 0;
         }
+        logoCrush();
+    }
 
+    public void backgroundMovement() {
+        xCoordBg1 += BACKGROUND_MOVE_SPEED * Gdx.graphics.getDeltaTime();
+        xCoordBg2 = xCoordBg1 - xMax;  // We move the background, not the camera
+        if (xCoordBg1 <= 0) {
+            xCoordBg1 = xMax;
+            xCoordBg2 = 0;
+        }
+    }
 
+    //Make the castle in the logo crush and tranforming it to a U
+    public void logoCrush() {
         long time = TimeUtils.timeSinceMillis(startTime);
         if (time > 3500 && little_crushed) {
             logo = new Texture("logo_little_crushed.png");;;
@@ -181,8 +160,6 @@ public class PlayMenu extends State {
             changed_logo = true;
         }
     }
-
-
 
     @Override
     public void render(SpriteBatch sb) {

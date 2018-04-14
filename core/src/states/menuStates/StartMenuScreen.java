@@ -105,33 +105,6 @@ public class StartMenuScreen extends states.State {
         }
     }
 
-    /*private boolean isOnPlayBtn() {
-        if (((CastleCrush.HEIGHT - Gdx.input.getY()) > btnPlay.getYpos()) &&
-                ((CastleCrush.HEIGHT - Gdx.input.getY()) < (btnPlay.getYpos() + btnPlay.getBtnHeight())) &&
-                (Gdx.input.getX() > btnPlay.getXpos()) && (Gdx.input.getX() < (btnPlay.getXpos() + btnPlay.getBtnWidth()))) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isOnHelpBtn() {
-        if (((CastleCrush.HEIGHT - Gdx.input.getY()) > btnHelp.getYpos()) &&
-                ((CastleCrush.HEIGHT - Gdx.input.getY()) < (btnHelp.getYpos() + btnHelp.getBtnHeight())) &&
-                (Gdx.input.getX() > btnHelp.getXpos()) && (Gdx.input.getX() < (btnHelp.getXpos() + btnHelp.getBtnWidth()))) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isOnSoundBtn() {
-        if (((CastleCrush.HEIGHT - Gdx.input.getY()) > btnSound.getYpos()) &&
-                ((CastleCrush.HEIGHT - Gdx.input.getY()) < (btnSound.getYpos() + btnSound.getBtnHeight())) &&
-                (Gdx.input.getX() > btnSound.getXpos()) && (Gdx.input.getX() < (btnSound.getXpos() + btnSound.getBtnWidth()))) {
-            return true;
-        }
-        return false;
-    }*/
-
     @Override
     public void update(float dt) {
         handleInput();

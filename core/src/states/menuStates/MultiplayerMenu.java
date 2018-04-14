@@ -43,6 +43,5 @@ public class MultiplayerMenu extends State {
 
     @Override
     public void dispose() {
-
     }
 }
