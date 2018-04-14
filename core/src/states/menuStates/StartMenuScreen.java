@@ -58,7 +58,8 @@ public class StartMenuScreen extends states.State {
 
 
         if (crush.playServices.isSignedIn()) {
-            crush.playServices.toast();
+            System.out.println();
+            //crush.playServices.toast();
 
         }else{
             crush.playServices.signIn();

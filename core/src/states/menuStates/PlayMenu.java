@@ -94,12 +94,15 @@ public class PlayMenu extends State {
     @Override
     protected void handleInput() {
         if (Gdx.input.justTouched() && isOnSingleBtn()) {
-            gsm.set(new SinglePlayerState(gsm));
+            gsm.set(new OnlineMultiplayerState(gsm));
             System.out.println("Single pressed");
             dispose();
         }
         else if (Gdx.input.justTouched() && isOnMultiBtn()) {
-            crush.playServices.startSelectOpponents();
+            if (!CastleCrush.playServices.isSignedIn()){
+                CastleCrush.playServices.signIn();
+            }
+            CastleCrush.playServices.startSelectOpponents();
 
             System.out.println("Multi pressed");
             dispose();

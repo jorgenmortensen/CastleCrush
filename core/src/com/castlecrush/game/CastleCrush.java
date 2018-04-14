@@ -32,6 +32,7 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 
 	public CastleCrush(PlayServices playServices) {
 		this.playServices = playServices;
+		playServices.setGameListener(this);
 	}
 
 	@Override
@@ -66,7 +67,8 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 	@Override
 	public void onMultiplayerGameStarting() {
         Gdx.app.debug(TAG, "onMultiplayerGameStarting: ");
-        //ServiceLocator.getAppComponent().getAssetService().getAssetManager().finishLoading();
+		System.out.println("onMultiplayerGameStarting");
+		//ServiceLocator.getAppComponent().getAssetService().getAssetManager().finishLoading();
         //setScreen(new MpGamePresenter(this, new MainMenuPresenter(this)));
         gsm.set(new OnlineMultiplayerState(gsm));
 

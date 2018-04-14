@@ -16,7 +16,9 @@ import googleplayservice.PlayerData;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.google.android.gms.games.GameEntity;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.Multiplayer;
 import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
@@ -46,7 +48,6 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 	private final static int RC_WAITING_ROOM = 10002;
 	private static final int MIN_PLAYERS = 1;
 	private static final int MAX_PLAYERS = 2;
-	//private final Activity activity;
 	private String incomingInvitationId;
 	private GameListener gameListener;
 	private NetworkListener networkListener;
@@ -73,7 +74,10 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 
 			@Override
 			public void onSignInSucceeded() {
-				System.out.println("sign in succeeded");
+				Log.d(TAG, "onSignInSucceeded: ");
+				if (gameHelper.hasInvitation()) {
+					acceptInviteToRoom(gameHelper.getInvitationId());
+				}
 			}
 		};
 
@@ -107,8 +111,15 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 		}else if (requestCode == RC_SELECT_PLAYERS) {
 			Log.d(TAG, "onActivityResult: RC_SELECT_PLAYERS");
 			handleSelectPlayersResult(resultCode, data);
+		}else if (requestCode == RC_INVITATION_INBOX){
+			Log.d(TAG, "onActivityResult: RC_INVITATION_INBOX");
+			handleInvitationInboxResult(resultCode, data);
 
 		}
+	}
+
+	private void handleInvitationInboxResult(int resultCode, Intent data) {
+		Log.d(TAG, "handleInvitationInboxResult: ");
 	}
 
 	private void handleSelectPlayersResult(int response, Intent data) {
@@ -121,8 +132,10 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 		Log.d(TAG, "Select players UI succeeded.");
 
 		// get the invitee list
-		final ArrayList<String> invitees =null;// data.getStringArrayListExtra(Games.EXTRA_PLAYER_IDS);
-		Log.d(TAG, "Invitee count: " + invitees.size());
+
+		//final ArrayList<String> invitees = data.getStringArrayListExtra(Games.EXTRA_PLAYER_IDS);
+		ArrayList<String> invite = data.getStringArrayListExtra(GamesClient.EXTRA_PLAYERS);
+		Log.d(TAG, "Invitee count: " + invite.size());
 
 		// get the automatch criteria //KAN SLETTES??????
 		Bundle autoMatchCriteria = null;
@@ -136,7 +149,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 		// create the room
 		Log.d(TAG, "Creating room...");
 		RoomConfig.Builder rtmConfigBuilder = RoomConfig.builder(this);
-		rtmConfigBuilder.addPlayersToInvite(invitees);
+		rtmConfigBuilder.addPlayersToInvite(invite);
 		rtmConfigBuilder.setMessageReceivedListener(this);
 		rtmConfigBuilder.setRoomStatusUpdateListener(this);
 		if (autoMatchCriteria != null) {
@@ -153,6 +166,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 		if (resultCode == Activity.RESULT_OK) {
 			// Start the game!
 			Log.d(TAG, "handleWaitingRoomResult: OK");
+			System.out.println("handleWaitingRoomResult: OK");
 			gameListener.onMultiplayerGameStarting();
 			List<PlayerData> playerList = new ArrayList<>();
 			String currentPlayerId = Games.Players.getCurrentPlayerId(gameHelper.getApiClient());
@@ -172,9 +186,11 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 			// match, or do something else like minimize the waiting room and
 			// continue to connect in the background.
 			Log.d(TAG, "handleWaitingRoomResult: CANCEL");
+			System.out.println("handleWaitingRoomResult: CANCEL");
 		} else if (resultCode == RESULT_LEFT_ROOM) {
 			// player wants to leave the room.
 			Log.d(TAG, "handleWaitingRoomResult: LEFT_ROOM");
+			System.out.println("handleWaitingRoomResult: LEFT_ROOM");
 			Games.RealTimeMultiplayer.leave(gameHelper.getApiClient(), this, room.getRoomId());
 		}
 	}
@@ -436,6 +452,16 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 		Log.d(TAG, "onInvitationRemoved: ");
 	}
 
+	public void acceptInviteToRoom(String invId) {
+		Log.d(TAG, "Accepting invitation: " + invId);
+		RoomConfig.Builder roomConfigBuilder = RoomConfig.builder(this);
+		roomConfigBuilder.setInvitationIdToAccept(invId)
+				.setMessageReceivedListener(this)
+				.setRoomStatusUpdateListener(this);
+		keepScreenOn();
+		Games.RealTimeMultiplayer.join(gameHelper.getApiClient(), roomConfigBuilder.build());
+	}
+
 
 	@Override
 	public void onRealTimeMessageReceived(RealTimeMessage realTimeMessage) {
@@ -461,6 +487,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 	void stopKeepingScreenOn() {
 		this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
+
 
 
 }
