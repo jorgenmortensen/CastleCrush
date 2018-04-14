@@ -17,6 +17,7 @@ import com.codeandweb.physicseditor.PhysicsShapeCache;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import models.entities.Box;
 import models.entities.Cannon;
@@ -33,28 +34,22 @@ public class MockGameWorld {
     static final float STEP_TIME = 1f / 60f;
     static final int VELOCITY_ITERATIONS = 6;
     static final int POSITION_ITERATIONS = 2;
-    static final float SCALE = 0.25f;
+    static final float SCALE = 0.05f;
     private World physicsWorld;
 
     private TextureAtlas textureAtlas;
-    PhysicsShapeCache physicsBodies;
-
-    private final int PTM_RATIO = 10;
-
-    Sprite mockSprite = new Sprite(new Texture("badlogic.jpg"));
+    private PhysicsShapeCache physicsBodies;
 
     private List<Drawable> mockBoxes;
     private List cannons;
     private Body body;
     private Projectile prosjektil;
-    private List<Drawable> worldBodies;
 
 
 
     public MockGameWorld() {
         mockBoxes = new ArrayList<Drawable>();
         cannons = new ArrayList<Cannon>();
-        worldBodies = new ArrayList<Drawable>();
 
         textureAtlas = new TextureAtlas("sprites.txt");
 
@@ -64,21 +59,44 @@ public class MockGameWorld {
         this.generateBodies();
     }
 
-    private void generateBodies() {
-        createGround();
-        createBox(500, 30, 60, 60);
-        createBox(550,30, 30,30);
-        createBox(600,60, 20,20);
-        createBox(600,80, 20,20);
-      //  createBox(Gdx.graphics.getWidth() - 300, 10, 60,40);
 
-        createProjectile(20, 20, 50);
+
+    public void makeCastle(int verticalBoxes, int horizontalBoxes, int startPosX, int castleWidth,
+                           int startPosY, int castleHeight) {
+        int endPosX =  castleWidth+ startPosX;
+        int endPosY =  castleHeight + startPosY;
+
+        Random ran = new Random();
+
+        int startX = startPosX;
+        //Make the vertical left wall
+        for (int i = 0; i < 5; i++) {
+            int number = ran.nextInt(7) + 1;
+            for (int j = 0; j < number; j++) {
+                createBox(startX, (float) (startPosY + j * 0.5 * castleHeight / verticalBoxes));
+            }
+            startX = startX + 1;
+        }
     }
 
-    public void createGround() {
+
+    private void generateBodies() {
+        createGround();
+        makeCastle(5, 2, 40, 5, 3, 20);
+
+        //createBox(500, 30, 60, 60);
+        //createBox(550,30, 30,30);
+        //createBox(600,60, 20,20);
+        //createBox(600,80, 20,20);
+        //  createBox(Gdx.graphics.getWidth() - 300, 10, 60,40);
+
+        createProjectile(2, 2, 50);
+    }
+
+    private void createGround() {
         if (body != null) physicsWorld.destroyBody(body);
 
-        int groundHeight = 20;
+        float groundHeight = 20*SCALE;
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
@@ -87,7 +105,7 @@ public class MockGameWorld {
         fixtureDef.friction = 0.1f;
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(Gdx.graphics.getWidth(),groundHeight/2);
+        shape.setAsBox(Gdx.graphics.getWidth()*SCALE,groundHeight/2);
         fixtureDef.shape = shape;
 
         body = physicsWorld.createBody(bodyDef);
@@ -101,34 +119,37 @@ public class MockGameWorld {
         Sprite groundSprite = textureAtlas.createSprite("bottom_ground");
         //groundSprite.setScale(Gdx.graphics.getWidth(), 1);
         groundSprite.setSize(Gdx.graphics.getWidth(), groundHeight/2);
-        mockBoxes.add(new Box(body, groundSprite, Gdx.graphics.getWidth(), groundHeight));
+        mockBoxes.add(new Box(body, groundSprite));
     }
 
 
 
-    private void createBox(float xPos, float yPos, int width, int height){
+    private void createBox(float xPos, float yPos){
         Sprite sprite = textureAtlas.createSprite("brick1");
-        body = createBody("brick1", xPos, yPos, 0);
-        sprite.setScale(SCALE);
+        //magic number 7, to scale the boxes appropriatly
+        float boxScale = SCALE/7;
+        body = createBody("brick1", xPos, yPos, 0, boxScale );
+        sprite.setScale(boxScale);
         sprite.setOrigin(0, 0);
-        mockBoxes.add(new Box(body, sprite, width*2, height*2));
+        mockBoxes.add(new Box(body, sprite));
 
     }
 
     private void createProjectile(float xPos, float yPos, int radius){
         Sprite sprite = textureAtlas.createSprite("ball_cannon");
-        sprite.setScale(SCALE);
+        //magic number 40, to scale the projectile appropriatly
+        float objectScale = SCALE/40;
+        sprite.setScale(objectScale);
         sprite.setOrigin(0, 0);
-        body = createBody("ball_cannon", xPos, yPos, 0);
-        body.setLinearVelocity(200.0f, 20.0f);
-        body.setAngularVelocity(100.0f/radius);
+        body = createBody("ball_cannon", xPos, yPos, 0, objectScale);
+        body.setLinearVelocity(20.0f, 10.0f);
         prosjektil = new Projectile(body, sprite, radius*2, radius*2, new Vector2(100,100));
 
     }
 
 
-    private Body createBody(String name, float x, float y, float rotation) {
-        Body body = physicsBodies.createBody(name, physicsWorld, SCALE, SCALE);
+    private Body createBody(String name, float x, float y, float rotation, float scale) {
+        Body body = physicsBodies.createBody(name, physicsWorld, scale, scale);
         body.setTransform(x, y, rotation);
 
         return body;
@@ -147,10 +168,6 @@ public class MockGameWorld {
     public List<Drawable> getBoxes(){return mockBoxes;}
 
     public List<Cannon> getCannons(){return cannons;}
-
-    public int getPTM_RATIO() {
-        return PTM_RATIO;
-    }
 
     public static float getSCALE() {
         return SCALE;

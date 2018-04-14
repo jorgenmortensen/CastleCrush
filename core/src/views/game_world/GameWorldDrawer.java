@@ -46,14 +46,13 @@ public class GameWorldDrawer extends Drawer {
         super(batch);
         this.mockWorld = world;
         this.physicsWorld = mockWorld.getPhysicsWorld();
-        PTM_ratio = mockWorld.getPTM_RATIO();
         SCALE = world.getSCALE();
 
 
         camera = new OrthographicCamera();
-        viewport = new ExtendViewport(CastleCrush.WIDTH, CastleCrush.HEIGHT, camera);
+        viewport = new ExtendViewport(CastleCrush.WIDTH*SCALE, CastleCrush.HEIGHT*SCALE, camera);
         viewport.update(CastleCrush.WIDTH, CastleCrush.HEIGHT, true);
-
+        System.out.println(CastleCrush.WIDTH*SCALE +" "+ CastleCrush.HEIGHT*SCALE);
         batch.setProjectionMatrix(camera.combined);
     }
 
@@ -61,7 +60,7 @@ public class GameWorldDrawer extends Drawer {
     public void render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(background, 0,0, CastleCrush.WIDTH, CastleCrush.HEIGHT);
+        batch.draw(background, 0,0, CastleCrush.WIDTH*SCALE, CastleCrush.HEIGHT*SCALE);
 
         for (Drawable obj : mockWorld.getBoxes()) {
             drawObject(obj);
