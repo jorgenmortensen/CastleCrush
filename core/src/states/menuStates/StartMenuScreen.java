@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.castlecrush.game.CastleCrush;
 
 import components.Button;
-import entities.Castle;
 import states.GameStateManager;
 import states.TutorialState;
 
@@ -92,13 +91,15 @@ public class StartMenuScreen extends states.State {
 
         if (CastleCrush.playServices.isSignedIn()) {
             t = new Texture("googlesignout.png");
+        if (crush.playServices.isSignedIn()) {
+            t = new Texture("signout.png");
         }else{
-            t = new Texture("googlesignin.png");
+            t = new Texture("sign_in.png");
         }
-        btnLogOutIn = new Button(CastleCrush.WIDTH - CastleCrush.WIDTH / 7,
-                CastleCrush.HEIGHT - CastleCrush.HEIGHT * 2 / 9,
-                CastleCrush.WIDTH / 8,
-                CastleCrush.HEIGHT * 2 / 10,
+        btnLogOutIn = new Button(CastleCrush.WIDTH / 3,
+                1*CastleCrush.HEIGHT / 10,
+                CastleCrush.WIDTH / 3,
+                CastleCrush.HEIGHT / 10,
                 new Sprite(t));
 
         btnInvitationInbox = new Button(CastleCrush.WIDTH/7 ,
@@ -128,9 +129,14 @@ public class StartMenuScreen extends states.State {
             if (CastleCrush.playServices.isSignedIn()) {
                 CastleCrush.playServices.signOut();
                 btnLogOutIn.setBtn(new Sprite(new Texture("googlesignin.png")));
+            if (crush.playServices.isSignedIn()) {
+                crush.playServices.signOut();
+                btnLogOutIn.setBtn(new Sprite(new Texture("sign_in.png")));
             } else {
                 CastleCrush.playServices.signIn();
                 btnLogOutIn.setBtn(new Sprite(new Texture("googlesignout.png")));
+                crush.playServices.signIn();
+                btnLogOutIn.setBtn(new Sprite(new Texture("signout.png")));
             }
         }
         else if (Gdx.input.justTouched() && isOnSoundBtn()) {
