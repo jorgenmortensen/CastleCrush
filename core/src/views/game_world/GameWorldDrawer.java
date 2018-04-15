@@ -66,6 +66,7 @@ public class GameWorldDrawer extends Drawer {
         drawObject(mockWorld.getGround());
 
         // If the object has been hit, it doesn't have to be drawn
+
         for (Drawable obj : mockWorld.getBoxes()) {
             if (obj instanceof Box){
                 if (((Box) obj).getHit()){
