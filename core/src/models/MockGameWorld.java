@@ -144,7 +144,7 @@ public class MockGameWorld {
         sprite.setScale(objectScale);
         sprite.setOrigin(0, 0);
         body = createBody("ball_cannon", xPos, yPos, 0, objectScale);
-        body.setUserData("Prosjektil");
+        body.setUserData("Projectile");
         body.setLinearVelocity(20.0f, 10.0f);
         prosjektil = new Projectile(body, sprite, radius*2, radius*2, new Vector2(100,100));
 

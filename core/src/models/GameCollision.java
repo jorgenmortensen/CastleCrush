@@ -20,9 +20,9 @@ public class GameCollision implements ContactListener {
     public void beginContact(Contact contact) {
         Body a = contact.getFixtureA().getBody();
         Body b = contact.getFixtureA().getBody();
-        if (a.getUserData() == "Prosjektil" || b.getUserData() == "Prosjektil"){
+        if (a.getUserData() == "Projectile" || b.getUserData() == "Projectile"){
             if (contact.isTouching()){
-                System.out.println("Prosjektilet har truffet noe");
+                System.out.println("Projectile has hit something");
             }
         }
     }
