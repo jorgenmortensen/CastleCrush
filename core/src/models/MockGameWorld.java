@@ -1,15 +1,12 @@
 package models;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -48,6 +45,8 @@ public class MockGameWorld {
 
 
 
+
+
     public MockGameWorld() {
         mockBoxes = new ArrayList<Drawable>();
         cannons = new ArrayList<Cannon>();
@@ -57,6 +56,7 @@ public class MockGameWorld {
         Box2D.init();
         physicsBodies = new PhysicsShapeCache("physics.xml");
         physicsWorld = new World(new Vector2(0, -10), true);
+        physicsWorld.setContactListener(new GameCollision());
         this.generateBodies();
     }
 
@@ -144,6 +144,7 @@ public class MockGameWorld {
         sprite.setScale(objectScale);
         sprite.setOrigin(0, 0);
         body = createBody("ball_cannon", xPos, yPos, 0, objectScale);
+        body.setUserData("Prosjektil");
         body.setLinearVelocity(20.0f, 10.0f);
         prosjektil = new Projectile(body, sprite, radius*2, radius*2, new Vector2(100,100));
 
