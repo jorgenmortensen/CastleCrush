@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.castlecrush.game.CastleCrush;
 import com.codeandweb.physicseditor.PhysicsShapeCache;
 
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class MockGameWorld {
     private List cannons;
     private Body body;
     private Projectile prosjektil;
+    private float screenWidth = CastleCrush.WIDTH*SCALE;
 
 
 
@@ -62,14 +64,14 @@ public class MockGameWorld {
 
 
 
-    public void makeCastle(int verticalBoxes, int horizontalBoxes, int startPosX, int castleWidth,
+    public void makeCastle(int verticalBoxes, int horizontalBoxes, float startPosX, int castleWidth,
                            int startPosY, int castleHeight) {
-        int endPosX =  castleWidth+ startPosX;
-        int endPosY =  castleHeight + startPosY;
+        float endPosX =  castleWidth+ startPosX;
+        float endPosY =  castleHeight + startPosY;
 
         Random ran = new Random();
 
-        int startX = startPosX;
+        float startX = startPosX;
         //Make the vertical left wall
         for (int i = 0; i < 5; i++) {
             int number = ran.nextInt(7) + 1;
@@ -80,11 +82,23 @@ public class MockGameWorld {
         }
     }
 
+    private void  makeMirroredCastle() {
+        for (int i = mockBoxes.size()- 1; i >= 0; i--) {
+            Box originalBox = (Box) mockBoxes.get(i);
+            Box mirroredBox = createBox(originalBox.getBody().getPosition().x, originalBox.getBody().getPosition().y);
+            float boxXpos = originalBox.getBody().getPosition().x;
+            float boxYpos = originalBox.getBody().getPosition().y;
+            //float boxWidth = originalBox.getDrawable().getWidth();
+            moveBox(mirroredBox,  screenWidth- boxXpos, boxYpos);
+            mockBoxes.add(mirroredBox);
+        }
+    }
+
 
     private void generateBodies() {
         createGround();
-        makeCastle(5, 2, 40, 5, 3, 20);
-
+        makeCastle(5, 2, screenWidth*0.8f, 5, 3, 20);
+        makeMirroredCastle();
         //createBox(500, 30, 60, 60);
         //createBox(550,30, 30,30);
         //createBox(600,60, 20,20);
@@ -126,15 +140,16 @@ public class MockGameWorld {
 
 
 
-    private void createBox(float xPos, float yPos){
+    private Box createBox(float xPos, float yPos){
         Sprite sprite = textureAtlas.createSprite("brick1");
         //magic number 7, to scale the boxes appropriatly
         float boxScale = SCALE/7;
         body = createBody("brick1", xPos, yPos, 0, boxScale );
         sprite.setScale(boxScale);
         sprite.setOrigin(0, 0);
-        mockBoxes.add(new Box(body, sprite));
-
+        Box box = new Box(body, sprite);
+        mockBoxes.add(box);
+        return box;
     }
 
     private void createProjectile(float xPos, float yPos, int radius){
@@ -144,7 +159,7 @@ public class MockGameWorld {
         sprite.setScale(objectScale);
         sprite.setOrigin(0, 0);
         body = createBody("ball_cannon", xPos, yPos, 0, objectScale);
-        body.setLinearVelocity(20.0f, 10.0f);
+        //body.setLinearVelocity(20.0f, 1.0f);
         prosjektil = new Projectile(body, sprite, radius*2, radius*2, new Vector2(100,100));
 
     }
@@ -155,6 +170,11 @@ public class MockGameWorld {
         body.setTransform(x, y, rotation);
 
         return body;
+    }
+
+    private void moveBox(Drawable box, float xPos, float yPos) {
+        box.getBody().setTransform(xPos, yPos, 0);
+        box.getDrawable().setPosition(xPos, yPos);
     }
 
 

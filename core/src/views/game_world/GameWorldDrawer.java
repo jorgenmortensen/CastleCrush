@@ -52,7 +52,6 @@ public class GameWorldDrawer extends Drawer {
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(CastleCrush.WIDTH*SCALE, CastleCrush.HEIGHT*SCALE, camera);
         viewport.update(CastleCrush.WIDTH, CastleCrush.HEIGHT, true);
-        System.out.println(CastleCrush.WIDTH*SCALE +" "+ CastleCrush.HEIGHT*SCALE);
         batch.setProjectionMatrix(camera.combined);
     }
 
