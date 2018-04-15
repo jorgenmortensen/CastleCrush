@@ -1,11 +1,13 @@
 package models;
 
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
+import models.entities.Box;
 import models.entities.Projectile;
 
 /**
@@ -31,14 +33,20 @@ public class GameCollision implements ContactListener {
         Fixture fb = contact.getFixtureB();
 
         if (contact.isTouching()){
-            if (fa.getBody().getUserData() instanceof Projectile){
-                //System.out.println("Prosjektil");
-                System.out.println("ProjectileIsTouching");
+            if (!(fa.getBody().getType().equals(BodyDef.BodyType.StaticBody))){
+                if (fa.getBody().getUserData() instanceof Projectile || fb.getBody().getUserData() instanceof Projectile){
+                    //System.out.println("Prosjektil");
+                    if (fa.getBody().getUserData() instanceof Box) {
+                        ((Box) fa.getBody().getUserData()).isHit(true);
+                        gameWorld.addBodyToDestroy(fa);
+                    } else if (fb.getBody().getUserData() instanceof Box) {
+                        ((Box) fa.getBody().getUserData()).isHit(true);
+                        gameWorld.addBodyToDestroy(fb);
+
+                    }
+                }
             }
-            if (fb.getBody().getUserData() instanceof Projectile){
-                // System.out.println("Prosjektil");
-                System.out.println("ProjectileIsTouching");
-            }
+
         }
     }
 

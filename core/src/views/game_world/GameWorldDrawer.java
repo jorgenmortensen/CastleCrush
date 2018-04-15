@@ -7,11 +7,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.castlecrush.game.CastleCrush;
 
+import java.util.ArrayList;
+
 import models.MockGameWorld;
+import models.entities.Box;
 import models.entities.Cannon;
 import models.entities.Castle;
 import models.entities.Drawable;
@@ -61,10 +65,19 @@ public class GameWorldDrawer extends Drawer {
         batch.draw(background, 0,0, CastleCrush.WIDTH*SCALE, CastleCrush.HEIGHT*SCALE);
         drawObject(mockWorld.getGround());
 
+        // If the object has been hit, it doesn't have to be drawn
         for (Drawable obj : mockWorld.getBoxes()) {
-            drawObject(obj);
+            if (obj instanceof Box){
+                if (((Box) obj).getHit()){
+                } else {
+                    drawObject(obj);
+                }
+            }
         }
+
+
         for (Drawable obj : mockWorld.getCannons()) {
+
             drawObject(obj);
         }
 
@@ -73,12 +86,19 @@ public class GameWorldDrawer extends Drawer {
         batch.end();
         debugRenderer.render(physicsWorld,camera.combined);
 
-        mockWorld.getPhysicsWorld().step(1/600f, 6, 2);
+        mockWorld.getPhysicsWorld().step(1/60f, 6, 2);
         //mock DELETE BODIES
+        if (!physicsWorld.isLocked()){
+            mockWorld.destroy((ArrayList<Fixture>) mockWorld.getBodiesToDestroy());
+
+        }
+
     }
 
+
+
+
     private void drawObject(Drawable object) {
-       // batch.draw(object.getDrawable(), object.getBody().getLocalCenter().x, object.getBody().getLocalCenter().y, object.getWidth(), object.getHeight());
         Vector2 position = object.getBody().getPosition();
         float degrees = (float) Math.toDegrees(object.getBody().getAngle());
         object.getDrawable().setPosition(position.x, position.y);

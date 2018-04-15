@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -34,6 +35,7 @@ public class MockGameWorld {
     static final float SCALE = 0.05f;
     private World physicsWorld;
 
+    private List<Fixture> bodiesToDestroy = new ArrayList<Fixture>();
     private TextureAtlas textureAtlas;
     private PhysicsShapeCache physicsBodies;
 
@@ -42,7 +44,26 @@ public class MockGameWorld {
     private List cannons;
     private Body body;
     private Projectile projectile;
-    private List<Body> destroyBodies = new ArrayList<Body>();
+
+    public List<Fixture> getBodiesToDestroy(){
+        return bodiesToDestroy;
+    }
+
+    public void removeBox(Box b){
+        if (mockBoxes.contains(b)){
+            mockBoxes.remove(b);
+        }
+    }
+
+    public void addBodyToDestroy(Fixture b){
+        if (!bodiesToDestroy.contains(b)){
+            bodiesToDestroy.add(b);
+        }
+    }
+
+    public void removeAllBodiesToDestroy(){
+        bodiesToDestroy = new ArrayList<Fixture>();
+    }
 
 
     public MockGameWorld() {
@@ -84,7 +105,9 @@ public class MockGameWorld {
         createProjectile(2, 2, 50);
         makeCastle(5, 2, 40, 5, 3, 20);
 
-        //createBox(500, 30, 60, 60);
+        //createBox(10, 10);
+
+
         //createBox(550,30, 30,30);
         //createBox(600,60, 20,20);
         //createBox(600,80, 20,20);
@@ -139,6 +162,7 @@ public class MockGameWorld {
         System.out.println("Box type: " + body.getType());
     }
 
+
     private void createProjectile(float xPos, float yPos, int radius){
         Sprite sprite = textureAtlas.createSprite("ball_cannon");
         //magic number 40, to scale the projectile appropriatly
@@ -154,7 +178,6 @@ public class MockGameWorld {
         System.out.println("Projectile type: "+body.getType());
     }
 
-
     private Body createBody(String name, float x, float y, float rotation, float scale) {
         Body body = physicsBodies.createBody(name, physicsWorld, scale, scale);
         body.setTransform(x, y, rotation);
@@ -162,7 +185,15 @@ public class MockGameWorld {
         return body;
     }
 
-
+    public void destroy(ArrayList<Fixture> bodiesToDestroy) {
+        for (Fixture bodyToDestroy : bodiesToDestroy) {
+            if (bodyToDestroy.getBody() != null) {
+                physicsWorld.destroyBody(bodyToDestroy.getBody());
+                removeBox((Box) bodyToDestroy.getUserData());
+            }
+        }
+        removeAllBodiesToDestroy();
+    }
 
     public World getPhysicsWorld() {
         return physicsWorld;

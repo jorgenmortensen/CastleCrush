@@ -1,7 +1,6 @@
 package models.entities;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 //import com.sun.xml.internal.ws.client.sei.ResponseBuilder;
 
@@ -17,7 +16,7 @@ public class Box implements Drawable {
     private Sprite sprite;
     private Body body;
 
-    private boolean isHit;
+    private boolean isHit = false;
 
     public Box(Body body, Sprite sprite) {
         this.body = body;
@@ -31,5 +30,13 @@ public class Box implements Drawable {
     @Override
     public Sprite getDrawable() {
         return sprite;
+    }
+
+    public boolean getHit(){
+        return this.isHit;
+    }
+
+    public void isHit(boolean isHit){
+        this.isHit = isHit;
     }
 }
