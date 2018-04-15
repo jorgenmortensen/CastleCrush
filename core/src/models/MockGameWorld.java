@@ -67,7 +67,7 @@ public class MockGameWorld {
 
     private void generateBodies() {
         createGround();
-        makeCastle(5, 7, screenWidth*0.8f, 10, 15);
+        makeCastle(10, 10, screenWidth*0.8f, 50, 50);
         makeMirroredCastle();
         // createBox(30, 3, screenWidth/50, screenWidth/50);
         //createBox(550,30, 30,30);
@@ -79,15 +79,15 @@ public class MockGameWorld {
     }
 
     public void makeCastle(int numVerticalBoxes, int numHorizontalBoxes, float startPosX, int castleWidth, int castleHeight) {
-        float boxWidth = castleWidth/numVerticalBoxes;
-        float boxHeight = castleHeight/numHorizontalBoxes;
+        float boxWidth = castleWidth/numHorizontalBoxes;
+        float boxHeight = castleHeight/numVerticalBoxes;
 
         Random ran = new Random();
         //Make the vertical left wall
-        for (int i = 0; i < numHorizontalBoxes; i++) {
-            int number = ran.nextInt(numVerticalBoxes) + 1;
+        for (int i = 0; i < numVerticalBoxes; i++) {
+            int number = ran.nextInt(numHorizontalBoxes-4 )+4 + 1;
             for (int j = 0; j < number; j++) {
-                Box box = createBox(startPosX + i * boxWidth, groundLevel + j * boxHeight, boxWidth, boxHeight);
+                Box box = createBox(startPosX + i * boxWidth, groundLevel + j * boxHeight+ 0.005f, boxWidth, boxHeight, (numHorizontalBoxes-j)*10);
             }
         }
     }
@@ -96,7 +96,7 @@ public class MockGameWorld {
     private void  makeMirroredCastle() {
         for (int i = mockBoxes.size()- 1; i >= 0; i--) {
             Box originalBox = (Box) mockBoxes.get(i);
-            Box mirroredBox = createBox(originalBox.getBody().getPosition().x, originalBox.getBody().getPosition().y, originalBox.getWidth(), originalBox.getHeight());
+            Box mirroredBox = createBox(originalBox.getBody().getPosition().x, originalBox.getBody().getPosition().y, originalBox.getWidth(), originalBox.getHeight(), 2);
             float boxXpos = originalBox.getBody().getPosition().x;
             float boxYpos = originalBox.getBody().getPosition().y;
             //float boxWidth = originalBox.getDrawable().getWidth();
@@ -138,7 +138,7 @@ public class MockGameWorld {
 
 
 
-    private Box createBox(float xPos, float yPos, float boxWidth, float boxHeight){
+    private Box createBox(float xPos, float yPos, float boxWidth, float boxHeight, float density){
 
         //creating and setting up the physical shape of the box
         BodyDef bodyDef = new BodyDef();
@@ -147,9 +147,9 @@ public class MockGameWorld {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(boxWidth/2, boxHeight/2);
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.friction = 0.6f;
-        fixtureDef.density = 2f;
-        fixtureDef.restitution = 0.1f;
+        fixtureDef.friction = 1.0f;
+        fixtureDef.density = density;
+        fixtureDef.restitution = 0.0f;
         fixtureDef.shape = shape;
         Body body;
         body = physicsWorld.createBody(bodyDef);
