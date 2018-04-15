@@ -7,10 +7,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.castlecrush.game.CastleCrush;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
 import components.Button;
+import components.MessageCodes;
 import components.TextView;
 import googleplayservice.PlayServices;
 import googleplayservice.PlayerData;
@@ -35,33 +37,17 @@ public class OnlineMultiplayerState extends State implements PlayServices.Networ
 
         CastleCrush.playServices.setNetworkListener(this);
 
-        clickBtn = new Button(CastleCrush.WIDTH / 4,
-                CastleCrush.HEIGHT / 2 - CastleCrush.HEIGHT / 10,
-                CastleCrush.WIDTH / 8,
-                CastleCrush.HEIGHT * 2 / 10,
-                new Sprite(new Texture("test_play.png")));
-
         font = new BitmapFont();
     }
 
 
     @Override
     protected void handleInput() {
-        if (Gdx.input.justTouched() && isOnClickBtn()) {
-            count+=1;
+        if (Gdx.input.justTouched()) {
+
             dispose();
         }
 
-    }
-
-
-    private boolean isOnClickBtn() {
-        if (((CastleCrush.HEIGHT - Gdx.input.getY()) > clickBtn.getYpos()) &&
-                ((CastleCrush.HEIGHT - Gdx.input.getY()) < (clickBtn.getYpos() + clickBtn.getBtnHeight())) &&
-                (Gdx.input.getX() > clickBtn.getXpos()) && (Gdx.input.getX() < (clickBtn.getXpos() + clickBtn.getBtnWidth()))) {
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -74,11 +60,7 @@ public class OnlineMultiplayerState extends State implements PlayServices.Networ
         sb.begin();
 
         sb.draw(new Texture("logo.png"), 0, 0, CastleCrush.WIDTH, CastleCrush.HEIGHT);
-        sb.draw(clickBtn.getBtn(), clickBtn.getXpos(),
-                clickBtn.getYpos(),
-                clickBtn.getBtnWidth(), clickBtn.getBtnHeight());
 
-        System.out.println("AAAAAAAAAAAA");
         font.setColor((float) 0.5,(float)0.5,(float)0.5,1);
         font.draw(sb, "You: " + count + "       Opponent: " + opponent, CastleCrush.WIDTH/3, CastleCrush.HEIGHT*3/4);
         font.getData().setScale(5);
@@ -89,15 +71,48 @@ public class OnlineMultiplayerState extends State implements PlayServices.Networ
     public void dispose() {
     }
 
+    public void broadcastShotData(){
+        ByteBuffer buffer = ByteBuffer.allocate(2*4+1); //capacity = 9, why?
+        buffer.put(MessageCodes.CANNON);
+        buffer.putFloat();
+        buffer.putFloat();
+        CastleCrush.playServices.sendUnreliableMessageToOthers(buffer.array());
+
+    }
+
     @Override
     public void onReliableMessageReceived(String senderParticipantId, int describeContents, byte[] messageData) {
         Gdx.app.debug(TAG, "onReliableMessageReceived: " + senderParticipantId + "," + describeContents);
+
+        ByteBuffer buffer = ByteBuffer.wrap(messageData);
+        byte messageType = buffer.get();
+
+        switch (messageType) {
+            case MessageCodes.GAME_OVER:
+                System.out.println("GAME OVER MESSAGE RECEIVED");
+                //pop-up window????
+                //gsm.set(new GameOverState(gsm));
+                //evnt. draw GameOver text, og to knapper: end og rematch (aka Flappy)
+
+                break;
+        }
 
     }
 
     @Override
     public void onUnreliableMessageReceived(String senderParticipantId, int describeContents, byte[] messageData) {
+        System.out.println("onReliableMessageReceived: " + senderParticipantId + "," + describeContents);
 
+        ByteBuffer buffer = ByteBuffer.wrap(messageData);
+        byte messageType = buffer.get();
+
+        switch (messageType) {
+            case MessageCodes.CANNON:
+                System.out.println("CANNON MESSAGE RECEIVED");
+
+                break;
+
+        }
     }
 
     @Override

@@ -12,6 +12,7 @@ import states.Splashscreen;
 
 
 import googleplayservice.PlayServices;
+import states.menuStates.StartMenuScreen;
 import states.playStates.OnlineMultiplayerState;
 
 public class CastleCrush extends ApplicationAdapter implements PlayServices.GameListener{
@@ -68,9 +69,14 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 	public void onMultiplayerGameStarting() {
         Gdx.app.debug(TAG, "onMultiplayerGameStarting: ");
 		System.out.println("onMultiplayerGameStarting");
-		//ServiceLocator.getAppComponent().getAssetService().getAssetManager().finishLoading();
-        //setScreen(new MpGamePresenter(this, new MainMenuPresenter(this)));
         gsm.set(new OnlineMultiplayerState(gsm));
 
 	}
+
+	@Override
+	public void goToMain() {
+		System.out.println("goToMainScreen");
+		gsm.set(new StartMenuScreen(gsm));
+	}
+
 }

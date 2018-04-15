@@ -21,6 +21,7 @@ public class StartMenuScreen extends states.State {
     Button btnPlay;
     Button btnHelp;
     Button btnSound;
+    Button btnInvitationInbox;
     public static Texture logo;
     Button btnLogOutIn;
 
@@ -36,12 +37,9 @@ public class StartMenuScreen extends states.State {
     public static boolean changed_logo;
 
 
-    CastleCrush crush;
 
-
-    public StartMenuScreen(GameStateManager gsm, CastleCrush crush) {
+    public StartMenuScreen(GameStateManager gsm) {
         super(gsm);
-        this.crush = crush;
         // the normal logo will appear when the user gets back to this menu, which is the intention
         logo = new Texture("logo.png");
         if (changed_logo) {
@@ -57,12 +55,12 @@ public class StartMenuScreen extends states.State {
 
 
 
-        if (crush.playServices.isSignedIn()) {
+        if (CastleCrush.playServices.isSignedIn()) {
             System.out.println();
             //crush.playServices.toast();
 
         }else{
-            crush.playServices.signIn();
+            CastleCrush.playServices.signIn();
         }
     }
 
@@ -92,7 +90,7 @@ public class StartMenuScreen extends states.State {
         btnSound = new Button(0, 0, CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
                 CastleCrush.soundOn ? new Sprite(new Texture("sound_on.png")) : new Sprite(new Texture("sound_off.png")));
 
-        if (crush.playServices.isSignedIn()) {
+        if (CastleCrush.playServices.isSignedIn()) {
             t = new Texture("googlesignout.png");
         }else{
             t = new Texture("googlesignin.png");
@@ -103,25 +101,35 @@ public class StartMenuScreen extends states.State {
                 CastleCrush.HEIGHT * 2 / 10,
                 new Sprite(t));
 
+        btnInvitationInbox = new Button(CastleCrush.WIDTH/7 ,
+                CastleCrush.HEIGHT *2/9,
+                CastleCrush.WIDTH / 8,
+                CastleCrush.HEIGHT * 2 / 10,
+                new Sprite(new Texture("test_play.png")));
+
     }
 
     @Override
     protected void handleInput() {
         if (Gdx.input.justTouched() && isOnPlayBtn()) {
-            gsm.set(new PlayMenu(gsm, crush));
+            gsm.set(new PlayMenu(gsm));
             dispose();
         }
         else if (Gdx.input.justTouched() && isOnHelpBtn()) {
-            gsm.set(new TutorialState(gsm, crush));
+            gsm.set(new TutorialState(gsm));
+            dispose();
+        }
+        else if (Gdx.input.justTouched() && isOnInvitationBtn()) {
+            CastleCrush.playServices.showInvitationInbox();
             dispose();
         }
         else if (Gdx.input.justTouched() && isOnLogOffInBtn()) {
 
-            if (crush.playServices.isSignedIn()) {
-                crush.playServices.signOut();
+            if (CastleCrush.playServices.isSignedIn()) {
+                CastleCrush.playServices.signOut();
                 btnLogOutIn.setBtn(new Sprite(new Texture("googlesignin.png")));
             } else {
-                crush.playServices.signIn();
+                CastleCrush.playServices.signIn();
                 btnLogOutIn.setBtn(new Sprite(new Texture("googlesignout.png")));
             }
         }
@@ -175,6 +183,15 @@ public class StartMenuScreen extends states.State {
         return false;
     }
 
+    private boolean isOnInvitationBtn() {
+        if (((CastleCrush.HEIGHT - Gdx.input.getY()) > btnInvitationInbox.getYpos()) &&
+                ((CastleCrush.HEIGHT - Gdx.input.getY()) < (btnInvitationInbox.getYpos() + btnInvitationInbox.getBtnHeight())) &&
+                (Gdx.input.getX() > btnInvitationInbox.getXpos()) && (Gdx.input.getX() < (btnInvitationInbox.getXpos() + btnInvitationInbox.getBtnWidth()))) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void update(float dt) {
         handleInput();
@@ -222,6 +239,9 @@ public class StartMenuScreen extends states.State {
         sb.draw(btnLogOutIn.getBtn(), btnLogOutIn.getXpos(),
                 btnLogOutIn.getYpos(),
                 btnLogOutIn.getBtnWidth(), btnLogOutIn.getBtnHeight());
+        sb.draw(btnInvitationInbox.getBtn(), btnInvitationInbox.getXpos(),
+                btnInvitationInbox.getYpos(),
+                btnInvitationInbox.getBtnWidth(), btnInvitationInbox.getBtnHeight());
 
         sb.draw(logo, 0, CastleCrush.HEIGHT * 7 / 10, CastleCrush.WIDTH, CastleCrush.HEIGHT * 3 / 10);
 

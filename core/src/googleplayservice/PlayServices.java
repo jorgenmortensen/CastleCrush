@@ -17,14 +17,19 @@ public interface PlayServices {
     void sendUnreliableMessageToOthers(byte[] messageData);
 
     void startSelectOpponents();
+    void sendOutRematch();
+    void rematch(List<PlayerData> players);
 
     void setGameListener(GameListener gameListener);
     void setNetworkListener(NetworkListener networkListener);
 
     void quitGame();
+    void showInvitationInbox();
+
 
     interface GameListener {
         void onMultiplayerGameStarting();
+        void goToMain();
     }
 
     interface NetworkListener {

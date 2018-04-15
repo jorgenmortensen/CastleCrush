@@ -35,5 +35,8 @@ public class PlayerData {
     public static boolean equals(String currentPlayerId, String playerId) {
         return playerId.equals(currentPlayerId);
     }
+    public String getPlayerID(){
+        return playerId;
+    }
 }
 
