@@ -41,7 +41,7 @@ public class MockGameWorld {
     private Box ground;
     private List cannons;
     private Body body;
-    private Projectile prosjektil;
+    private Projectile projectile;
 
 
 
@@ -122,6 +122,7 @@ public class MockGameWorld {
         groundSprite.setSize(Gdx.graphics.getWidth(), groundHeight/2);
         // mockBoxes.add(new Box(body, groundSprite));
         ground = new Box(body, groundSprite);
+        body.setUserData(ground);
     }
 
 
@@ -133,8 +134,10 @@ public class MockGameWorld {
         body = createBody("brick1", xPos, yPos, 0, boxScale );
         sprite.setScale(boxScale);
         sprite.setOrigin(0, 0);
-        mockBoxes.add(new Box(body, sprite));
-
+        Box box = new Box(body, sprite);
+        mockBoxes.add(box);
+        body.setUserData(box);
+        System.out.println("Box type: " + body.getType());
     }
 
     private void createProjectile(float xPos, float yPos, int radius){
@@ -144,10 +147,11 @@ public class MockGameWorld {
         sprite.setScale(objectScale);
         sprite.setOrigin(0, 0);
         body = createBody("ball_cannon", xPos, yPos, 0, objectScale);
-        body.setUserData("Projectile");
+        //body.setUserData("Projectile");
         body.setLinearVelocity(20.0f, 10.0f);
-        prosjektil = new Projectile(body, sprite, radius*2, radius*2, new Vector2(100,100));
-
+        projectile = new Projectile(body, sprite, radius*2, radius*2, new Vector2(100,100));
+        body.setUserData(projectile);
+        System.out.println("Projectile type: "+body.getType());
     }
 
 
@@ -164,8 +168,8 @@ public class MockGameWorld {
         return physicsWorld;
     }
 
-    public Projectile getProsjektil() {
-        return prosjektil;
+    public Projectile getProjectile() {
+        return projectile;
     }
 
     public List<Drawable> getBoxes(){return mockBoxes;}

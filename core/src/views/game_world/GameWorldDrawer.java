@@ -4,9 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -70,12 +68,12 @@ public class GameWorldDrawer extends Drawer {
             drawObject(obj);
         }
 
-        drawObject(mockWorld.getProsjektil());
+        drawObject(mockWorld.getProjectile());
 
         batch.end();
         debugRenderer.render(physicsWorld,camera.combined);
 
-        mockWorld.getPhysicsWorld().step(1/60f, 6, 2);
+        mockWorld.getPhysicsWorld().step(1/600f, 6, 2);
     }
 
     private void drawObject(Drawable object) {
