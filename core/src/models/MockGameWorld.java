@@ -83,6 +83,7 @@ public class MockGameWorld {
 
     private void generateBodies() {
         createGround();
+        createProjectile(2, 2, 50);
         makeCastle(5, 2, 40, 5, 3, 20);
 
         //createBox(500, 30, 60, 60);
@@ -91,7 +92,7 @@ public class MockGameWorld {
         //createBox(600,80, 20,20);
         //  createBox(Gdx.graphics.getWidth() - 300, 10, 60,40);
 
-        createProjectile(2, 2, 50);
+
     }
 
     private void createGround() {
@@ -151,6 +152,7 @@ public class MockGameWorld {
         body.setLinearVelocity(20.0f, 10.0f);
         projectile = new Projectile(body, sprite, radius*2, radius*2, new Vector2(100,100));
         body.setUserData(projectile);
+        System.out.println(body.getUserData() instanceof Projectile);
         System.out.println("Projectile type: "+body.getType());
     }
 

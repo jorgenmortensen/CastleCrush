@@ -1,12 +1,11 @@
 package models;
 
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
-import models.entities.Box;
 import models.entities.Projectile;
 
 /**
@@ -21,38 +20,25 @@ public class GameCollision implements ContactListener {
 
     @Override
     public void beginContact(Contact contact) {
-        //System.out.println("Contact");
 
-        Body a = contact.getFixtureA().getBody();
-        Body b = contact.getFixtureA().getBody();
+        // We need to make a fixture first, making a body directly doesn't work
+        //Body a = contact.getFixtureA().getBody();
+        //Body b = contact.getFixtureA().getBody();
+
+        // KEEP AS IS
+        Fixture fa = contact.getFixtureA();
+        Fixture fb = contact.getFixtureB();
+
         if (contact.isTouching()){
-
-            if (a.getUserData() instanceof Box && b.getUserData() instanceof Box){
-
-            } else {
-                System.out.println(a.getUserData());
-                System.out.println(b.getUserData());
+            if (fa.getBody().getUserData() instanceof Projectile){
+                //System.out.println("Prosjektil");
+                System.out.println("ProjectileIsTouching");
+            }
+            if (fb.getBody().getUserData() instanceof Projectile){
+                // System.out.println("Prosjektil");
+                System.out.println("ProjectileIsTouching");
             }
         }
-
-        //String aaa = (String) a.getUserData();
-        //String bbb = (String) b.getUserData();
-
-        if (a.getUserData() instanceof Projectile){
-            //System.out.println("Prosjektil");
-        }
-        if (b.getUserData() instanceof Projectile){
-           // System.out.println("Prosjektil");
-        }
-
-        if (a.getUserData() instanceof Box && b.getUserData() instanceof Box){
-            //System.out.println("Bokser");
-        } else {
-            //System.out.println(a.getUserData());
-            //System.out.println(b.getUserData());
-        }
-
-
     }
 
     @Override
