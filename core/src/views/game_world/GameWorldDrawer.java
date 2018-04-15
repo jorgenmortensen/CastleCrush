@@ -74,6 +74,7 @@ public class GameWorldDrawer extends Drawer {
         debugRenderer.render(physicsWorld,camera.combined);
 
         mockWorld.getPhysicsWorld().step(1/600f, 6, 2);
+        //mock DELETE BODIES
     }
 
     private void drawObject(Drawable object) {

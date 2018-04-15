@@ -13,9 +13,10 @@ import models.entities.Projectile;
  */
 
 public class GameCollision implements ContactListener {
+    private MockGameWorld gameWorld;
 
-    public GameCollision(){
-
+    public GameCollision(MockGameWorld world){
+        this.gameWorld = world;
     }
 
     @Override

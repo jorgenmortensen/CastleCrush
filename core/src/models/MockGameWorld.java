@@ -42,9 +42,7 @@ public class MockGameWorld {
     private List cannons;
     private Body body;
     private Projectile projectile;
-
-
-
+    private List<Body> destroyBodies = new ArrayList<Body>();
 
 
     public MockGameWorld() {
@@ -56,7 +54,7 @@ public class MockGameWorld {
         Box2D.init();
         physicsBodies = new PhysicsShapeCache("physics.xml");
         physicsWorld = new World(new Vector2(0, -10), true);
-        physicsWorld.setContactListener(new GameCollision());
+        physicsWorld.setContactListener(new GameCollision(this));
         this.generateBodies();
     }
 
