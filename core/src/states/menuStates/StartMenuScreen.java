@@ -91,7 +91,8 @@ public class StartMenuScreen extends states.State {
 
         if (CastleCrush.playServices.isSignedIn()) {
             t = new Texture("googlesignout.png");
-        if (crush.playServices.isSignedIn()) {
+        }
+        if (CastleCrush.playServices.isSignedIn()) {
             t = new Texture("signout.png");
         }else{
             t = new Texture("sign_in.png");
@@ -115,40 +116,37 @@ public class StartMenuScreen extends states.State {
         if (Gdx.input.justTouched() && isOnPlayBtn()) {
             gsm.set(new PlayMenu(gsm));
             dispose();
-        }
-        else if (Gdx.input.justTouched() && isOnHelpBtn()) {
+        } else if (Gdx.input.justTouched() && isOnHelpBtn()) {
             gsm.set(new TutorialState(gsm));
             dispose();
-        }
-        else if (Gdx.input.justTouched() && isOnInvitationBtn()) {
+        } else if (Gdx.input.justTouched() && isOnInvitationBtn()) {
             CastleCrush.playServices.showInvitationInbox();
             dispose();
-        }
-        else if (Gdx.input.justTouched() && isOnLogOffInBtn()) {
+        } else if (Gdx.input.justTouched() && isOnLogOffInBtn()) {
 
             if (CastleCrush.playServices.isSignedIn()) {
                 CastleCrush.playServices.signOut();
                 btnLogOutIn.setBtn(new Sprite(new Texture("googlesignin.png")));
-            if (crush.playServices.isSignedIn()) {
-                crush.playServices.signOut();
-                btnLogOutIn.setBtn(new Sprite(new Texture("sign_in.png")));
-            } else {
-                CastleCrush.playServices.signIn();
-                btnLogOutIn.setBtn(new Sprite(new Texture("googlesignout.png")));
-                crush.playServices.signIn();
-                btnLogOutIn.setBtn(new Sprite(new Texture("signout.png")));
-            }
-        }
-        else if (Gdx.input.justTouched() && isOnSoundBtn()) {
-            //Turn off sound if already on and vice versa
-            if (CastleCrush.soundOn) {
-                CastleCrush.music.setVolume(0);
-                CastleCrush.soundOn = false;
-                btnSound.setBtn(new Sprite(new Texture("sound_off.png")));
-            } else {
-                CastleCrush.music.setVolume(0.5f);
-                CastleCrush.soundOn = true;
-                btnSound.setBtn(new Sprite(new Texture("sound_on.png")));
+                if (CastleCrush.playServices.isSignedIn()) {
+                    CastleCrush.playServices.signOut();
+                    btnLogOutIn.setBtn(new Sprite(new Texture("sign_in.png")));
+                } else {
+                    CastleCrush.playServices.signIn();
+                    btnLogOutIn.setBtn(new Sprite(new Texture("googlesignout.png")));
+                    CastleCrush.playServices.signIn();
+                    btnLogOutIn.setBtn(new Sprite(new Texture("signout.png")));
+                }
+            } else if (Gdx.input.justTouched() && isOnSoundBtn()) {
+                //Turn off sound if already on and vice versa
+                if (CastleCrush.soundOn) {
+                    CastleCrush.music.setVolume(0);
+                    CastleCrush.soundOn = false;
+                    btnSound.setBtn(new Sprite(new Texture("sound_off.png")));
+                } else {
+                    CastleCrush.music.setVolume(0.5f);
+                    CastleCrush.soundOn = true;
+                    btnSound.setBtn(new Sprite(new Texture("sound_on.png")));
+                }
             }
         }
     }

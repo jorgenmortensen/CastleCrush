@@ -27,7 +27,7 @@ public class LogInMenu extends State {
         System.out.println("Hei");
         t = new Texture("helpBtn.png");
 
-        gsm.set(new StartMenuScreen(gsm, crush));
+        gsm.set(new StartMenuScreen(gsm));
         dispose();
 
 
@@ -36,7 +36,7 @@ public class LogInMenu extends State {
 
     private void signIn() {
         crush.playServices.signIn();
-        gsm.set(new StartMenuScreen(gsm, crush));
+        gsm.set(new StartMenuScreen(gsm));
         dispose();
     }
 

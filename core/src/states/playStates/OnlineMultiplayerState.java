@@ -74,8 +74,8 @@ public class OnlineMultiplayerState extends State implements PlayServices.Networ
     public void broadcastShotData(){
         ByteBuffer buffer = ByteBuffer.allocate(2*4+1); //capacity = 9, why?
         buffer.put(MessageCodes.CANNON);
-        buffer.putFloat();
-        buffer.putFloat();
+        //buffer.putFloat();
+        //buffer.putFloat();
         CastleCrush.playServices.sendUnreliableMessageToOthers(buffer.array());
 
     }
