@@ -19,7 +19,7 @@ public class CastleCrush extends ApplicationAdapter {
 	public static int HEIGHT;
 	public static float xCoordBg1;
 	public static float xCoordBg2;
-
+	public static final int BACKGROUND_MOVE_SPEED = -50;
 
 	public static final String TITLE = "Castle Crush";
 
@@ -32,7 +32,6 @@ public class CastleCrush extends ApplicationAdapter {
 		HEIGHT = Gdx.graphics.getHeight();
 		xCoordBg1 = WIDTH;
 		xCoordBg2 = 0;
-
 		batch = new SpriteBatch();
 		gsm = new GameStateManager();
 		soundOn = true;

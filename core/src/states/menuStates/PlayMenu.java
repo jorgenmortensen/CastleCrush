@@ -29,10 +29,9 @@ import static states.menuStates.StartMenuScreen.without_castle;
 
 public class PlayMenu extends State {
 
-    float xMax = CastleCrush.WIDTH;
+    float xMax;
     private Texture background1;
     private Texture background2;
-    final int BACKGROUND_MOVE_SPEED = -30;
 
     private GravityButton btnSingle;
     private GravityButton btnMulti;
@@ -45,6 +44,7 @@ public class PlayMenu extends State {
     public PlayMenu(GameStateManager gsm) {
         super(gsm);
         makeMovingBackground();
+        xMax = CastleCrush.WIDTH;
         makeButtons();
     }
 
@@ -118,7 +118,7 @@ public class PlayMenu extends State {
         btnLocal.update(dt);
 
         // makes the background move to the left
-        CastleCrush.xCoordBg1 += BACKGROUND_MOVE_SPEED * Gdx.graphics.getDeltaTime();
+        CastleCrush.xCoordBg1 += CastleCrush.BACKGROUND_MOVE_SPEED * Gdx.graphics.getDeltaTime();
         CastleCrush.xCoordBg2 = CastleCrush.xCoordBg1 - xMax;  // We move the background, not the camera
         if (CastleCrush.xCoordBg1 <= 0) {
             CastleCrush.xCoordBg1 = xMax;
@@ -126,7 +126,6 @@ public class PlayMenu extends State {
         }
         logoCrush();
     }
-
 
 
     //Make the castle in the logo crush and tranforming it to a U

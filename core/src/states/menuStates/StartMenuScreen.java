@@ -30,7 +30,6 @@ public class StartMenuScreen extends states.State {
 
     private Texture background1;
     private Texture background2;
-    final int BACKGROUND_MOVE_SPEED = -30;
 
     public static long startTime;
     public static boolean little_crushed = true;
@@ -109,7 +108,7 @@ public class StartMenuScreen extends states.State {
     public void update(float dt) {
         handleInput();
         //makes the background move to the left
-        xCoordBg1 += BACKGROUND_MOVE_SPEED * Gdx.graphics.getDeltaTime();
+        xCoordBg1 += CastleCrush.BACKGROUND_MOVE_SPEED * Gdx.graphics.getDeltaTime();
         xCoordBg2 = xCoordBg1 - xMax;  // We move the background, not the camera
         if (CastleCrush.xCoordBg1 <= 0) {
             CastleCrush.xCoordBg1 = xMax;
