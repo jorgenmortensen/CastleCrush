@@ -29,7 +29,7 @@ import static states.menuStates.StartMenuScreen.without_castle;
 
 public class PlayMenu extends State {
 
-    float xMax, xCoordBg1, xCoordBg2;
+    float xMax = CastleCrush.WIDTH;
     private Texture background1;
     private Texture background2;
     final int BACKGROUND_MOVE_SPEED = -30;
@@ -51,9 +51,6 @@ public class PlayMenu extends State {
     private void makeMovingBackground(){
         background1 = new Texture(Gdx.files.internal("loop_background_castles.png"));
         background2 = new Texture(Gdx.files.internal("loop_background_castles.png")); // identical
-        xMax = CastleCrush.WIDTH;
-        xCoordBg1 = xMax;
-        xCoordBg2 = 0;
     }
 
 
@@ -121,23 +118,16 @@ public class PlayMenu extends State {
         btnLocal.update(dt);
 
         // makes the background move to the left
-        xCoordBg1 += BACKGROUND_MOVE_SPEED * Gdx.graphics.getDeltaTime();
-        xCoordBg2 = xCoordBg1 - xMax;  // We move the background, not the camera
-        if (xCoordBg1 <= 0) {
-            xCoordBg1 = xMax;
-            xCoordBg2 = 0;
+        CastleCrush.xCoordBg1 += BACKGROUND_MOVE_SPEED * Gdx.graphics.getDeltaTime();
+        CastleCrush.xCoordBg2 = CastleCrush.xCoordBg1 - xMax;  // We move the background, not the camera
+        if (CastleCrush.xCoordBg1 <= 0) {
+            CastleCrush.xCoordBg1 = xMax;
+            CastleCrush.xCoordBg2 = 0;
         }
         logoCrush();
     }
 
-    public void backgroundMovement() {
-        xCoordBg1 += BACKGROUND_MOVE_SPEED * Gdx.graphics.getDeltaTime();
-        xCoordBg2 = xCoordBg1 - xMax;  // We move the background, not the camera
-        if (xCoordBg1 <= 0) {
-            xCoordBg1 = xMax;
-            xCoordBg2 = 0;
-        }
-    }
+
 
     //Make the castle in the logo crush and tranforming it to a U
     public void logoCrush() {
@@ -165,8 +155,8 @@ public class PlayMenu extends State {
     public void render(SpriteBatch sb) {
 
         sb.begin();
-        sb.draw(background1, xCoordBg1, 0, CastleCrush.WIDTH, CastleCrush.HEIGHT);
-        sb.draw(background2, xCoordBg2, 0, CastleCrush.WIDTH, CastleCrush.HEIGHT);
+        sb.draw(background1, CastleCrush.xCoordBg1, 0, CastleCrush.WIDTH, CastleCrush.HEIGHT);
+        sb.draw(background2, CastleCrush.xCoordBg2, 0, CastleCrush.WIDTH, CastleCrush.HEIGHT);
         sb.draw(btnSingle.getBtn(), btnSingle.getXpos(),
                 btnSingle.getYpos(),
                 btnSingle.getBtnWidth(),

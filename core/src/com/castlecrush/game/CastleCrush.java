@@ -17,6 +17,9 @@ public class CastleCrush extends ApplicationAdapter {
 	public static boolean soundOn;
 	public static int WIDTH;
 	public static int HEIGHT;
+	public static float xCoordBg1;
+	public static float xCoordBg2;
+
 
 	public static final String TITLE = "Castle Crush";
 
@@ -27,6 +30,9 @@ public class CastleCrush extends ApplicationAdapter {
 	public void create () {
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
+		xCoordBg1 = WIDTH;
+		xCoordBg2 = 0;
+
 		batch = new SpriteBatch();
 		gsm = new GameStateManager();
 		soundOn = true;
@@ -45,7 +51,9 @@ public class CastleCrush extends ApplicationAdapter {
 		gsm.update(Gdx.graphics.getDeltaTime());
 		gsm.render(batch);
 	}
-	
+
+
+
 	@Override
 	public void dispose () {
 		batch.dispose();
