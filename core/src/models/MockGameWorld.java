@@ -41,6 +41,7 @@ public class MockGameWorld {
     private PhysicsShapeCache physicsBodies;
 
     private List<Drawable> mockBoxes;
+    private Box ground;
     private List cannons;
     private Body body;
     private Projectile prosjektil;
@@ -119,7 +120,8 @@ public class MockGameWorld {
         Sprite groundSprite = textureAtlas.createSprite("bottom_ground");
         //groundSprite.setScale(Gdx.graphics.getWidth(), 1);
         groundSprite.setSize(Gdx.graphics.getWidth(), groundHeight/2);
-        mockBoxes.add(new Box(body, groundSprite));
+        // mockBoxes.add(new Box(body, groundSprite));
+        ground = new Box(body, groundSprite);
     }
 
 
@@ -168,6 +170,10 @@ public class MockGameWorld {
     public List<Drawable> getBoxes(){return mockBoxes;}
 
     public List<Cannon> getCannons(){return cannons;}
+
+    public Box getGround() {
+        return ground;
+    }
 
     public static float getSCALE() {
         return SCALE;

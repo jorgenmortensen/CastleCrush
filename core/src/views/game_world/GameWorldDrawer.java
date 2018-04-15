@@ -61,6 +61,7 @@ public class GameWorldDrawer extends Drawer {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.draw(background, 0,0, CastleCrush.WIDTH*SCALE, CastleCrush.HEIGHT*SCALE);
+        drawObject(mockWorld.getGround());
 
         for (Drawable obj : mockWorld.getBoxes()) {
             drawObject(obj);
