@@ -6,10 +6,9 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import states.GameStateManager;
+import models.states.GameStateManager;
 
-import states.Splashscreen;
-import states.playStates.SinglePlayerState;
+import models.states.playStates.SinglePlayerState;
 
 
 public class CastleCrush extends ApplicationAdapter {
