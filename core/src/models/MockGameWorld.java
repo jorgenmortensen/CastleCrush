@@ -1,7 +1,6 @@
 package models;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -44,15 +43,17 @@ public class MockGameWorld {
     private List<Drawable> mockBoxes;
     private Box ground;
     private List cannons;
-    private Body body;
-    private Projectile prosjektil;
+    private Projectile projectile;
     private float screenWidth = CastleCrush.WIDTH*SCALE;
+    private float screenHeight = CastleCrush.HEIGHT*SCALE;
+    private float groundLevel;
 
 
 
     public MockGameWorld() {
         mockBoxes = new ArrayList<Drawable>();
         cannons = new ArrayList<Cannon>();
+        groundLevel = screenHeight/100;
 
         textureAtlas = new TextureAtlas("sprites.txt");
 
@@ -64,28 +65,38 @@ public class MockGameWorld {
 
 
 
-    public void makeCastle(int verticalBoxes, int horizontalBoxes, float startPosX, int castleWidth,
-                           int startPosY, int castleHeight) {
-        float endPosX =  castleWidth+ startPosX;
-        float endPosY =  castleHeight + startPosY;
+    private void generateBodies() {
+        createGround();
+        makeCastle(5, 7, screenWidth*0.8f, 10, 15);
+        makeMirroredCastle();
+        // createBox(30, 3, screenWidth/50, screenWidth/50);
+        //createBox(550,30, 30,30);
+        //createBox(600,60, 20,20);
+        //createBox(600,80, 20,20);
+        //  createBox(Gdx.graphics.getWidth() - 300, 10, 60,40);
+
+        createProjectile( 30 , 2, screenWidth/50f);
+    }
+
+    public void makeCastle(int numVerticalBoxes, int numHorizontalBoxes, float startPosX, int castleWidth, int castleHeight) {
+        float boxWidth = castleWidth/numVerticalBoxes;
+        float boxHeight = castleHeight/numHorizontalBoxes;
 
         Random ran = new Random();
-
-        float startX = startPosX;
         //Make the vertical left wall
-        for (int i = 0; i < 5; i++) {
-            int number = ran.nextInt(7) + 1;
+        for (int i = 0; i < numHorizontalBoxes; i++) {
+            int number = ran.nextInt(numVerticalBoxes) + 1;
             for (int j = 0; j < number; j++) {
-                createBox(startX, (float) (startPosY + j * 0.5 * castleHeight / verticalBoxes));
+                Box box = createBox(startPosX + i * boxWidth, groundLevel + j * boxHeight, boxWidth, boxHeight);
             }
-            startX = startX + 1;
         }
     }
+
 
     private void  makeMirroredCastle() {
         for (int i = mockBoxes.size()- 1; i >= 0; i--) {
             Box originalBox = (Box) mockBoxes.get(i);
-            Box mirroredBox = createBox(originalBox.getBody().getPosition().x, originalBox.getBody().getPosition().y);
+            Box mirroredBox = createBox(originalBox.getBody().getPosition().x, originalBox.getBody().getPosition().y, originalBox.getWidth(), originalBox.getHeight());
             float boxXpos = originalBox.getBody().getPosition().x;
             float boxYpos = originalBox.getBody().getPosition().y;
             //float boxWidth = originalBox.getDrawable().getWidth();
@@ -94,24 +105,10 @@ public class MockGameWorld {
         }
     }
 
-
-    private void generateBodies() {
-        createGround();
-        makeCastle(5, 2, screenWidth*0.8f, 5, 3, 20);
-        makeMirroredCastle();
-        //createBox(500, 30, 60, 60);
-        //createBox(550,30, 30,30);
-        //createBox(600,60, 20,20);
-        //createBox(600,80, 20,20);
-        //  createBox(Gdx.graphics.getWidth() - 300, 10, 60,40);
-
-        createProjectile(2, 2, 50);
-    }
-
     private void createGround() {
-        if (body != null) physicsWorld.destroyBody(body);
+        if (ground != null) physicsWorld.destroyBody(ground.getBody());
 
-        float groundHeight = 20*SCALE;
+        float groundHeight = groundLevel;
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
@@ -123,6 +120,7 @@ public class MockGameWorld {
         shape.setAsBox(Gdx.graphics.getWidth()*SCALE,groundHeight/2);
         fixtureDef.shape = shape;
 
+        Body body;
         body = physicsWorld.createBody(bodyDef);
         body.createFixture(fixtureDef);
         body.setTransform(0,0,0);
@@ -135,42 +133,88 @@ public class MockGameWorld {
         //groundSprite.setScale(Gdx.graphics.getWidth(), 1);
         groundSprite.setSize(Gdx.graphics.getWidth(), groundHeight/2);
         // mockBoxes.add(new Box(body, groundSprite));
-        ground = new Box(body, groundSprite);
+        ground = new Box(body, groundSprite, 0, 0);
     }
 
 
 
-    private Box createBox(float xPos, float yPos){
+    private Box createBox(float xPos, float yPos, float boxWidth, float boxHeight){
+
+        //creating and setting up the physical shape of the box
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(xPos, yPos);
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(boxWidth/2, boxHeight/2);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.friction = 0.6f;
+        fixtureDef.density = 2f;
+        fixtureDef.restitution = 0.1f;
+        fixtureDef.shape = shape;
+        Body body;
+        body = physicsWorld.createBody(bodyDef);
+        body.createFixture(fixtureDef);
+        body.setTransform(xPos, yPos, 0);
+        body.setAngularVelocity(3);
+        shape.dispose();
+
+
         Sprite sprite = textureAtlas.createSprite("brick1");
-        //magic number 7, to scale the boxes appropriatly
-        float boxScale = SCALE/7;
-        body = createBody("brick1", xPos, yPos, 0, boxScale );
-        sprite.setScale(boxScale);
-        sprite.setOrigin(0, 0);
-        Box box = new Box(body, sprite);
+        sprite.setSize(boxWidth, boxHeight);
+        sprite.setOriginCenter();
+        Box box = new Box(body, sprite, boxWidth, boxHeight);
         mockBoxes.add(box);
         return box;
+
+
+        //magic number 7, to scale the boxes appropriatly
+//        float boxScale = SCALE/7;
+//        body = createBody("brick1", xPos, yPos, 0, boxScale );
     }
 
-    private void createProjectile(float xPos, float yPos, int radius){
+    private void createProjectile(float xPos, float yPos, float radius){
+        //creating the physical shape of the ball and setting physical attributes
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(xPos, yPos);
+        CircleShape shape = new CircleShape();
+        shape.setRadius(radius);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.friction = 0.5f;
+        fixtureDef.density = 2f;
+        fixtureDef.restitution = 0.2f;
+        fixtureDef.shape = shape;
+        Body body;
+        body = physicsWorld.createBody(bodyDef);
+        body.createFixture(fixtureDef);
+        body.setTransform(xPos, yPos, 0);
+        shape.dispose();
+
+        //setting the sprite of the ball and positioning it correctly
         Sprite sprite = textureAtlas.createSprite("ball_cannon");
-        //magic number 40, to scale the projectile appropriatly
-        float objectScale = SCALE/40;
-        sprite.setScale(objectScale);
+        sprite.setSize(radius*2, radius*2);
         sprite.setOrigin(0, 0);
-        body = createBody("ball_cannon", xPos, yPos, 0, objectScale);
-        //body.setLinearVelocity(20.0f, 1.0f);
-        prosjektil = new Projectile(body, sprite, radius*2, radius*2, new Vector2(100,100));
+        sprite.setOriginCenter();
 
+        body.setLinearVelocity(0.0f, 0.0f);
+        projectile = new Projectile(body, sprite, radius*2, radius*2);
+
+
+//        body = physicsWorld.createBody(bodyDef);
+//        body.createFixture(fixtureDef);
+        //magic number 40, to scale the projectile appropriatly
+//        float objectScale = SCALE/40;
+//        sprite.setScale(objectScale);
+//        body = createBody("ball_cannon", xPos, yPos, 0, objectScale);
     }
 
 
-    private Body createBody(String name, float x, float y, float rotation, float scale) {
-        Body body = physicsBodies.createBody(name, physicsWorld, scale, scale);
-        body.setTransform(x, y, rotation);
-
-        return body;
-    }
+//    private Body createBody(String name, float x, float y, float rotation, float scale) {
+//        Body body = physicsBodies.createBody(name, physicsWorld, scale, scale);
+//        body.setTransform(x, y, rotation);
+//
+//        return body;
+//    }
 
     private void moveBox(Drawable box, float xPos, float yPos) {
         box.getBody().setTransform(xPos, yPos, 0);
@@ -183,8 +227,8 @@ public class MockGameWorld {
         return physicsWorld;
     }
 
-    public Projectile getProsjektil() {
-        return prosjektil;
+    public Projectile getProjectile() {
+        return projectile;
     }
 
     public List<Drawable> getBoxes(){return mockBoxes;}

@@ -4,9 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -35,6 +33,8 @@ public class GameWorldDrawer extends Drawer {
     private OrthographicCamera camera;
     private ExtendViewport viewport;
     private float SCALE;
+    private float screenWidth = CastleCrush.WIDTH*SCALE;
+
 
 
     private int PTM_ratio;
@@ -60,8 +60,7 @@ public class GameWorldDrawer extends Drawer {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.draw(background, 0,0, CastleCrush.WIDTH*SCALE, CastleCrush.HEIGHT*SCALE);
-        drawObject(mockWorld.getGround());
-
+        drawGround();
         for (Drawable obj : mockWorld.getBoxes()) {
             drawObject(obj);
         }
@@ -69,7 +68,7 @@ public class GameWorldDrawer extends Drawer {
             drawObject(obj);
         }
 
-        drawObject(mockWorld.getProsjektil());
+        drawObject(mockWorld.getProjectile());
 
         batch.end();
         debugRenderer.render(physicsWorld,camera.combined);
@@ -80,10 +79,16 @@ public class GameWorldDrawer extends Drawer {
     private void drawObject(Drawable object) {
        // batch.draw(object.getDrawable(), object.getBody().getLocalCenter().x, object.getBody().getLocalCenter().y, object.getWidth(), object.getHeight());
         Vector2 position = object.getBody().getPosition();
+        float xPos = object.getBody().getPosition().x - object.getDrawable().getWidth()/2;
+        float yPos = object.getBody().getPosition().y - object.getDrawable().getHeight()/2;
         float degrees = (float) Math.toDegrees(object.getBody().getAngle());
-        object.getDrawable().setPosition(position.x, position.y);
+        object.getDrawable().setPosition(xPos, yPos);
         object.getDrawable().setRotation(degrees);
         object.getDrawable().draw(batch);
+    }
+
+    private void drawGround() {
+        mockWorld.getGround().getDrawable().draw(batch);
     }
 
 

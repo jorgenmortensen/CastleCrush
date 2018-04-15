@@ -13,14 +13,14 @@ import com.badlogic.gdx.physics.box2d.Body;
 public class Projectile implements Drawable {
 
     private int x, y;
-    private int width;
-    private int height;
+    private float width;
+    private float height;
     private Body body;
     private Sprite sprite;
 
     private Vector2 velocity;
 
-    public Projectile(Body body, Sprite sprite, int width, int height, Vector2 velocity) {
+    public Projectile(Body body, Sprite sprite, float width, float height) {
         this.width = width;
         this.height = height;
         this.body = body;

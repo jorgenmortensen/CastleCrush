@@ -16,12 +16,16 @@ public class Box implements Drawable {
 
     private Sprite sprite;
     private Body body;
+    private float width;
+    private float height;
 
     private boolean isHit;
 
-    public Box(Body body, Sprite sprite) {
+    public Box(Body body, Sprite sprite, float width, float height) {
         this.body = body;
         this.sprite = sprite;
+        this.width = width;
+        this.height = height;
     }
 
     public Body getBody() {
@@ -31,5 +35,13 @@ public class Box implements Drawable {
     @Override
     public Sprite getDrawable() {
         return sprite;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
     }
 }
