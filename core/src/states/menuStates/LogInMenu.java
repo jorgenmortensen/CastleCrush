@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.castlecrush.game.CastleCrush;
 
-import states.GameStateManager;
-import states.State;
+import models.states.GameStateManager;
+import models.states.State;
 
 /**
  * Created by Jørgen on 09.03.2018.

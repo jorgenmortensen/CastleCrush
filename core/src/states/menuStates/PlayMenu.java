@@ -9,8 +9,8 @@ import com.castlecrush.game.CastleCrush;
 
 import components.Button;
 import components.GravityButton;
-import states.GameStateManager;
-import states.State;
+import models.states.GameStateManager;
+import models.states.State;
 import states.playStates.OnlineMultiplayerState;
 import states.playStates.SinglePlayerState;
 

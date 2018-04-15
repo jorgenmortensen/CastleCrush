@@ -11,6 +11,8 @@ import com.castlecrush.game.CastleCrush;
 import components.Button;
 import components.SlidingObjectXdirection;
 import states.menuStates.StartMenuScreen;
+import models.states.State;
+import models.states.GameStateManager;
 
 /**
  * Created by Jørgen on 05.04.2018.

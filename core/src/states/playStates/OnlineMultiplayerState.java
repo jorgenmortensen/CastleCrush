@@ -16,8 +16,8 @@ import components.MessageCodes;
 import components.TextView;
 import googleplayservice.PlayServices;
 import googleplayservice.PlayerData;
-import states.GameStateManager;
-import states.State;
+import models.states.State;
+import models.states.GameStateManager;
 import states.menuStates.PlayMenu;
 
 /**

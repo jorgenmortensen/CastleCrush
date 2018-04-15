@@ -6,7 +6,10 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import states.GameStateManager;
+import models.MockGameWorld;
+import views.Drawer;
+import views.game_world.GameWorldDrawer;
+import models.states.GameStateManager;
 
 import states.Splashscreen;
 
@@ -23,13 +26,15 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 	public static boolean soundOn;
 	public static int WIDTH;
 	public static int HEIGHT;
+	Drawer tegner;
+	MockGameWorld world;
 
-	public static final String TITLE = "Castle Crush";
 
 	private GameStateManager gsm;
 	private SpriteBatch batch;
 
 	public static PlayServices playServices;
+
 
 	public CastleCrush(PlayServices playServices) {
 		this.playServices = playServices;
@@ -40,7 +45,12 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 	public void create () {
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
-		batch = new SpriteBatch();
+
+		SpriteBatch batch = new SpriteBatch();
+		world = new MockGameWorld();
+		tegner = new GameWorldDrawer(batch, world);
+	//	img = new Texture("badlogic.jpg");
+
 		gsm = new GameStateManager();
 		soundOn = true;
 		music = Gdx.audio.newMusic(Gdx.files.internal("gameMusic.mp3"));
@@ -48,7 +58,7 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 		music.setVolume(0.5f);
 		music.play();
 		Gdx.gl.glClearColor(0, 0, 0, 1);
-		gsm.push(new Splashscreen(gsm,this));
+		gsm.push(new Splashscreen(gsm));
 	}
 
 	@Override
@@ -63,6 +73,7 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 	public void dispose () {
 		batch.dispose();
 
+		tegner.dispose();
 	}
 
 	@Override

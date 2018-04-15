@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.castlecrush.game.CastleCrush;
 
+import models.states.State;
+import models.states.GameStateManager;
 import states.menuStates.StartMenuScreen;
 
 /**
@@ -22,15 +24,13 @@ public class Splashscreen extends State {
     // long uses 64-bit, int uses 32-bit -> long can hold more numbers
     private long startTime;
     private Texture t;
-    private CastleCrush crush;
 
 
-    public Splashscreen(GameStateManager gsm, CastleCrush crush) {
+    public Splashscreen(GameStateManager gsm) {
         super(gsm);
         this.am = new AssetManager();
         this.startTime = TimeUtils.millis();
         t = new Texture("splashscreen.png");
-        this.crush = crush;
     }
 
     @Override

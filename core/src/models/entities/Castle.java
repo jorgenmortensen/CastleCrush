@@ -1,14 +1,17 @@
-package entities;
+package models.entities;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Jørgen on 09.03.2018.
  */
 
-public class Castle implements Drawable {
+public class Castle {
 
     private int x;
     private int y;
@@ -16,49 +19,70 @@ public class Castle implements Drawable {
     private int height;
     private List<Box> boxes;
     private Player player;
+    private Cannon cannon;
 
 
-    @Override
-    public void Draw(SpriteBatch batch) {
 
+
+    public Castle(int x, int y, List boxes, Cannon cannon) {
+        this.x = x;
+        this.y = y;
+        this.boxes = boxes;
+        this.cannon = cannon;
     }
 
-    @Override
+
+
+
+
+
+    public List<Box> getBoxes () {return boxes;}
+
+
+
+
+
+
+
+
+
+
     public void setX(int x) {
         this.x = x;
     }
 
-    @Override
+
     public int getX() {
         return this.x;
     }
 
-    @Override
+
+
     public void setY(int y) {
         this.y = y;
     }
 
-    @Override
+
     public int getY() {
         return y;
     }
 
-    @Override
+
     public void setWidth(int width) {
         this.width = width;
     }
 
-    @Override
+
     public int getWidth() {
         return width;
     }
 
-    @Override
+
     public void setHeight(int height) {
         this.height = height;
     }
 
-    @Override
+
     public int getHeight() {
         return this.height;
     }

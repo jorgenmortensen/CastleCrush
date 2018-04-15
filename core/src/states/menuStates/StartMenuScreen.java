@@ -8,14 +8,15 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.castlecrush.game.CastleCrush;
 
 import components.Button;
-import states.GameStateManager;
+import models.states.GameStateManager;
+import models.states.State;
 import states.TutorialState;
 
 /**
  * Created by Jørgen on 12.03.2018.
  */
 
-public class StartMenuScreen extends states.State {
+public class StartMenuScreen extends State {
 
     Button btnPlay;
     Button btnHelp;

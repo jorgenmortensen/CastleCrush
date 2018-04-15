@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import states.GameStateManager;
-import states.State;
+import models.states.GameStateManager;
+import models.states.State;
 
 /**
  * Created by Jørgen on 12.03.2018.
