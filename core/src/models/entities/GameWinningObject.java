@@ -2,8 +2,8 @@ package models.entities;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
-//import com.sun.xml.internal.ws.client.sei.ResponseBuilder;
 
 /**
  * Created by Jørgen on 09.03.2018.
@@ -20,14 +20,29 @@ public class GameWinningObject implements Drawable {
 
     private boolean isHit;
 
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getHeight() {
+        return this.height;
+    }
+
     @Override
     public Sprite getDrawable() {
-        return null;
+        return sprite;
     }
 
     @Override
     public Body getBody() {
         return body;
     }
-
 }

@@ -37,10 +37,10 @@ public class GameCollision implements ContactListener {
                 if (fa.getBody().getUserData() instanceof Projectile || fb.getBody().getUserData() instanceof Projectile){
                     //System.out.println("Prosjektil");
                     if (fa.getBody().getUserData() instanceof Box) {
-                        ((Box) fa.getBody().getUserData()).isHit(true);
+                        ((Box) fa.getBody().getUserData()).setHit(true);
                         gameWorld.addBodyToDestroy(fa);
                     } else if (fb.getBody().getUserData() instanceof Box) {
-                        ((Box) fa.getBody().getUserData()).isHit(true);
+                        ((Box) fa.getBody().getUserData()).setHit(true);
                         gameWorld.addBodyToDestroy(fb);
 
                     }
