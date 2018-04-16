@@ -119,6 +119,13 @@ public class GameWorldDrawer extends Drawer {
 
         //mockWorld.getCannons().get(0).getCannon().draw(batch);
 
+
+        mockWorld.getPhysicsWorld().step(1/60f, 6, 2);
+        //mock DELETE BODIES
+        if (!physicsWorld.isLocked()){
+            mockWorld.destroy((ArrayList<Fixture>) mockWorld.getBodiesToDestroy());
+
+        }
         //Draw the projectile
         if (cannonLeft.isShotsFired()) {
             drawObject(mockWorld.getProjectile());
@@ -133,13 +140,6 @@ public class GameWorldDrawer extends Drawer {
         }
 
         batch.end();
-
-        mockWorld.getPhysicsWorld().step(1/60f, 6, 2);
-        //mock DELETE BODIES
-        if (!physicsWorld.isLocked()){
-            mockWorld.destroy((ArrayList<Fixture>) mockWorld.getBodiesToDestroy());
-
-        }
 
     }
 
