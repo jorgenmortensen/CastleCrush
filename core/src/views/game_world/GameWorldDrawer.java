@@ -79,7 +79,9 @@ public class GameWorldDrawer extends Drawer {
             drawObject(obj);
         }
 
-        //drawObject(mockWorld.getProjectile());
+        drawObject(mockWorld.getProjectile());
+        for (Drawable obj : mockWorld.getGameWinningObjectList())
+        drawObject(obj);
 
         batch.end();
         debugRenderer.render(physicsWorld,camera.combined);
@@ -110,10 +112,11 @@ public class GameWorldDrawer extends Drawer {
 
 
 
+
     @Override
     public void dispose() {
 
-        debugRenderer.dispose();
+       // debugRenderer.dispose();
 
     }
 

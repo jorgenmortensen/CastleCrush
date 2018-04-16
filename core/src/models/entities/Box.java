@@ -18,6 +18,7 @@ public class Box implements Drawable {
     private float width;
     private float height;
     private float density;
+
     private boolean isHit = false;
 
     public Box(Body body, Sprite sprite, float width, float height, float density) {
@@ -45,15 +46,15 @@ public class Box implements Drawable {
         return height;
     }
 
+    public float getDensity() {
+        return density;
+    }
+
     public boolean getHit(){
         return this.isHit;
     }
 
     public void isHit(boolean isHit){
         this.isHit = isHit;
-    }
-
-    public float getDensity() {
-        return density;
     }
 }
