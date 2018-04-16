@@ -83,6 +83,8 @@ public class Box implements Drawable {
         this.isHit = isHit;
     }
 
+    public boolean getHit() { return isHit; }
+
     public float getDensity() {
         return density;
     }

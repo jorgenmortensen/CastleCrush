@@ -43,6 +43,7 @@ public class Projectile implements Drawable {
         this.height = height;
         this.body = body;
         this.sprite = sprite;
+        this.velocity = velocity;
         this.gameWorld = world;
     }
 

@@ -57,17 +57,18 @@ public class SinglePlayerState extends State {
         world = new MockGameWorld();
         angleUp = true;
         font = new BitmapFont();
-        cannon = new Cannon(Math.round((width / 20) * world.getSCALE()),
-                Math.round((width / 20)*world.getSCALE()),
-                Math.round((width / 10) * world.getSCALE()),
-                Math.round((width / 20) * world.getSCALE()),
-                new Sprite(new Texture("cannon.png")),
-                new Sprite(new Texture("wheel.png")), null);
+        //cannon = new Cannon(Math.round((width / 20) * world.getSCALE()),
+        //        Math.round((width / 20)*world.getSCALE()),
+        //        Math.round((width / 10) * world.getSCALE()),
+        //        Math.round((width / 20) * world.getSCALE()),
+        //        new Sprite(new Texture("cannon.png")),
+        //        new Sprite(new Texture("wheel.png")), null);
 
+        cannon = world.getCannons().get(0);
         projectile = new Projectile(null, new Vector2(cannon.getX() + cannon.getWidth() / 2,
                 cannon.getY() + cannon.getHeight() / 4),
                 new Sprite(new Texture("ball_cannon.png")),
-                cannon.getWidth() / 10,cannon.getWidth() / 10, new Vector2(0,0));
+                cannon.getWidth() / 10,cannon.getWidth() / 10, new Vector2(0,0), world);
 
         makeMovingBackground();
 

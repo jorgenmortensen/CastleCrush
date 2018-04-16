@@ -1,6 +1,7 @@
 package models;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -16,6 +17,7 @@ import com.castlecrush.game.CastleCrush;
 import com.codeandweb.physicseditor.PhysicsShapeCache;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -88,7 +90,9 @@ public class MockGameWorld {
 
     private void generateBodies() {
         createGround();
-        makeCastle(8, 20, screenWidth*0.8f, 30, 30);
+        int numVertBoxes = 8, numHorBoxes = 20, castleWidth = 30, castleHeight = 30;
+        float startPosX = screenWidth*0.8f;
+        makeCastle(numVertBoxes, numHorBoxes, startPosX, castleWidth, castleWidth);
         makeMirroredCastle();
         // createBox(30, 3, screenWidth/50, screenWidth/50);
         //createBox(550,30, 30,30);
@@ -100,7 +104,14 @@ public class MockGameWorld {
         //System.out.println("Screen height: " + groundLevel);
         //createBox(20, groundLevel, screenWidth/10, screenWidth/10, 1);
 
+        Cannon cannon = new Cannon(Math.round((startPosX+castleWidth+10) * this.getSCALE() + castleWidth*2/3),
+                Math.round((CastleCrush.WIDTH / 20) * this.getSCALE()),
+                Math.round((CastleCrush.WIDTH / 20) * this.getSCALE()),
+                Math.round((CastleCrush.WIDTH / 40) * this.getSCALE()),
+                new Sprite(new Texture("cannon.png")),
+                new Sprite(new Texture("wheel.png")), null);
 
+        setCannons(new ArrayList<Cannon>(Arrays.asList(cannon, null)));
     }
 
     public void makeCastle(int numVerticalBoxes, int numHorizontalBoxes, float startPosX, int castleWidth, int castleHeight) {

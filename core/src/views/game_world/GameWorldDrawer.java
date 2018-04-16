@@ -73,11 +73,9 @@ public class GameWorldDrawer extends Drawer {
 
     public void fire() {
         int projectileRadius = Math.round(screenWidth / 50);
-        mockWorld.createProjectile((float)(cannonLeft.getX() +
-                        (cannonLeft.getWidth() - projectileRadius * SCALE * 2) * cos(cannonLeft.getAngle() * PI / 180)),
-                (float)(cannonLeft.getY() + (cannonLeft.getWidth() - projectileRadius * SCALE * 2) *
-                        sin(cannonLeft.getAngle() * PI / 180)),
-                projectileRadius, new Vector2(
+        mockWorld.createProjectile((float)(cannonLeft.getX() + (cannonLeft.getWidth() - projectileRadius * SCALE * 2) * cos(cannonLeft.getAngle() * PI / 180)),
+                (float)(cannonLeft.getY() + (cannonLeft.getWidth() - projectileRadius * SCALE * 2) * sin(cannonLeft.getAngle() * PI / 180)), projectileRadius,
+                new Vector2(
                         (float)Math.cos(cannonLeft.getAngle()*Math.PI/180) * cannonLeft.getPower(),
                         (float)Math.sin(cannonLeft.getAngle()*Math.PI/180) * cannonLeft.getPower()));
         cannonLeft.setShotsFired(true);
