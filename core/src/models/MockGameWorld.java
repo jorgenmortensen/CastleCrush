@@ -216,7 +216,7 @@ public class MockGameWorld {
         sprite.setOriginCenter();
 
         body.setLinearVelocity(15.0f, 10.0f);
-        projectile = new Projectile(body, sprite, radius*2, radius*2);
+        projectile = new Projectile(body, sprite, radius*2, radius*2, this);
         body.setUserData(projectile);
 
     }

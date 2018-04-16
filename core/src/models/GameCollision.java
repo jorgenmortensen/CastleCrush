@@ -43,9 +43,10 @@ public class GameCollision implements ContactListener {
                             ((Box) fa.getBody().getUserData()).isHit(true);
                             gameWorld.addBodyToDestroy(fa);
                             System.out.println(getSpeed(fb.getBody().getLinearVelocity()));
-                            if (fb.getBody().getUserData() instanceof Projectile){
-                                ((Projectile) fb.getBody().getUserData()).scheduleSelfDestruct(fb);
-                            }
+
+                        }
+                        if (fb.getBody().getUserData() instanceof Projectile){
+                            ((Projectile) fb.getBody().getUserData()).scheduleSelfDestruct(fb);
                         }
                     } else if (fb.getBody().getUserData() instanceof Box) {
                         // Speed limitation
@@ -53,11 +54,11 @@ public class GameCollision implements ContactListener {
                             ((Box) fa.getBody().getUserData()).isHit(true);
                             gameWorld.addBodyToDestroy(fb);
                             System.out.println(getSpeed(fa.getBody().getLinearVelocity()));
-                            if (fa.getBody().getUserData() instanceof Projectile){
-                                ((Projectile) fa.getBody().getUserData()).scheduleSelfDestruct(fa);
-                            }
-                        }
 
+                        }
+                        if (fa.getBody().getUserData() instanceof Projectile){
+                            ((Projectile) fa.getBody().getUserData()).scheduleSelfDestruct(fa);
+                        }
                     }
                 }
             }
