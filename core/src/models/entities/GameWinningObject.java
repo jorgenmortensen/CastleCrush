@@ -1,7 +1,6 @@
 package models.entities;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 //import com.sun.xml.internal.ws.client.sei.ResponseBuilder;
 
@@ -9,32 +8,34 @@ import com.badlogic.gdx.physics.box2d.Body;
  * Created by Jørgen on 09.03.2018.
  */
 
+// Fundamental blocks for the castle
+
 public class GameWinningObject implements Drawable {
 
-    private float x;
-    private float y;
-    private float width;
-    private float height;
+
     private Sprite sprite;
     private Body body;
+    private float width;
+    private float height;
+    private float density;
+    private boolean isHit = false;
+    private int counter = 0;
 
-    private boolean isHit;
-
-    public GameWinningObject(Body body, Sprite sprite, float x, float y, float width, float height) {
-        this.x = x;
-        this.y = y;
+    public GameWinningObject(Body body, Sprite sprite, float width, float height, float density) {
+        this.body = body;
+        this.sprite = sprite;
         this.width = width;
         this.height = height;
-        this.sprite = sprite;
-        this.body = body;
+        this.density = density;
     }
 
-    public float getX() {
-        return x;
+    public Body getBody() {
+        return body;
     }
 
-    public float getY() {
-        return y;
+    @Override
+    public Sprite getDrawable() {
+        return sprite;
     }
 
     public float getWidth() {
@@ -45,26 +46,23 @@ public class GameWinningObject implements Drawable {
         return height;
     }
 
-    public Sprite getSprite() {
-        return sprite;
-    }
-
-    public boolean isHit() {
-        return isHit;
+    public boolean getHit(){
+        return this.isHit;
     }
 
     public void isHit(boolean isHit){
         this.isHit = isHit;
     }
 
-    @Override
-    public Sprite getDrawable() {
-        return sprite;
+    public float getDensity() {
+        return density;
     }
 
-    @Override
-    public Body getBody() {
-        return body;
+    public int getCounter() {
+        return counter;
     }
 
+    public void isHit(){
+        counter += 1;
+    }
 }
