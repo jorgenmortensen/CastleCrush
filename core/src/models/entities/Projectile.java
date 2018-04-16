@@ -30,11 +30,12 @@ public class Projectile implements Drawable {
 
     private Vector2 velocity;
 
-    public Projectile(Body body, Sprite sprite, float width, float height) {
+    public Projectile(Body body, Sprite sprite, float width, float height, MockGameWorld world) {
         this.width = width;
         this.height = height;
         this.body = body;
         this.sprite = sprite;
+        this.gameWorld = world;
     }
 
     public void setHasHit(boolean hasHit){this.hasHit = hasHit;}
