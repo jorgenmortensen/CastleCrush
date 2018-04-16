@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -18,13 +19,21 @@ import models.entities.Cannon;
 import models.entities.Castle;
 import models.entities.Drawable;
 import models.entities.GameWinningObject;
+import models.entities.Projectile;
+import models.states.State;
+import models.states.playStates.SinglePlayerState;
 import views.Drawer;
+
+import static java.lang.Math.PI;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
 /**
  * Created by Ludvig on 14/03/2018.
  */
 
 public class GameWorldDrawer extends Drawer {
+
     private Texture background = new Texture("background_without_ground.png");
     //private Sprite background;
     private Castle castleLeft, castleRight;
@@ -36,6 +45,8 @@ public class GameWorldDrawer extends Drawer {
     private ExtendViewport viewport;
     private float SCALE;
 
+    private BitmapFont font;
+
 
     private int PTM_ratio;
 
@@ -45,32 +56,73 @@ public class GameWorldDrawer extends Drawer {
     public GameWorldDrawer(SpriteBatch batch, MockGameWorld world){
         super(batch);
         this.mockWorld = world;
+        font = new BitmapFont();
+        this.cannonLeft = world.getCannons().get(0);
+        this.cannonRight = world.getCannons().get(1); //This is NULL as of now
+
         this.physicsWorld = mockWorld.getPhysicsWorld();
         SCALE = world.getSCALE();
-
-
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(CastleCrush.WIDTH*SCALE, CastleCrush.HEIGHT*SCALE, camera);
         viewport.update(CastleCrush.WIDTH, CastleCrush.HEIGHT, true);
-        System.out.println(CastleCrush.WIDTH*SCALE +" "+ CastleCrush.HEIGHT*SCALE);
-        batch.setProjectionMatrix(camera.combined);
+    }
+
+    public void fire() {
+        int projectileRadius = 50;
+        mockWorld.createProjectile((float)(cannonLeft.getX() +
+                        (cannonLeft.getWidth() - projectileRadius * SCALE * 2) * cos(cannonLeft.getAngle() * PI / 180)),
+                (float)(cannonLeft.getY() + (cannonLeft.getWidth() - projectileRadius * SCALE * 2) *
+                        sin(cannonLeft.getAngle() * PI / 180)),
+                projectileRadius, new Vector2(
+                        (float)Math.cos(cannonLeft.getAngle()*Math.PI/180) * cannonLeft.getPower(),
+                        (float)Math.sin(cannonLeft.getAngle()*Math.PI/180) * cannonLeft.getPower()));
+        cannonLeft.setShotsFired(true);
     }
 
     @Override
     public void render() {
+        batch.setProjectionMatrix(camera.combined);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
+        //Draw the background
         batch.draw(background, 0,0, CastleCrush.WIDTH*SCALE, CastleCrush.HEIGHT*SCALE);
+
+        //Draw the ground
         drawObject(mockWorld.getGround());
 
+        //Draw the boxes(castles)
         for (Drawable obj : mockWorld.getBoxes()) {
             drawObject(obj);
         }
-        for (Drawable obj : mockWorld.getCannons()) {
-            drawObject(obj);
+
+        //Draw the cannons
+        /*for (Cannon cannon : mockWorld.getCannons()) {
+            cannon.getCannon().draw(batch);
+        }*/
+
+        batch.draw(cannonLeft.getCannon(), cannonLeft.getX(), cannonLeft.getY() / 2,
+                cannonLeft.getWidth() * 3 / 10, cannonLeft.getHeight() * 3 / 10,
+                cannonLeft.getWidth(), cannonLeft.getHeight(), 1, 1,
+                cannonLeft.getCannon().getRotation());
+
+        batch.draw(cannonLeft.getWheel(), cannonLeft.getX(), CastleCrush.HEIGHT * SCALE / 100,
+                cannonLeft.getWidth() * 2 / 5,
+                cannonLeft.getHeight());
+
+        //mockWorld.getCannons().get(0).getCannon().draw(batch);
+
+        //Draw the projectile
+        if (cannonLeft.isShotsFired()) {
+            drawObject(mockWorld.getProsjektil());
         }
 
-        drawObject(mockWorld.getProsjektil());
+        //Draw the power bar
+        if (cannonLeft.getPower() > 0) {
+            batch.draw(new Texture("powerBar.png"), cannonLeft.getX(),
+                    cannonLeft.getY() / 2,
+                    (cannonLeft.getPower() * cannonLeft.getWidth() * 4 / 5) / 100,
+                    cannonLeft.getHeight() / 2);
+        }
 
         batch.end();
         debugRenderer.render(physicsWorld,camera.combined);
@@ -87,13 +139,10 @@ public class GameWorldDrawer extends Drawer {
         object.getDrawable().draw(batch);
     }
 
-
-
     @Override
     public void dispose() {
-
         debugRenderer.dispose();
-
+        batch.dispose();
     }
 
     public int getCameraWidth() {

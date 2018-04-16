@@ -22,7 +22,6 @@ public class PowerUp implements Drawable {
     private Vector3 velocity;
     private Image image;
 
-
     @Override
     public Sprite getDrawable() {
         return sprite;
@@ -33,15 +32,28 @@ public class PowerUp implements Drawable {
         return body;
     }
 
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getHeight() {
+        return this.height;
+    }
+
     public void move(int dx, int dy) {
 
     }
 
+
     public void update(float dt) {
 
     }
-
-
-
-
 }

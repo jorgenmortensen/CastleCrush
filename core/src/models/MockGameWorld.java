@@ -46,8 +46,6 @@ public class MockGameWorld {
     private Body body;
     private Projectile prosjektil;
 
-
-
     public MockGameWorld() {
         mockBoxes = new ArrayList<Drawable>();
         cannons = new ArrayList<Cannon>();
@@ -59,8 +57,6 @@ public class MockGameWorld {
         physicsWorld = new World(new Vector2(0, -10), true);
         this.generateBodies();
     }
-
-
 
     public void makeCastle(int verticalBoxes, int horizontalBoxes, int startPosX, int castleWidth,
                            int startPosY, int castleHeight) {
@@ -80,7 +76,6 @@ public class MockGameWorld {
         }
     }
 
-
     private void generateBodies() {
         createGround();
         makeCastle(5, 2, 40, 5, 3, 20);
@@ -91,7 +86,7 @@ public class MockGameWorld {
         //createBox(600,80, 20,20);
         //  createBox(Gdx.graphics.getWidth() - 300, 10, 60,40);
 
-        createProjectile(2, 2, 50);
+        //createProjectile(2, 2, 50, new Vector2(5, 5));
     }
 
     private void createGround() {
@@ -115,16 +110,12 @@ public class MockGameWorld {
 
         shape.dispose();
 
-
-
         Sprite groundSprite = textureAtlas.createSprite("bottom_ground");
         //groundSprite.setScale(Gdx.graphics.getWidth(), 1);
         groundSprite.setSize(Gdx.graphics.getWidth(), groundHeight/2);
         // mockBoxes.add(new Box(body, groundSprite));
         ground = new Box(body, groundSprite);
     }
-
-
 
     private void createBox(float xPos, float yPos){
         Sprite sprite = textureAtlas.createSprite("brick1");
@@ -137,18 +128,20 @@ public class MockGameWorld {
 
     }
 
-    private void createProjectile(float xPos, float yPos, int radius){
+    public void createProjectile(float xPos, float yPos, int radius, Vector2 velocity){
         Sprite sprite = textureAtlas.createSprite("ball_cannon");
         //magic number 40, to scale the projectile appropriatly
         float objectScale = SCALE/40;
         sprite.setScale(objectScale);
         sprite.setOrigin(0, 0);
         body = createBody("ball_cannon", xPos, yPos, 0, objectScale);
-        body.setLinearVelocity(20.0f, 10.0f);
-        prosjektil = new Projectile(body, sprite, radius*2, radius*2, new Vector2(100,100));
-
+        body.setLinearVelocity(velocity.x, velocity.y);
+        prosjektil = new Projectile(body, new Vector2(body.getPosition().x, body.getPosition().y),
+                sprite, radius*2, radius*2,
+                velocity);
+        System.out.println("Body X: " + body.getPosition().x);
+        System.out.println("Body Y: " + body.getPosition().y);
     }
-
 
     private Body createBody(String name, float x, float y, float rotation, float scale) {
         Body body = physicsBodies.createBody(name, physicsWorld, scale, scale);
@@ -156,8 +149,6 @@ public class MockGameWorld {
 
         return body;
     }
-
-
 
     public World getPhysicsWorld() {
         return physicsWorld;
@@ -178,4 +169,14 @@ public class MockGameWorld {
     public static float getSCALE() {
         return SCALE;
     }
+
+    public void setCannons(List cannons) {
+        this.cannons = cannons;
+    }
+
+    public void setProsjektil(Projectile prosjektil) {
+        this.prosjektil = prosjektil;
+    }
+
+
 }
