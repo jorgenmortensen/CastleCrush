@@ -79,6 +79,10 @@ public class GameWorldDrawer extends Drawer {
             drawObject(obj);
         }
 
+        for (Drawable obj : mockWorld.getGameWinningObjects()) {
+            drawObject(obj);
+        }
+
         if (mockWorld.getProjectile().getHasHit()) {
         } else {
             drawObject(mockWorld.getProjectile());
