@@ -96,8 +96,8 @@ public class MockGameWorld {
         //createBox(600,80, 20,20);
         //  createBox(Gdx.graphics.getWidth() - 300, 10, 60,40);
 
-        createProjectile( 30 , 2, screenWidth/50f);
-        System.out.println("Screen height: " + groundLevel);
+        //createProjectile( 30 , 2, screenWidth/50f);
+        //System.out.println("Screen height: " + groundLevel);
         //createBox(20, groundLevel, screenWidth/10, screenWidth/10, 1);
 
 
@@ -196,7 +196,7 @@ public class MockGameWorld {
     }
 
 
-    private void createProjectile(float xPos, float yPos, float radius){
+    public void createProjectile(float xPos, float yPos, float radius, Vector2 velocity){
         //creating the physical shape of the ball and setting physical attributes
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -220,8 +220,8 @@ public class MockGameWorld {
         sprite.setOrigin(0, 0);
         sprite.setOriginCenter();
 
-        body.setLinearVelocity(15.0f, 10.0f);
-        projectile = new Projectile(body, sprite, radius*2, radius*2, this);
+        body.setLinearVelocity(velocity.x, velocity.y);
+        projectile = new Projectile(body, new Vector2(xPos, yPos), sprite, radius*2, radius*2, velocity,this);
         body.setUserData(projectile);
 
     }
@@ -262,4 +262,14 @@ public class MockGameWorld {
     public static float getSCALE() {
         return SCALE;
     }
+
+    public void setCannons(List cannons) {
+        this.cannons = cannons;
+    }
+
+    public void setProjectile(Projectile projectile) {
+        this.projectile = projectile;
+    }
+
+
 }
