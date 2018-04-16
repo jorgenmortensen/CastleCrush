@@ -181,21 +181,14 @@ public class MockGameWorld {
         body.setAngularVelocity(3);
         shape.dispose();
 
-
         Sprite sprite = textureAtlas.createSprite("brick1");
         sprite.setSize(boxWidth, boxHeight);
         sprite.setOriginCenter();
         Box box = new Box(body, sprite, boxWidth, boxHeight);
         mockBoxes.add(box);
+        body.setUserData(box);
         return box;
 
-
-        //magic number 7, to scale the boxes appropriatly
-        float boxScale = SCALE/7;
-        body = createBody("brick1", xPos, yPos, 0, boxScale );
-        sprite.setScale(boxScale);
-        sprite.setOrigin(0, 0);
-        mockBoxes.add(new Box(body, sprite));
 
     }
 
@@ -224,15 +217,13 @@ public class MockGameWorld {
         sprite.setOrigin(0, 0);
         sprite.setOriginCenter();
 
-        body.setLinearVelocity(0.0f, 0.0f);
+        body.setLinearVelocity(15.0f, 10.0f);
         projectile = new Projectile(body, sprite, radius*2, radius*2);
-
+        body.setUserData(projectile);
 
     }
 
-    private Body createBody(String name, float x, float y, float rotation, float scale) {
-        Body body = physicsBodies.createBody(name, physicsWorld, scale, scale);
-        body.setTransform(x, y, rotation);
+//
 
     private void moveBox(Drawable box, float xPos, float yPos) {
         box.getBody().setTransform(xPos, yPos, 0);

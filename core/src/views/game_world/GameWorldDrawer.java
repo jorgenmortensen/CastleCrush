@@ -92,6 +92,7 @@ public class GameWorldDrawer extends Drawer {
     }
 
     private void drawObject(Drawable object) {
+       // batch.draw(object.getDrawable(), object.getBody().getLocalCenter().x, object.getBody().getLocalCenter().y, object.getWidth(), object.getHeight());
         Vector2 position = object.getBody().getPosition();
         float xPos = object.getBody().getPosition().x - object.getDrawable().getWidth()/2;
         float yPos = object.getBody().getPosition().y - object.getDrawable().getHeight()/2;
