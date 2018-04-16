@@ -79,7 +79,10 @@ public class GameWorldDrawer extends Drawer {
             drawObject(obj);
         }
 
-        //drawObject(mockWorld.getProjectile());
+        if (mockWorld.getProjectile().getHasHit()) {
+        } else {
+            drawObject(mockWorld.getProjectile());
+        }
 
         batch.end();
         debugRenderer.render(physicsWorld,camera.combined);

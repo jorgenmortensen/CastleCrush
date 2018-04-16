@@ -96,7 +96,7 @@ public class MockGameWorld {
         //createBox(600,80, 20,20);
         //  createBox(Gdx.graphics.getWidth() - 300, 10, 60,40);
 
-        //createProjectile( 30 , 2, screenWidth/50f);
+        createProjectile( 30 , 2, screenWidth/50f);
         System.out.println("Screen height: " + groundLevel);
         //createBox(20, groundLevel, screenWidth/10, screenWidth/10, 1);
 

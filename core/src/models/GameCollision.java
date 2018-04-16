@@ -1,5 +1,6 @@
 package models;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -37,17 +38,38 @@ public class GameCollision implements ContactListener {
                 if (fa.getBody().getUserData() instanceof Projectile || fb.getBody().getUserData() instanceof Projectile){
                     //System.out.println("Prosjektil");
                     if (fa.getBody().getUserData() instanceof Box) {
-                        ((Box) fa.getBody().getUserData()).isHit(true);
-                        gameWorld.addBodyToDestroy(fa);
+                        // Speed limitation
+                        if (getSpeed(fb.getBody().getLinearVelocity())>10){
+                            ((Box) fa.getBody().getUserData()).isHit(true);
+                            gameWorld.addBodyToDestroy(fa);
+                            System.out.println(getSpeed(fb.getBody().getLinearVelocity()));
+                            if (fb.getBody().getUserData() instanceof Projectile){
+                                ((Projectile) fb.getBody().getUserData()).scheduleSelfDestruct(fb);
+                            }
+                        }
                     } else if (fb.getBody().getUserData() instanceof Box) {
-                        ((Box) fa.getBody().getUserData()).isHit(true);
-                        gameWorld.addBodyToDestroy(fb);
+                        // Speed limitation
+                        if (getSpeed(fa.getBody().getLinearVelocity())>10){
+                            ((Box) fa.getBody().getUserData()).isHit(true);
+                            gameWorld.addBodyToDestroy(fb);
+                            System.out.println(getSpeed(fa.getBody().getLinearVelocity()));
+                            if (fa.getBody().getUserData() instanceof Projectile){
+                                ((Projectile) fa.getBody().getUserData()).scheduleSelfDestruct(fa);
+                            }
+                        }
 
                     }
                 }
             }
 
         }
+    }
+
+    private double getSpeed (Vector2 vector){
+        double x = vector.x;
+        double y = vector.y;
+
+        return Math.sqrt(x*x+y*y);
     }
 
     @Override
