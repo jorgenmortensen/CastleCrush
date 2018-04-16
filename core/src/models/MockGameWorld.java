@@ -175,7 +175,7 @@ public class MockGameWorld {
         body = createBody("ball_cannon", xPos, yPos, 0, objectScale);
         //body.setUserData("Projectile");
         body.setLinearVelocity(20.0f, 10.0f);
-        projectile = new Projectile(body, sprite, radius*2, radius*2, new Vector2(100,100));
+        projectile = new Projectile(body, sprite, radius*2, radius*2, new Vector2(100,100), this);
         body.setUserData(projectile);
         System.out.println(body.getUserData() instanceof Projectile);
         System.out.println("Projectile type: "+body.getType());

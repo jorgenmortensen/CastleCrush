@@ -1,6 +1,7 @@
 package models;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -43,6 +44,9 @@ public class GameCollision implements ContactListener {
                             ((Box) fa.getBody().getUserData()).isHit(true);
                             gameWorld.addBodyToDestroy(fa);
                             System.out.println(getSpeed(fb.getBody().getLinearVelocity()));
+                            if (fb.getBody().getUserData() instanceof Projectile){
+                                ((Projectile) fb.getBody().getUserData()).scheduleSelfDestruct(fb);
+                            }
                         }
                     } else if (fb.getBody().getUserData() instanceof Box) {
                         // Speed limitation
@@ -50,6 +54,9 @@ public class GameCollision implements ContactListener {
                             ((Box) fa.getBody().getUserData()).isHit(true);
                             gameWorld.addBodyToDestroy(fb);
                             System.out.println(getSpeed(fa.getBody().getLinearVelocity()));
+                            if (fa.getBody().getUserData() instanceof Projectile){
+                                ((Projectile) fa.getBody().getUserData()).scheduleSelfDestruct(fa);
+                            }
                         }
 
                     }
