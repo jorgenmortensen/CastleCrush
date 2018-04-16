@@ -1,6 +1,7 @@
 package models;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -37,6 +38,7 @@ public class MockGameWorld {
     static final float SCALE = 0.05f;
     private World physicsWorld;
 
+    private List<Fixture> bodiesToDestroy = new ArrayList<Fixture>();
     private TextureAtlas textureAtlas;
     private PhysicsShapeCache physicsBodies;
 
@@ -48,6 +50,25 @@ public class MockGameWorld {
     private float screenHeight = CastleCrush.HEIGHT*SCALE;
     private float groundLevel;
 
+    public List<Fixture> getBodiesToDestroy(){
+        return bodiesToDestroy;
+    }
+
+    public void removeBox(Box b){
+        if (mockBoxes.contains(b)){
+            mockBoxes.remove(b);
+        }
+    }
+
+    public void addBodyToDestroy(Fixture b){
+        if (!bodiesToDestroy.contains(b)){
+            bodiesToDestroy.add(b);
+        }
+    }
+
+    public void removeAllBodiesToDestroy(){
+        bodiesToDestroy = new ArrayList<Fixture>();
+    }
 
 
     public MockGameWorld() {
@@ -60,6 +81,7 @@ public class MockGameWorld {
         Box2D.init();
         physicsBodies = new PhysicsShapeCache("physics.xml");
         physicsWorld = new World(new Vector2(0, -10), true);
+        physicsWorld.setContactListener(new GameCollision(this));
         this.generateBodies();
     }
 
@@ -134,6 +156,7 @@ public class MockGameWorld {
         groundSprite.setSize(Gdx.graphics.getWidth(), groundHeight/2);
         // mockBoxes.add(new Box(body, groundSprite));
         ground = new Box(body, groundSprite, 0, 0);
+        body.setUserData(ground);
     }
 
 
@@ -168,9 +191,14 @@ public class MockGameWorld {
 
 
         //magic number 7, to scale the boxes appropriatly
-//        float boxScale = SCALE/7;
-//        body = createBody("brick1", xPos, yPos, 0, boxScale );
+        float boxScale = SCALE/7;
+        body = createBody("brick1", xPos, yPos, 0, boxScale );
+        sprite.setScale(boxScale);
+        sprite.setOrigin(0, 0);
+        mockBoxes.add(new Box(body, sprite));
+
     }
+
 
     private void createProjectile(float xPos, float yPos, float radius){
         //creating the physical shape of the ball and setting physical attributes
@@ -200,28 +228,26 @@ public class MockGameWorld {
         projectile = new Projectile(body, sprite, radius*2, radius*2);
 
 
-//        body = physicsWorld.createBody(bodyDef);
-//        body.createFixture(fixtureDef);
-        //magic number 40, to scale the projectile appropriatly
-//        float objectScale = SCALE/40;
-//        sprite.setScale(objectScale);
-//        body = createBody("ball_cannon", xPos, yPos, 0, objectScale);
     }
 
-
-//    private Body createBody(String name, float x, float y, float rotation, float scale) {
-//        Body body = physicsBodies.createBody(name, physicsWorld, scale, scale);
-//        body.setTransform(x, y, rotation);
-//
-//        return body;
-//    }
+    private Body createBody(String name, float x, float y, float rotation, float scale) {
+        Body body = physicsBodies.createBody(name, physicsWorld, scale, scale);
+        body.setTransform(x, y, rotation);
 
     private void moveBox(Drawable box, float xPos, float yPos) {
         box.getBody().setTransform(xPos, yPos, 0);
         box.getDrawable().setPosition(xPos, yPos);
     }
 
-
+    public void destroy(ArrayList<Fixture> bodiesToDestroy) {
+        for (Fixture bodyToDestroy : bodiesToDestroy) {
+            if (bodyToDestroy.getBody() != null) {
+                physicsWorld.destroyBody(bodyToDestroy.getBody());
+                removeBox((Box) bodyToDestroy.getUserData());
+            }
+        }
+        removeAllBodiesToDestroy();
+    }
 
     public World getPhysicsWorld() {
         return physicsWorld;
