@@ -40,7 +40,7 @@ public class GameCollision implements ContactListener {
                     //System.out.println("Prosjektil");
                     if (fa.getBody().getUserData() instanceof Box) {
                         // Speed limitation
-                        if (getSpeed(fb.getBody().getLinearVelocity())>5){
+                        if (getSpeed(fb.getBody().getLinearVelocity())>10){
                             ((Box) fa.getBody().getUserData()).isHit(true);
                             gameWorld.addBodyToDestroy(fa);
                             System.out.println(getSpeed(fb.getBody().getLinearVelocity()));
@@ -50,7 +50,7 @@ public class GameCollision implements ContactListener {
                         }
                     } else if (fb.getBody().getUserData() instanceof Box) {
                         // Speed limitation
-                        if (getSpeed(fa.getBody().getLinearVelocity())>5){
+                        if (getSpeed(fa.getBody().getLinearVelocity())>10){
                             ((Box) fa.getBody().getUserData()).isHit(true);
                             gameWorld.addBodyToDestroy(fb);
                             System.out.println(getSpeed(fa.getBody().getLinearVelocity()));

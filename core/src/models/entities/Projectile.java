@@ -58,7 +58,7 @@ public class Projectile implements Drawable {
                 public void run() {
                     // Delete ball
 
-                    if (getSpeed(getBody().getLinearVelocity())<1){
+                    if (getSpeed(getBody().getLinearVelocity())<3){
                         setHasHit(true);
                         gameWorld.addBodyToDestroy(fixture);
                         timer.cancel();
@@ -78,5 +78,7 @@ public class Projectile implements Drawable {
 
         return Math.sqrt(x*x+y*y);
     }
+
+    public boolean getHasHit(){return hasHit;}
 
 }
