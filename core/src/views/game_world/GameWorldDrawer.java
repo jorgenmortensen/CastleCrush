@@ -67,6 +67,8 @@ public class GameWorldDrawer extends Drawer {
         drawGround();
         for (Drawable obj : mockWorld.getBoxes()) {
             if (obj instanceof Box){
+                System.out.println("Y coordinat:" + obj.getDrawable().getY());
+                System.out.println("Width: " + obj.getDrawable().getHeight());
                 if (((Box) obj).getHit()){
                 } else {
                     drawObject(obj);
@@ -77,7 +79,7 @@ public class GameWorldDrawer extends Drawer {
             drawObject(obj);
         }
 
-        drawObject(mockWorld.getProjectile());
+        //drawObject(mockWorld.getProjectile());
 
         batch.end();
         debugRenderer.render(physicsWorld,camera.combined);

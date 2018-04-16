@@ -1,7 +1,6 @@
 package models;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -74,7 +73,7 @@ public class MockGameWorld {
     public MockGameWorld() {
         mockBoxes = new ArrayList<Drawable>();
         cannons = new ArrayList<Cannon>();
-        groundLevel = screenHeight/100;
+        groundLevel = screenHeight/25;
 
         textureAtlas = new TextureAtlas("sprites.txt");
 
@@ -89,7 +88,7 @@ public class MockGameWorld {
 
     private void generateBodies() {
         createGround();
-        makeCastle(10, 10, screenWidth*0.8f, 50, 50);
+        makeCastle(8, 20, screenWidth*0.8f, 30, 30);
         makeMirroredCastle();
         // createBox(30, 3, screenWidth/50, screenWidth/50);
         //createBox(550,30, 30,30);
@@ -97,7 +96,11 @@ public class MockGameWorld {
         //createBox(600,80, 20,20);
         //  createBox(Gdx.graphics.getWidth() - 300, 10, 60,40);
 
-        createProjectile( 30 , 2, screenWidth/50f);
+        //createProjectile( 30 , 2, screenWidth/50f);
+        System.out.println("Screen height: " + groundLevel);
+        //createBox(20, groundLevel, screenWidth/10, screenWidth/10, 1);
+
+
     }
 
     public void makeCastle(int numVerticalBoxes, int numHorizontalBoxes, float startPosX, int castleWidth, int castleHeight) {
@@ -106,10 +109,12 @@ public class MockGameWorld {
 
         Random ran = new Random();
         //Make the vertical left wall
-        for (int i = 0; i < numVerticalBoxes; i++) {
-            int number = ran.nextInt(numHorizontalBoxes-4 )+4 + 1;
+        for (int i = 0; i < numHorizontalBoxes; i++) {
+            int number = ran.nextInt(numVerticalBoxes-4 )+4 + 1;
             for (int j = 0; j < number; j++) {
-                Box box = createBox(startPosX + i * boxWidth, groundLevel + j * boxHeight+ 0.005f, boxWidth, boxHeight, (numHorizontalBoxes-j)*10);
+                if (startPosX + i * boxWidth < screenWidth) {
+                    Box box = createBox(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight/3, boxWidth, boxHeight, (numVerticalBoxes - j)*10);
+                }
             }
         }
     }
@@ -118,7 +123,7 @@ public class MockGameWorld {
     private void  makeMirroredCastle() {
         for (int i = mockBoxes.size()- 1; i >= 0; i--) {
             Box originalBox = (Box) mockBoxes.get(i);
-            Box mirroredBox = createBox(originalBox.getBody().getPosition().x, originalBox.getBody().getPosition().y, originalBox.getWidth(), originalBox.getHeight(), 2);
+            Box mirroredBox = createBox(originalBox.getBody().getPosition().x, originalBox.getBody().getPosition().y, originalBox.getWidth(), originalBox.getHeight(), originalBox.getDensity());
             float boxXpos = originalBox.getBody().getPosition().x;
             float boxYpos = originalBox.getBody().getPosition().y;
             //float boxWidth = originalBox.getDrawable().getWidth();
@@ -155,7 +160,7 @@ public class MockGameWorld {
         //groundSprite.setScale(Gdx.graphics.getWidth(), 1);
         groundSprite.setSize(Gdx.graphics.getWidth(), groundHeight/2);
         // mockBoxes.add(new Box(body, groundSprite));
-        ground = new Box(body, groundSprite, 0, 0);
+        ground = new Box(body, groundSprite, 0, 0, 0);
         body.setUserData(ground);
     }
 
@@ -178,18 +183,16 @@ public class MockGameWorld {
         body = physicsWorld.createBody(bodyDef);
         body.createFixture(fixtureDef);
         body.setTransform(xPos, yPos, 0);
-        body.setAngularVelocity(3);
+        //body.setAngularVelocity(3);
         shape.dispose();
 
         Sprite sprite = textureAtlas.createSprite("brick1");
         sprite.setSize(boxWidth, boxHeight);
         sprite.setOriginCenter();
-        Box box = new Box(body, sprite, boxWidth, boxHeight);
+        Box box = new Box(body, sprite, boxWidth, boxHeight, density);
         mockBoxes.add(box);
         body.setUserData(box);
         return box;
-
-
     }
 
 
