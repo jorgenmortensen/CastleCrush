@@ -1,6 +1,7 @@
 package models;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -36,6 +37,8 @@ public class MockGameWorld {
     static final int POSITION_ITERATIONS = 2;
     static final float SCALE = 0.05f;
     private World physicsWorld;
+    private float boxWidth;
+    private float boxHeight;
 
     private List<Fixture> bodiesToDestroy = new ArrayList<Fixture>();
     private TextureAtlas textureAtlas;
@@ -76,7 +79,8 @@ public class MockGameWorld {
         groundLevel = screenHeight/25;
 
         textureAtlas = new TextureAtlas("sprites.txt");
-
+        boxWidth = screenWidth/20;
+        boxHeight = screenWidth/20;
         Box2D.init();
         physicsBodies = new PhysicsShapeCache("physics.xml");
         physicsWorld = new World(new Vector2(0, -10), true);
@@ -88,7 +92,7 @@ public class MockGameWorld {
 
     private void generateBodies() {
         createGround();
-        makeCastle(8, 20, screenWidth*0.8f, 30, 30);
+        makeCastle(screenWidth*0.8f, screenWidth*0.2f, screenHeight*0.6f);
         makeMirroredCastle();
         // createBox(30, 3, screenWidth/50, screenWidth/50);
         //createBox(550,30, 30,30);
@@ -103,31 +107,36 @@ public class MockGameWorld {
 
     }
 
-    public void makeCastle(int numVerticalBoxes, int numHorizontalBoxes, float startPosX, int castleWidth, int castleHeight) {
-        float boxWidth = castleWidth/numHorizontalBoxes;
-        float boxHeight = castleHeight/numVerticalBoxes;
-
+    public void makeCastle(float startPosX, float castleWidth, float castleHeight) {
+        int numHorizontalBoxes = (int) Math.floor((castleWidth / boxWidth));
+        int numVerticalBoxes = (int) Math.floor((castleHeight / boxHeight));
         Random ran = new Random();
         //Make the vertical left wall
         for (int i = 0; i < numHorizontalBoxes; i++) {
-            int number = ran.nextInt(numVerticalBoxes-4 )+4 + 1;
+            int number = ran.nextInt(numVerticalBoxes) + numVerticalBoxes/4;
             for (int j = 0; j < number; j++) {
                 if (startPosX + i * boxWidth < screenWidth) {
-                    Box box = createBox(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight/3, boxWidth, boxHeight, (numVerticalBoxes - j)*10);
+                    if (j == number - 1) {
+                        Box box = createBox(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight / 3, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, new Sprite(new Texture("roof_box.png")));
+
+                    } else {
+                        Box box = createBox(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight / 3, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, null);
+                    }
                 }
             }
         }
     }
 
 
+
     private void  makeMirroredCastle() {
         for (int i = mockBoxes.size()- 1; i >= 0; i--) {
             Box originalBox = (Box) mockBoxes.get(i);
-            Box mirroredBox = createBox(originalBox.getBody().getPosition().x, originalBox.getBody().getPosition().y, originalBox.getWidth(), originalBox.getHeight(), originalBox.getDensity());
+            Box mirroredBox = createBox(originalBox.getBody().getPosition().x, originalBox.getBody().getPosition().y, originalBox.getWidth(), originalBox.getHeight(), originalBox.getDensity(), originalBox.getDrawable());
             float boxXpos = originalBox.getBody().getPosition().x;
             float boxYpos = originalBox.getBody().getPosition().y;
             //float boxWidth = originalBox.getDrawable().getWidth();
-            moveBox(mirroredBox,  screenWidth- boxXpos, boxYpos);
+            moveBox(mirroredBox,  screenWidth - boxXpos, boxYpos);
             mockBoxes.add(mirroredBox);
         }
     }
@@ -155,7 +164,6 @@ public class MockGameWorld {
         shape.dispose();
 
 
-
         Sprite groundSprite = textureAtlas.createSprite("bottom_ground");
         //groundSprite.setScale(Gdx.graphics.getWidth(), 1);
         groundSprite.setSize(Gdx.graphics.getWidth(), groundHeight/2);
@@ -166,8 +174,7 @@ public class MockGameWorld {
 
 
 
-    private Box createBox(float xPos, float yPos, float boxWidth, float boxHeight, float density){
-
+    private Box createBox(float xPos, float yPos, float boxWidth, float boxHeight, float density, Sprite sprite){
         //creating and setting up the physical shape of the box
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -185,8 +192,16 @@ public class MockGameWorld {
         body.setTransform(xPos, yPos, 0);
         //body.setAngularVelocity(3);
         shape.dispose();
-
-        Sprite sprite = textureAtlas.createSprite("brick1");
+        Random ran = new Random();
+        int number = ran.nextInt(20);
+        Sprite boxSprite;
+        if (sprite != null){
+            boxSprite = sprite;
+        } else if(number == 10){
+            sprite = new Sprite(new Texture("window_box.png"));
+        } else {
+            sprite = new Sprite(new Texture("normal_box.png"));
+        }
         sprite.setSize(boxWidth, boxHeight);
         sprite.setOriginCenter();
         Box box = new Box(body, sprite, boxWidth, boxHeight, density);
