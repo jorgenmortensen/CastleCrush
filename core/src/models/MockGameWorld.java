@@ -45,6 +45,7 @@ public class MockGameWorld {
     private Body body;
     private Projectile projectile;
 
+
     public List<Fixture> getBodiesToDestroy(){
         return bodiesToDestroy;
     }
@@ -77,6 +78,8 @@ public class MockGameWorld {
         physicsWorld = new World(new Vector2(0, -10), true);
         physicsWorld.setContactListener(new GameCollision(this));
         this.generateBodies();
+
+
     }
 
 

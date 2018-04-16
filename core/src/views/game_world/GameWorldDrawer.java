@@ -38,6 +38,10 @@ public class GameWorldDrawer extends Drawer {
     private ExtendViewport viewport;
     private float SCALE;
 
+    private Texture gwo1;
+    private Texture gwo2;
+    private Texture gwo3;
+
 
     private int PTM_ratio;
 
@@ -56,6 +60,9 @@ public class GameWorldDrawer extends Drawer {
         viewport.update(CastleCrush.WIDTH, CastleCrush.HEIGHT, true);
         System.out.println(CastleCrush.WIDTH*SCALE +" "+ CastleCrush.HEIGHT*SCALE);
         batch.setProjectionMatrix(camera.combined);
+        gwo1 = new Texture("gwo1.png");
+        gwo2 = new Texture("gwo2.png");
+        gwo3 = new Texture("gwo3.png");
     }
 
     @Override
@@ -64,7 +71,9 @@ public class GameWorldDrawer extends Drawer {
         batch.begin();
         batch.draw(background, 0,0, CastleCrush.WIDTH*SCALE, CastleCrush.HEIGHT*SCALE);
         drawObject(mockWorld.getGround());
-
+        batch.draw(gwo1, 0,0, 5,5);
+        batch.draw(gwo2, 6,0, 5,5);
+        batch.draw(gwo3, 12,0, 5,5);
         // If the object has been hit, it doesn't have to be drawn
 
         for (Drawable obj : mockWorld.getBoxes()) {
