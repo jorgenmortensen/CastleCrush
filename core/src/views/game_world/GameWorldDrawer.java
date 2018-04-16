@@ -70,7 +70,7 @@ public class GameWorldDrawer extends Drawer {
     }
 
     public void fire() {
-        int projectileRadius = 50;
+        int projectileRadius = Math.round(screenWidth / 50);
         mockWorld.createProjectile((float)(cannonLeft.getX() +
                         (cannonLeft.getWidth() - projectileRadius * SCALE * 2) * cos(cannonLeft.getAngle() * PI / 180)),
                 (float)(cannonLeft.getY() + (cannonLeft.getWidth() - projectileRadius * SCALE * 2) *
@@ -131,8 +131,6 @@ public class GameWorldDrawer extends Drawer {
                     (cannonLeft.getPower() * cannonLeft.getWidth() * 4 / 5) / 100,
                     cannonLeft.getHeight() / 2);
         }
-        
-        drawObject(mockWorld.getProjectile());
 
         batch.end();
 
