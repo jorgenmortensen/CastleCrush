@@ -250,7 +250,7 @@ public class MockGameWorld {
         sprite.setOriginCenter();
 
         Projectile tempProjectile = new Projectile(body, new Vector2(xPos, yPos), sprite, radius*2, radius*2, this, state);
-        body.setUserData(projectile);
+        body.setUserData(tempProjectile);
 
         return tempProjectile;
 
