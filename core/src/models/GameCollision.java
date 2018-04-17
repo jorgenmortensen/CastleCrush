@@ -1,5 +1,6 @@
 package models;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
 import models.entities.Box;
+import models.entities.GameWinningObject;
 import models.entities.Projectile;
 
 /**
@@ -17,6 +19,7 @@ import models.entities.Projectile;
 
 public class GameCollision implements ContactListener {
     private MockGameWorld gameWorld;
+    private Sound sound;
 
     public GameCollision(MockGameWorld world){
         this.gameWorld = world;
@@ -36,13 +39,19 @@ public class GameCollision implements ContactListener {
         if (contact.isTouching()){
             if (!(fa.getBody().getType().equals(BodyDef.BodyType.StaticBody))){
                 if (fa.getBody().getUserData() instanceof Projectile || fb.getBody().getUserData() instanceof Projectile){
-                    //System.out.println("Prosjektil");
-                    if (fa.getBody().getUserData() instanceof Box) {
+                    if (fa.getBody().getUserData() instanceof GameWinningObject){
+                        ((GameWinningObject) fa.getBody().getUserData()).isHit(true);
+                        gameWorld.addBodyToDestroy(fa);
+                        System.out.println("COllided.");
+                    } else if (fb.getBody().getUserData() instanceof GameWinningObject){
+                        ((GameWinningObject) fa.getBody().getUserData()).isHit(true);
+                        gameWorld.addBodyToDestroy(fb);
+                        System.out.println("COllided.");
+                    } else if (fa.getBody().getUserData() instanceof Box) {
                         // Speed limitation
                         if (getSpeed(fb.getBody().getLinearVelocity())>10){
                             ((Box) fa.getBody().getUserData()).isHit(true);
                             gameWorld.addBodyToDestroy(fa);
-                            System.out.println(getSpeed(fb.getBody().getLinearVelocity()));
 
                         }
                         if (fb.getBody().getUserData() instanceof Projectile){
@@ -53,7 +62,6 @@ public class GameCollision implements ContactListener {
                         if (getSpeed(fa.getBody().getLinearVelocity())>10){
                             ((Box) fa.getBody().getUserData()).isHit(true);
                             gameWorld.addBodyToDestroy(fb);
-                            System.out.println(getSpeed(fa.getBody().getLinearVelocity()));
 
                         }
                         if (fa.getBody().getUserData() instanceof Projectile){

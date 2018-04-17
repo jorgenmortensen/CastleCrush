@@ -37,7 +37,8 @@ public class GameWorldDrawer extends Drawer {
     private OrthographicCamera camera;
     private ExtendViewport viewport;
     private float SCALE;
-    private float screenWidth = CastleCrush.WIDTH*SCALE;
+    private float screenWidth;
+    private float screenHeight;
 
 
 
@@ -51,7 +52,8 @@ public class GameWorldDrawer extends Drawer {
         this.mockWorld = world;
         this.physicsWorld = mockWorld.getPhysicsWorld();
         SCALE = world.getSCALE();
-
+        screenWidth = CastleCrush.WIDTH*SCALE;
+        screenHeight = CastleCrush.HEIGHT*SCALE;
 
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(CastleCrush.WIDTH*SCALE, CastleCrush.HEIGHT*SCALE, camera);
@@ -63,33 +65,39 @@ public class GameWorldDrawer extends Drawer {
     public void render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(background, 0,0, CastleCrush.WIDTH*SCALE, CastleCrush.HEIGHT*SCALE);
+        batch.draw(background, 0,0, screenWidth, screenHeight);
         drawGround();
-        for (Drawable obj : mockWorld.getBoxes()) {
-            if (obj instanceof Box){
-                System.out.println("Y coordinat:" + obj.getDrawable().getY());
-                System.out.println("Width: " + obj.getDrawable().getHeight());
-                if (((Box) obj).getHit()){
-                } else {
-                    drawObject(obj);
+        System.out.println("Player 1: " + mockWorld.getPlayer1().getGameWinningObject().getHit());
+        System.out.println("Player 2: " + mockWorld.getPlayer2().getGameWinningObject().getHit());
+        if (mockWorld.getPlayer1().getGameWinningObject().getHit()){
+            Texture t = new Texture("player2.png");
+            batch.draw(t,screenWidth*0.1f,screenHeight*0.1f, screenWidth*0.8f, screenHeight*0.8f);
+        } else if (mockWorld.getPlayer2().getGameWinningObject().getHit()){
+            Texture t = new Texture("player1.png");
+            batch.draw(t,screenWidth*0.1f,screenHeight*0.1f, screenWidth*0.8f, screenHeight*0.8f);
+        } else {
+            for (Drawable obj : mockWorld.getBoxes()) {
+                if (obj instanceof Box) {
+                    if (!(((Box) obj).getHit())) {
+                        drawObject(obj);
+                    }
                 }
             }
-        }
-        for (Drawable obj : mockWorld.getCannons()) {
-            drawObject(obj);
+            for (Drawable obj : mockWorld.getCannons()) {
+                drawObject(obj);
+            }
+
+
+            if (mockWorld.getProjectile().getHasHit()) {
+            } else {
+                drawObject(mockWorld.getProjectile());
+            }
         }
 
-        for (Drawable obj : mockWorld.getGameWinningObjects()) {
-            drawObject(obj);
-        }
 
-        if (mockWorld.getProjectile().getHasHit()) {
-        } else {
-            drawObject(mockWorld.getProjectile());
-        }
 
         batch.end();
-        debugRenderer.render(physicsWorld,camera.combined);
+        // debugRenderer.render(physicsWorld,camera.combined);
 
         mockWorld.getPhysicsWorld().step(1/60f, 6, 2);
         //mock DELETE BODIES
