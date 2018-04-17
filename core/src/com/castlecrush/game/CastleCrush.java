@@ -12,8 +12,6 @@ import models.states.Splashscreen;
 import views.Drawer;
 
 public class CastleCrush extends ApplicationAdapter {
-	Drawer drawer;
-	MockGameWorld world;
 
 	public static Music music;
 	public static boolean soundOn;
@@ -43,9 +41,6 @@ public class CastleCrush extends ApplicationAdapter {
 		music.play();
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		gsm.push(new Splashscreen(gsm));
-		//world = new MockGameWorld();
-		//drawer = new GameWorldDrawer(batch, world);
-	//	img = new Texture("badlogic.jpg");
 	}
 
 	@Override
@@ -54,10 +49,8 @@ public class CastleCrush extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		gsm.update(Gdx.graphics.getDeltaTime());
 		gsm.render(batch);
-		//drawer.render();
 	}
 	
 	@Override
-	public void dispose () {
-	}
+	public void dispose () {}
 }
