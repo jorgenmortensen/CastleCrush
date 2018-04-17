@@ -25,6 +25,7 @@ import models.states.GameStateManager;
 import models.states.State;
 import views.game_world.GameWorldDrawer;
 
+import static java.lang.Math.negateExact;
 import static java.lang.Math.round;
 
 /**
@@ -34,7 +35,7 @@ import static java.lang.Math.round;
 public class SinglePlayerState extends State {
 
     Projectile projectile;
-    Cannon cannon;
+    Cannon cannon1, cannon2, activeCannon;
     int width = CastleCrush.WIDTH;
     int height = CastleCrush.HEIGHT;
 
@@ -63,7 +64,7 @@ public class SinglePlayerState extends State {
 
     public SinglePlayerState(GameStateManager gsm) {
         super(gsm);
-        world = new MockGameWorld();
+        world = new MockGameWorld(this);
         angleUp = true;
         font = new BitmapFont();
         //cannon = new Cannon(Math.round((width / 20) * world.getSCALE()),
@@ -73,23 +74,20 @@ public class SinglePlayerState extends State {
         //        new Sprite(new Texture("cannon.png")),
         //        new Sprite(new Texture("wheel.png")), null);
 
-        cannon = world.getCannons().get(0);
-        projectile = new Projectile(null, new Vector2(cannon.getX() + cannon.getWidth() / 2,
-                cannon.getY() + cannon.getHeight() / 4),
-                new Sprite(new Texture("ball_cannon.png")),
-                cannon.getWidth() / 10,cannon.getWidth() / 10, new Vector2(0,0), world);
+        cannon1 = world.getCannons().get(0);
+        cannon2 = world.getCannons().get(1);
+        activeCannon = cannon1;
 
 
         angleActive = true;
         powerActive = false;
         shotsFired = false;
 
-        world.setCannons(new ArrayList<Cannon>(Arrays.asList(cannon, null)));
         drawer = new GameWorldDrawer(new SpriteBatch(), world);
         //controller = new GameWorldController();
 
-        player1 = new Player();
-        player2 = new Player();
+        player1 = new Player(cannon1);
+        player2 = new Player(cannon2);
         player1.setId("Player 1!");
         player2.setId("Player 2!!!");
         activePlayer = player1;
@@ -102,26 +100,15 @@ public class SinglePlayerState extends State {
     protected void handleInput() {
         if (Gdx.input.justTouched()) {
             if (activePlayer.isAngleActive()) {
-                System.out.println(activePlayer.getId()+ "  Angle: "+activePlayer.isAngleActive());
-                System.out.println("Power: "+activePlayer.isPowerActive());
-                float angle = cannon.getAngle();
+                float angle = activeCannon.getAngle();
 
                 activePlayer.switchAngleActive();
                 activePlayer.switchPowerActive();
 
-                System.out.println(activePlayer.getId()+ "  Angle: "+activePlayer.isAngleActive());
-                System.out.println("Power: "+activePlayer.isPowerActive());
-
             } else if (activePlayer.isPowerActive()) {
-                float power = cannon.getPower();
-
-                System.out.println(activePlayer.getId()+ "  Angle: "+activePlayer.isAngleActive());
-                System.out.println("Power: "+activePlayer.isPowerActive());
+                float power = activeCannon.getPower();
 
                 activePlayer.switchPowerActive();
-
-                System.out.println(activePlayer.getId()+ "  Angle: "+activePlayer.isAngleActive());
-                System.out.println("Power: "+activePlayer.isPowerActive());
 
             }
         }
@@ -131,7 +118,7 @@ public class SinglePlayerState extends State {
             //world.getCannons().get(0).setShotsFired(true);
             ///projectile.fire(cannon.getAngle(), cannon.getPower());
             if (!fired) {
-                drawer.fire();
+                fire();
                 //fired = true;
                 switchPlayer();
             }
@@ -149,7 +136,7 @@ public class SinglePlayerState extends State {
         }
         if (time>=turnLimit){
             System.out.println("Switching player turns!");
-            System.out.println("Current ctive player: " + activePlayer.getId());
+            System.out.println("Current active player: " + activePlayer.getId());
             switchPlayer();
             System.out.println("New active player " + activePlayer.getId());
         }
@@ -157,32 +144,12 @@ public class SinglePlayerState extends State {
         handleInput();
 
         //Make the angle and power increment between respectively 0-90 and 0-100
-        float angleSpeed = (float)3;
-        float powerSpeed = (float)4;
         if (activePlayer.isAngleActive()) {
-            if (cannon.getAngle() >= 90) {
-                angleUp = false;
-            } else if (cannon.getAngle() <= 0) {
-                angleUp = true;
-            }
-            if (angleUp) {
-                cannon.setAngle(cannon.getAngle() + angleSpeed);
-            } else if (!angleUp) {
-                cannon.setAngle(cannon.getAngle() - angleSpeed);
-            }
+            activePlayer.getCannon().updateAngle();
         } else if (activePlayer.isPowerActive()) {
-            if (cannon.getPower() >= 100) {
-                powerUp = false;
-            } else if (cannon.getPower() <= 0) {
-                powerUp = true;
-            }
-            if (powerUp) {
-                cannon.setPower(cannon.getPower() + powerSpeed);
-            } else if (!powerUp) {
-                cannon.setPower(cannon.getPower() - powerSpeed);
-            }
+            activePlayer.getCannon().updatePower();
         }
-        cannon.update(dt);
+        activeCannon.update(dt);
     }
 
     @Override
@@ -222,7 +189,7 @@ public class SinglePlayerState extends State {
         drawer.dispose();
     }
 
-    private void switchPlayer(){
+    public void switchPlayer(){
         start = System.currentTimeMillis();
         time = 0;
         //Deactivates variables
@@ -233,8 +200,8 @@ public class SinglePlayerState extends State {
             activePlayer.switchPowerActive();
         }
 
-        cannon.setPower(0);
-        cannon.setAngle(0);
+        activeCannon.setPower(0);
+        activeCannon.setAngle(0);
 
         System.out.println("Switching");
         //Changes active player
@@ -243,6 +210,7 @@ public class SinglePlayerState extends State {
         } else if (activePlayer == player2){
             activePlayer = player1;
         }
+        activeCannon = activePlayer.getCannon();
         //Activates variables
         if (!activePlayer.isAngleActive()){
             activePlayer.switchAngleActive();
@@ -250,5 +218,14 @@ public class SinglePlayerState extends State {
         if (activePlayer.isPowerActive()) {
             activePlayer.switchPowerActive();
         }
+
+        world.setProjectile(activePlayer);
+    }
+
+    public void fire() {
+        world.setProjectileVelocity(new Vector2(
+                (float)Math.cos(activeCannon.getAngle()*Math.PI/180) * activeCannon.getPower(),
+                (float)Math.sin(activeCannon.getAngle()*Math.PI/180) * activeCannon.getPower()));
+        world.getProjectile().setFired(true);
     }
 }

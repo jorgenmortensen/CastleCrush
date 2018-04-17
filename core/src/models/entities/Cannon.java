@@ -1,7 +1,6 @@
 package models.entities;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 
 /**
@@ -11,32 +10,77 @@ import com.badlogic.gdx.physics.box2d.Body;
 
 public class Cannon implements Drawable{
 
-    private int x;
-    private int y;
-    private int width;
-    private int height;
-    private Sprite wheel;
-    private Sprite cannon;
+    private float x;
+    private float y;
+    private float width;
+    private float height;
+    private Sprite wheelSprite;
+    private Sprite cannonSprite;
     private Body body;
-    private boolean shotsFired;
+    private boolean shotsFired, angleUp, powerUp;
+    private float angleSpeed = (float)3, powerSpeed = (float)4;
+    private float factor;
 
     private float angle;
     private float power;
 
-    public Cannon(int x, int y, int width, int height, Sprite cannon, Sprite wheel, Body body) {
+    public Cannon(float x, float y, float width, float height, Sprite cannon, Sprite wheel, Body body, boolean facingRight) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.wheel = wheel;
-        this.cannon = cannon;
+        this.wheelSprite = wheel;
+        this.cannonSprite = cannon;
         this.body = body;
-        this.shotsFired = false;
+        this.shotsFired = true;
+        this.angleUp = true;
+        this.powerUp = false;
+        this.angle = 90;
+
+        cannonSprite.setPosition(x, y);
+        cannonSprite.setSize(width, height);
+        cannonSprite.setOriginCenter();
+        wheelSprite.setPosition(x,y);
+        wheelSprite.setSize(width/2, height/2);
+
+        if (facingRight){
+            factor = 1;
+        } else if (!facingRight){
+            factor = -1;
+            cannonSprite.setRotation(180);
+        }
+
+    }
+
+    public void updateAngle(){
+        if (getAngle() >= 90) {
+            angleUp = false;
+        } else if (getAngle() <= 0) {
+            angleUp = true;
+        }
+        if (angleUp) {
+            setAngle(getAngle() + angleSpeed);
+        } else if (!angleUp) {
+            setAngle(getAngle() - angleSpeed);
+        }
+    }
+
+    public void updatePower(){
+        if (getPower() >= 100) {
+            powerUp = false;
+        } else if (getPower() <= 0) {
+            powerUp = true;
+        }
+        if (powerUp) {
+            setPower(getPower() + powerSpeed);
+        } else if (!powerUp) {
+            setPower(getPower() - powerSpeed);
+        }
     }
 
     @Override
     public Sprite getDrawable() {
-        return cannon;
+        return cannonSprite;
     }
 
     @Override
@@ -44,7 +88,7 @@ public class Cannon implements Drawable{
         return body;
     }
 
-    public int getX() {
+    public float getX() {
         return x;
     }
 
@@ -52,7 +96,7 @@ public class Cannon implements Drawable{
         this.x = x;
     }
 
-    public int getY() {
+    public float getY() {
         return y;
     }
 
@@ -60,7 +104,7 @@ public class Cannon implements Drawable{
         this.y = y;
     }
 
-    public int getWidth() {
+    public float getWidth() {
         return width;
     }
 
@@ -68,7 +112,7 @@ public class Cannon implements Drawable{
         this.width = width;
     }
 
-    public int getHeight() {
+    public float getHeight() {
         return height;
     }
 
@@ -77,19 +121,11 @@ public class Cannon implements Drawable{
     }
 
     public Sprite getWheel() {
-        return wheel;
+        return wheelSprite;
     }
 
     public void setWheel(Sprite sprite) {
-        this.wheel = sprite;
-    }
-
-    public Sprite getCannon() {
-        return cannon;
-    }
-
-    public void setCannon(Sprite cannon) {
-        this.cannon = cannon;
+        this.wheelSprite = sprite;
     }
 
     public void setBody(Body body) {
@@ -126,7 +162,7 @@ public class Cannon implements Drawable{
 
     //Updates the game with the interval dt
     public void update(float dt) {
-        cannon.setRotation(getAngle());
+        cannonSprite.setRotation(90 - factor*getAngle());
     }
 
 

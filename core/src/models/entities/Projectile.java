@@ -11,6 +11,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import models.MockGameWorld;
+import models.states.playStates.SinglePlayerState;
 
 /**
  * Created by Jørgen on 09.03.2018.
@@ -26,16 +27,18 @@ public class Projectile implements Drawable {
     private Body body;
     private Timer timer;
     private Sprite sprite;
+    private boolean isFired;
     private boolean hasHit = false;
     private MockGameWorld gameWorld;
     private boolean scheduleActive = false;
+    private SinglePlayerState state;
 
 
 
     private Vector2 velocity;
 
     public Projectile(Body body, Vector2 position, Sprite sprite,
-                      float width, float height, Vector2 velocity, MockGameWorld world) {
+                      float width, float height, MockGameWorld world, SinglePlayerState state) {
         this.body = body;
         this.position = position;
         this.sprite = sprite;
@@ -45,12 +48,15 @@ public class Projectile implements Drawable {
         this.sprite = sprite;
         this.velocity = velocity;
         this.gameWorld = world;
+        this.isFired = false;
+        this.state = state;
     }
 
     public void setHasHit(boolean hasHit){this.hasHit = hasHit;}
 
     public void scheduleSelfDestruct (final Fixture fixture){
         if (!scheduleActive){
+            final SinglePlayerState stat = state;
             timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
@@ -61,6 +67,9 @@ public class Projectile implements Drawable {
                         setHasHit(true);
                         gameWorld.addBodyToDestroy(fixture);
                         timer.cancel();
+                        stat.switchPlayer();
+                        Cannon cannon = gameWorld.getCannons().get(0);
+                        gameWorld.createProjectile(cannon.getX(),cannon.getY(), gameWorld.getScreenWidth()/40, stat);
 
                     }
 
@@ -142,6 +151,15 @@ public class Projectile implements Drawable {
                 ", sprite=" + sprite +
                 ", velocity=" + velocity +
                 '}';
+    }
+
+
+    public boolean isFired() {
+        return isFired;
+    }
+
+    public void setFired(boolean fired) {
+        isFired = fired;
     }
 
     //Fires the shot, with a given angle and power

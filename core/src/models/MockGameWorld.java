@@ -24,7 +24,9 @@ import java.util.Random;
 import models.entities.Box;
 import models.entities.Cannon;
 import models.entities.Drawable;
+import models.entities.Player;
 import models.entities.Projectile;
+import models.states.playStates.SinglePlayerState;
 
 
 /**
@@ -50,6 +52,8 @@ public class MockGameWorld {
     private float screenWidth = CastleCrush.WIDTH*SCALE;
     private float screenHeight = CastleCrush.HEIGHT*SCALE;
     private float groundLevel;
+    private SinglePlayerState state;
+    public Projectile testProjectile;
 
     public List<Fixture> getBodiesToDestroy(){
         return bodiesToDestroy;
@@ -72,7 +76,7 @@ public class MockGameWorld {
     }
 
 
-    public MockGameWorld() {
+    public MockGameWorld(SinglePlayerState state) {
         mockBoxes = new ArrayList<Drawable>();
         cannons = new ArrayList<Cannon>();
         groundLevel = screenHeight/25;
@@ -84,6 +88,7 @@ public class MockGameWorld {
         physicsWorld = new World(new Vector2(0, -10), true);
         physicsWorld.setContactListener(new GameCollision(this));
         this.generateBodies();
+        this.state = state;
     }
 
 
@@ -104,14 +109,23 @@ public class MockGameWorld {
         //System.out.println("Screen height: " + groundLevel);
         //createBox(20, groundLevel, screenWidth/10, screenWidth/10, 1);
 
-        Cannon cannon = new Cannon(Math.round((startPosX+castleWidth+10) * this.getSCALE() + castleWidth*2/3),
-                Math.round((CastleCrush.WIDTH / 20) * this.getSCALE()),
-                Math.round((CastleCrush.WIDTH / 20) * this.getSCALE()),
-                Math.round((CastleCrush.WIDTH / 40) * this.getSCALE()),
+        Cannon cannon1 = new Cannon(screenWidth*1/3,
+                groundLevel, screenWidth/30, screenHeight/30,
                 new Sprite(new Texture("cannon.png")),
-                new Sprite(new Texture("wheel.png")), null);
+                new Sprite(new Texture("wheel.png")), null, true);
 
-        setCannons(new ArrayList<Cannon>(Arrays.asList(cannon, null)));
+        Cannon cannon2 = new Cannon(screenWidth*2/3,
+                groundLevel, screenWidth/30, screenHeight/30,
+                new Sprite(new Texture("cannon.png")),
+                new Sprite(new Texture("wheel.png")), null, false);
+
+//        Cannon cannon3 = new Cannon(screenWidth/2, groundLevel, screenWidth/20, screenHeight/20,
+//                new Sprite(new Texture("cannon.png")),
+//                new Sprite(new Texture("wheel.png")), null);
+
+
+        setCannons(new ArrayList<Cannon>(Arrays.asList(cannon1, cannon2)));
+        projectile = createProjectile(cannon1.getX(), groundLevel, screenHeight/40, state);
     }
 
     public void makeCastle(int numVerticalBoxes, int numHorizontalBoxes, float startPosX, int castleWidth, int castleHeight) {
@@ -206,9 +220,13 @@ public class MockGameWorld {
         return box;
     }
 
-
-    public void createProjectile(float xPos, float yPos, float radius, Vector2 velocity){
+    public Projectile createProjectile(float xPos, float yPos, float radius, SinglePlayerState state){
         //creating the physical shape of the ball and setting physical attributes
+        if (projectile != null) {
+            addBodyToDestroy(projectile.getBody().getFixtureList().get(0));
+            projectile = null;
+        }
+
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(xPos, yPos);
@@ -231,10 +249,15 @@ public class MockGameWorld {
         sprite.setOrigin(0, 0);
         sprite.setOriginCenter();
 
-        body.setLinearVelocity(velocity.x, velocity.y);
-        projectile = new Projectile(body, new Vector2(xPos, yPos), sprite, radius*2, radius*2, velocity,this);
+        Projectile tempProjectile = new Projectile(body, new Vector2(xPos, yPos), sprite, radius*2, radius*2, this, state);
         body.setUserData(projectile);
 
+        return tempProjectile;
+
+    }
+
+    public void setProjectileVelocity(Vector2 velocity) {
+        projectile.getBody().setLinearVelocity(velocity);
     }
 
 //
@@ -278,9 +301,11 @@ public class MockGameWorld {
         this.cannons = cannons;
     }
 
-    public void setProjectile(Projectile projectile) {
-        this.projectile = projectile;
+    public void setProjectile(Player player) {
+        this.projectile = createProjectile(player.getCannon().getX(), player.getCannon().getY(),screenHeight/40, state);
     }
 
-
+    public float getScreenWidth() {
+        return screenWidth;
+    }
 }

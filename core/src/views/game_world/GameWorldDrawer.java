@@ -71,27 +71,20 @@ public class GameWorldDrawer extends Drawer {
         viewport.update(CastleCrush.WIDTH, CastleCrush.HEIGHT, true);
     }
 
-    public void fire() {
-        int projectileRadius = Math.round(screenWidth / 50);
-        mockWorld.createProjectile((float)(cannonLeft.getX() + (cannonLeft.getWidth() - projectileRadius * SCALE * 2) * cos(cannonLeft.getAngle() * PI / 180)),
-                (float)(cannonLeft.getY() + (cannonLeft.getWidth() - projectileRadius * SCALE * 2) * sin(cannonLeft.getAngle() * PI / 180)), projectileRadius,
-                new Vector2(
-                        (float)Math.cos(cannonLeft.getAngle()*Math.PI/180) * cannonLeft.getPower(),
-                        (float)Math.sin(cannonLeft.getAngle()*Math.PI/180) * cannonLeft.getPower()));
-        //cannonLeft.setShotsFired(true);
-    }
 
     @Override
     public void render() {
         batch.setProjectionMatrix(camera.combined);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        if (batch.isDrawing()){
+            batch.end();
+        }
         batch.begin();
         //Draw the background
         batch.draw(background, 0,0, CastleCrush.WIDTH*SCALE, CastleCrush.HEIGHT*SCALE);
         drawGround();
 
         //Draw the ground
-        drawObject(mockWorld.getGround());
 
         //Draw the boxes(castles)
         for (Drawable obj : mockWorld.getBoxes()) {
@@ -108,25 +101,22 @@ public class GameWorldDrawer extends Drawer {
             cannon.getCannon().draw(batch);
         }*/
 
-        batch.draw(cannonLeft.getCannon(), cannonLeft.getX(), cannonLeft.getY() / 2,
-                cannonLeft.getWidth() * 3 / 10, cannonLeft.getHeight() * 3 / 10,
-                cannonLeft.getWidth(), cannonLeft.getHeight(), 1, 1,
-                cannonLeft.getCannon().getRotation());
+//        batch.draw(cannonLeft.getCannon(), cannonLeft.getX(), cannonLeft.getY() / 2,
+//                cannonLeft.getWidth() * 3 / 10, cannonLeft.getHeight() * 3 / 10,
+//                cannonLeft.getWidth(), cannonLeft.getHeight(), 1, 1,
+//                cannonLeft.getCannon().getRotation());
 
 
-        batch.draw(cannonLeft.getWheel(), cannonLeft.getX(), CastleCrush.HEIGHT * SCALE / 100,
-                cannonLeft.getWidth() * 2 / 5,
-                cannonLeft.getHeight());
+
+//        batch.draw(cannonLeft.getWheel(), cannonLeft.getX(), CastleCrush.HEIGHT * SCALE / 100,
+//                cannonLeft.getWidth() * 2 / 5,
+//                cannonLeft.getHeight());
 
         //mockWorld.getCannons().get(0).getCannon().draw(batch);
 
 
 
-        //mock DELETE BODIES
-        if (!physicsWorld.isLocked()){
-            mockWorld.destroy((ArrayList<Fixture>) mockWorld.getBodiesToDestroy());
 
-        }
         //Draw the projectile
 //        if (cannonLeft.isShotsFired()) {
 //            if (mockWorld.getProjectile().getHasHit()) {
@@ -134,7 +124,7 @@ public class GameWorldDrawer extends Drawer {
 //                drawObject(mockWorld.getProjectile());
 //            }
 //        }
-        if (cannonLeft.isShotsFired()){
+        if (mockWorld.getProjectile().isFired()){
             drawObject(mockWorld.getProjectile());
         }
 
@@ -145,10 +135,27 @@ public class GameWorldDrawer extends Drawer {
                     (cannonLeft.getPower() * cannonLeft.getWidth() * 4 / 5) / 100,
                     cannonLeft.getHeight() / 2);
         }
+        if (cannonRight.getPower() > 0) {
+            batch.draw(new Texture("powerBar.png"), cannonRight.getX(),
+                    cannonRight.getY() / 2,
+                    (cannonRight.getPower() * cannonRight.getWidth() * 4 / 5) / 100,
+                    cannonRight.getHeight() / 2);
+        }
 
-        batch.end();
-        debugRenderer.render(physicsWorld,camera.combined);
+
+
+        cannonLeft.getDrawable().draw(batch);
+        cannonLeft.getWheel().draw(batch);
+        cannonRight.getDrawable().draw(batch);
+        cannonRight.getWheel().draw(batch);
+
+
         //Should be placed after bacth.end():
+        //mock DELETE BODIES
+        if (!physicsWorld.isLocked()){
+            mockWorld.destroy((ArrayList<Fixture>) mockWorld.getBodiesToDestroy());
+
+        }
         mockWorld.getPhysicsWorld().step(1/60f, 6, 2);
     }
 

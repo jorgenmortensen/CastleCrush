@@ -6,26 +6,17 @@ package models.entities;
 
 public class Player {
 
-    public Player() {
-        angleActive = true;
-        powerActive = false;
-    }
-
     private boolean angleActive, powerActive;
 
     private String id;
 
-    public String getId() {
-        return this.id;
+    private Cannon cannon;
+
+    public Player(Cannon cannon) {
+        angleActive = true;
+        powerActive = false;
+        this.cannon = cannon;
     }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public boolean isAngleActive(){return angleActive;}
-
-    public boolean isPowerActive() {return powerActive;}
 
     public void switchAngleActive(){
         if (angleActive==true){
@@ -41,5 +32,21 @@ public class Player {
         } else if (powerActive==false){
             powerActive=true;
         }
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public boolean isAngleActive(){return angleActive;}
+
+    public boolean isPowerActive() {return powerActive;}
+
+    public Cannon getCannon() {
+        return cannon;
     }
 }
