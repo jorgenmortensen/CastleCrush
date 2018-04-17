@@ -116,13 +116,13 @@ public class StartMenuScreen extends models.states.State {
         }
         long time = TimeUtils.timeSinceMillis(startTime);
         if (time > 3500 && little_crushed) {
-            logo = new Texture("logo_little_crushed.png");;;
+            logo = new Texture("logo_little_crushed.png");
             little_crushed = false;
         } else if (time > 7000 && crushed) {
-            logo = new Texture("logo_crushed.png");;
+            logo = new Texture("logo_crushed.png");
             crushed = false;
         } else if (time > 10000  && without_castle) {
-            logo = new Texture("logo_without_castle.png");;
+            logo = new Texture("logo_without_castle.png");
             without_castle = false;
         } else if (time > 13000 && with_u) {
             logo = new Texture("logo_with_u.png");;
