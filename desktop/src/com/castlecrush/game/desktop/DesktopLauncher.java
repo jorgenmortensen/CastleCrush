@@ -10,6 +10,6 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = CastleCrush.WIDTH;
 		config.height = CastleCrush.HEIGHT;
-		new LwjglApplication(new CastleCrush(), config);
+		//new LwjglApplication(new CastleCrush(), config);
 	}
 }

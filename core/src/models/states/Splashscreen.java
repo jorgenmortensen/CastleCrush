@@ -1,15 +1,12 @@
-package states;
+package models.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.castlecrush.game.CastleCrush;
 
-import models.states.State;
-import models.states.GameStateManager;
-import states.menuStates.StartMenuScreen;
+import models.states.menuStates.StartMenuScreen;
 
 /**
  * Created by erikkjernlie on 06/04/2018.

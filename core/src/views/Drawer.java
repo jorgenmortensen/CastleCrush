@@ -20,8 +20,13 @@ public abstract class Drawer extends ApplicationAdapter {
     protected SpriteBatch batch;
 
     public Drawer(SpriteBatch batch) {
-        this.batch = batch;
-        cam = new OrthographicCamera();
+        try {
+            this.batch = batch;
+            cam = new OrthographicCamera();
+        } catch (Exception e) {
+            System.out.println("DRAAAAAAAAAAAAAW");
+            e.printStackTrace();
+        }
     }
 
     //vi tenker at:

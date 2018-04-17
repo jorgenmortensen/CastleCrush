@@ -1,4 +1,4 @@
-package states.menuStates;
+package models.states.menuStates;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -7,20 +7,19 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.castlecrush.game.CastleCrush;
 
-import components.Button;
-import components.GravityButton;
+import models.components.Button;
+import models.components.GravityButton;
+import models.entities.Castle;
 import models.states.GameStateManager;
 import models.states.State;
-import states.playStates.OnlineMultiplayerState;
-import states.playStates.SinglePlayerState;
+import models.states.playStates.OnlineMultiplayerState;
 
-import static states.menuStates.StartMenuScreen.changed_logo;
-import static states.menuStates.StartMenuScreen.crushed;
-import static states.menuStates.StartMenuScreen.little_crushed;
-import static states.menuStates.StartMenuScreen.logo;
-import static states.menuStates.StartMenuScreen.startTime;
-import static states.menuStates.StartMenuScreen.with_u;
-import static states.menuStates.StartMenuScreen.without_castle;
+import static models.states.menuStates.StartMenuScreen.changed_logo;
+import static models.states.menuStates.StartMenuScreen.crushed;
+import static models.states.menuStates.StartMenuScreen.little_crushed;
+import static models.states.menuStates.StartMenuScreen.startTime;
+import static models.states.menuStates.StartMenuScreen.with_u;
+import static models.states.menuStates.StartMenuScreen.without_castle;
 
 /**
  * Created by erikkjernlie on 05/04/2018.
@@ -41,6 +40,8 @@ public class PlayMenu extends State {
     private GravityButton btnLocal;
     private Button btnSound;
     private Texture logo;
+
+    public static Thread th;
 
     // remember to change every .PNG to .png.
 
@@ -90,11 +91,13 @@ public class PlayMenu extends State {
     @Override
     protected void handleInput() {
         if (Gdx.input.justTouched() && isOnSingleBtn()) {
-            gsm.set(new OnlineMultiplayerState(gsm));
             System.out.println("Single pressed");
+            gsm.set(new OnlineMultiplayerState(gsm, new SpriteBatch()));
             dispose();
         }
         else if (Gdx.input.justTouched() && isOnMultiBtn()) {
+            th = Thread.currentThread();
+            System.out.println(th.getName() + "        HEYHEYHEY");
             if (!CastleCrush.playServices.isSignedIn()){
                 CastleCrush.playServices.signIn();
             }

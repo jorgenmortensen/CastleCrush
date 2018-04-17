@@ -1,4 +1,4 @@
-package states.menuStates;
+package models.states.menuStates;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.castlecrush.game.CastleCrush;
 
-import components.GravityButton;
+import models.components.GravityButton;
 import models.states.GameStateManager;
 import models.states.State;
 

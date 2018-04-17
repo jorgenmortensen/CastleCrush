@@ -1,4 +1,4 @@
-package states.menuStates;
+package models.states.menuStates;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -7,10 +7,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.castlecrush.game.CastleCrush;
 
-import components.Button;
+import models.components.Button;
+import models.entities.Castle;
 import models.states.GameStateManager;
 import models.states.State;
-import states.TutorialState;
+import models.states.TutorialState;
 
 /**
  * Created by Jørgen on 12.03.2018.
@@ -36,6 +37,8 @@ public class StartMenuScreen extends State {
     public static boolean with_u = true;
     public static boolean changed_logo;
 
+    public static Thread th;
+
 
 
     public StartMenuScreen(GameStateManager gsm) {
@@ -57,7 +60,7 @@ public class StartMenuScreen extends State {
 
         if (CastleCrush.playServices.isSignedIn()) {
             System.out.println();
-            //crush.playServices.toast();
+            CastleCrush.playServices.toast("Welcome back " + CastleCrush.playServices.getDisplayName() + "!");
 
         }else{
             CastleCrush.playServices.signIn();
@@ -90,9 +93,7 @@ public class StartMenuScreen extends State {
         btnSound = new Button(0, 0, CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
                 CastleCrush.soundOn ? new Sprite(new Texture("sound_on.png")) : new Sprite(new Texture("sound_off.png")));
 
-        if (CastleCrush.playServices.isSignedIn()) {
-            t = new Texture("googlesignout.png");
-        }
+
         if (CastleCrush.playServices.isSignedIn()) {
             t = new Texture("signout.png");
         }else{
@@ -115,6 +116,7 @@ public class StartMenuScreen extends State {
     @Override
     protected void handleInput() {
         if (Gdx.input.justTouched() && isOnPlayBtn()) {
+            th = Thread.currentThread();
             gsm.set(new PlayMenu(gsm));
             dispose();
         } else if (Gdx.input.justTouched() && isOnHelpBtn()) {
@@ -127,28 +129,24 @@ public class StartMenuScreen extends State {
 
             if (CastleCrush.playServices.isSignedIn()) {
                 CastleCrush.playServices.signOut();
-                btnLogOutIn.setBtn(new Sprite(new Texture("googlesignin.png")));
-                if (CastleCrush.playServices.isSignedIn()) {
-                    CastleCrush.playServices.signOut();
-                    btnLogOutIn.setBtn(new Sprite(new Texture("sign_in.png")));
-                } else {
-                    CastleCrush.playServices.signIn();
-                    btnLogOutIn.setBtn(new Sprite(new Texture("googlesignout.png")));
-                    CastleCrush.playServices.signIn();
-                    btnLogOutIn.setBtn(new Sprite(new Texture("signout.png")));
-                }
-            } else if (Gdx.input.justTouched() && isOnSoundBtn()) {
-                //Turn off sound if already on and vice versa
-                if (CastleCrush.soundOn) {
-                    CastleCrush.music.setVolume(0);
-                    CastleCrush.soundOn = false;
-                    btnSound.setBtn(new Sprite(new Texture("sound_off.png")));
-                } else {
-                    CastleCrush.music.setVolume(0.5f);
-                    CastleCrush.soundOn = true;
-                    btnSound.setBtn(new Sprite(new Texture("sound_on.png")));
-                }
+                btnLogOutIn.setBtn(new Sprite(new Texture("sign_in.png")));
             }
+            else {
+                CastleCrush.playServices.signIn();
+                btnLogOutIn.setBtn(new Sprite(new Texture("signout.png")));
+            }
+        } else if (Gdx.input.justTouched() && isOnSoundBtn()) {
+            //Turn off sound if already on and vice versa
+            if (CastleCrush.soundOn) {
+                CastleCrush.music.setVolume(0);
+                CastleCrush.soundOn = false;
+                btnSound.setBtn(new Sprite(new Texture("sound_off.png")));
+            } else {
+                CastleCrush.music.setVolume(0.5f);
+                CastleCrush.soundOn = true;
+                btnSound.setBtn(new Sprite(new Texture("sound_on.png")));
+            }
+
         }
     }
 

@@ -1,4 +1,4 @@
-package states.playStates;
+package models.states.playStates;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 

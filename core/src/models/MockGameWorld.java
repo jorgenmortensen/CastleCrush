@@ -81,7 +81,6 @@ public class MockGameWorld {
     public void makeCastle(int numVerticalBoxes, int numHorizontalBoxes, float startPosX, int castleWidth, int castleHeight) {
         float boxWidth = castleWidth/numVerticalBoxes;
         float boxHeight = castleHeight/numHorizontalBoxes;
-
         Random ran = new Random();
         //Make the vertical left wall
         for (int i = 0; i < numHorizontalBoxes; i++) {

@@ -1,4 +1,4 @@
-package components;
+package models.components;
 
 /**
  * Created by Bruker on 15.04.2018.

@@ -7,16 +7,16 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import models.MockGameWorld;
+import models.states.menuStates.PlayMenu;
 import views.Drawer;
-import views.game_world.GameWorldDrawer;
 import models.states.GameStateManager;
 
-import states.Splashscreen;
+import models.states.Splashscreen;
 
 
 import googleplayservice.PlayServices;
-import states.menuStates.StartMenuScreen;
-import states.playStates.OnlineMultiplayerState;
+import models.states.menuStates.StartMenuScreen;
+import models.states.playStates.OnlineMultiplayerState;
 
 public class CastleCrush extends ApplicationAdapter implements PlayServices.GameListener{
 
@@ -28,6 +28,7 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 	public static int HEIGHT;
 	Drawer tegner;
 	MockGameWorld world;
+	OnlineMultiplayerState onlinemultiplayerstate;
 
 
 	private GameStateManager gsm;
@@ -45,13 +46,11 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 	public void create () {
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
-
-		SpriteBatch batch = new SpriteBatch();
-		world = new MockGameWorld();
-		tegner = new GameWorldDrawer(batch, world);
-	//	img = new Texture("badlogic.jpg");
+		batch = new SpriteBatch();
+		System.out.println("HEI3");
 
 		gsm = new GameStateManager();
+		onlinemultiplayerstate = new OnlineMultiplayerState(gsm, batch);
 		soundOn = true;
 		music = Gdx.audio.newMusic(Gdx.files.internal("gameMusic.mp3"));
 		music.setLooping(true);
@@ -59,6 +58,9 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 		music.play();
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		gsm.push(new Splashscreen(gsm));
+		System.out.println("HEI4");
+
+
 	}
 
 	@Override
@@ -78,10 +80,18 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 
 	@Override
 	public void onMultiplayerGameStarting() {
-        Gdx.app.debug(TAG, "onMultiplayerGameStarting: ");
 		System.out.println("onMultiplayerGameStarting");
-        gsm.set(new OnlineMultiplayerState(gsm));
-
+		try {
+			Gdx.app.postRunnable(new Runnable() {
+				@Override
+				public void run() {
+					gsm.set(onlinemultiplayerstate);
+				}
+			});
+		}catch (Exception e) {
+			System.out.println("Exception caught");
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -89,5 +99,7 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 		System.out.println("goToMainScreen");
 		gsm.set(new StartMenuScreen(gsm));
 	}
+
+
 
 }

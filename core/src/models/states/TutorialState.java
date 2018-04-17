@@ -1,4 +1,4 @@
-package states;
+package models.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -8,11 +8,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.castlecrush.game.CastleCrush;
 
-import components.Button;
-import components.SlidingObjectXdirection;
-import states.menuStates.StartMenuScreen;
-import models.states.State;
-import models.states.GameStateManager;
+import models.components.Button;
+import models.components.SlidingObjectXdirection;
+import models.states.menuStates.StartMenuScreen;
 
 /**
  * Created by Jørgen on 05.04.2018.

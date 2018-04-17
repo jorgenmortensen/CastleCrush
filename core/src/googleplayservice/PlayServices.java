@@ -12,7 +12,7 @@ public interface PlayServices {
     void signOut();
     boolean isSignedIn();
     void startQuickGame();
-    void toast();
+    void toast(String toast);
     String getDisplayName();
     void sendUnreliableMessageToOthers(byte[] messageData);
 

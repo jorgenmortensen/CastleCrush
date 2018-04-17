@@ -2,6 +2,7 @@ package com.castlecrush.game;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -56,6 +57,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 	private Intent previousMatch;
 	private String currentPlayerID;
 	private String currentOpponentID;
+	private static Context context;
 
 
 	@Override
@@ -65,6 +67,8 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		initialize(new CastleCrush(this), config);
 		System.out.println("HEI2");
+		context = getApplicationContext();
+
 
 
 		gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
@@ -116,8 +120,15 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 		this.networkListener = networkListener;
 	}
 
-	public void toast(){
-		Toast.makeText(this,"Welcome back " + gameHelper.getPlayerDisplayName(), Toast.LENGTH_LONG).show();
+
+	@Override
+	public void toast(final String toastMessage) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 
 	@Override
@@ -292,7 +303,6 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 
 		if (resultCode == Activity.RESULT_OK) {
 			// Start the game!
-			Log.d(TAG, "handleWaitingRoomResult: OK");
 			System.out.println("handleWaitingRoomResult: OK");
 			gameListener.onMultiplayerGameStarting();
 			List<PlayerData> playerList = new ArrayList<>();
@@ -403,7 +413,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 	public void onRoomCreated(int code, @Nullable Room room) {
 		// Update UI and internal state based on room updates.
 		if (code == OK && room != null) {
-			Log.d(TAG, "Room " + room.getRoomId() + " created.");
+			System.out.println("Room " + room.getRoomId() + " created.");
 			currentRoomId = room.getRoomId();
 			showWaitingRoom(room);
 		} else {
@@ -436,46 +446,46 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 	@Override
 	public void onRoomConnected(int code, Room room) {
 		if (code == OK && room != null) {
-			Log.d(TAG, "Room " + room.getRoomId() + " connected.");
+			System.out.println("Room " + room.getRoomId() + " connected.");
 		} else {
-			Log.w(TAG, "Error connecting to room: " + code);
+			System.out.println("Error connecting to room: " + code);
 			// let screen go to sleep
-			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+			keepScreenOn();
 		}
 	}
 
 	@Override
-	public void onRoomConnecting(Room room) { Log.d(TAG, "onRoomConnecting");}
+	public void onRoomConnecting(Room room) {
+		System.out.println("onRoomConnecting");}
 
 	@Override
 	public void onRoomAutoMatching(Room room) {
-		Log.d(TAG, "onRoomAutoMatching: ");
+		System.out.println("onRoomAutoMatching: ");
 	}
 
 	@Override
 	public void onPeerInvitedToRoom(Room room, List<String> list) {
-		Log.d(TAG, "onPeerInvitedToRoom: ");
+		System.out.println(("onPeerInvitedToRoom: "));
 	}
 
 	@Override
 	public void onPeerDeclined(Room room, List<String> list) {
-		Log.d(TAG, "onPeerDeclined: ");
+		System.out.println(("onPeerDeclined: "));
 	}
 
 	@Override
 	public void onPeerJoined(Room room, List<String> list) {
-		Log.d(TAG, "onPeerJoined: ");
+		System.out.println(("onPeerJoined: "));
 	}
 
 	@Override
 	public void onPeerLeft(Room room, List<String> list) {
-		Log.d(TAG, "onPeerLeft: ");
+		System.out.println(("onPeerLeft: "));
 	}
 
 	@Override
 	public void onConnectedToRoom(Room room) {
-		Log.d(TAG, "onConnectedToRoom: ");
+		System.out.println("onConnectedToRoom: ");
 		stopKeepingScreenOn();
 		if (currentRoomId == null){
 			currentRoomId = room.getRoomId();
@@ -490,22 +500,22 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 
 	@Override
 	public void onPeersConnected(Room room, List<String> list) {
-		Log.d(TAG, "onPeersConnected: ");
+		System.out.println("onPeersConnected: ");
 	}
 
 	@Override
 	public void onPeersDisconnected(Room room, List<String> list) {
-		Log.d(TAG, "onPeersDisconnected: ");
+		System.out.println("onPeersDisconnected: ");
 	}
 
 	@Override
 	public void onP2PConnected(String s) {
-		Log.d(TAG, "onP2PConnected: ");
+		System.out.println("onP2PConnected: ");
 	}
 
 	@Override
 	public void onP2PDisconnected(String s) {
-		Log.d(TAG, "onP2PDisconnected: ");
+		System.out.println("onP2PDisconnected: ");
 	}
 
 

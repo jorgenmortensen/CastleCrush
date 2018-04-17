@@ -1,24 +1,22 @@
-package states.playStates;
+package models.states.playStates;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.castlecrush.game.CastleCrush;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.List;
 
-import components.Button;
-import components.MessageCodes;
-import components.TextView;
+import models.components.Button;
+import models.components.MessageCodes;
 import googleplayservice.PlayServices;
 import googleplayservice.PlayerData;
+import models.MockGameWorld;
 import models.states.State;
 import models.states.GameStateManager;
-import states.menuStates.PlayMenu;
+import views.game_world.GameWorldDrawer;
 
 /**
  * Created by Jørgen on 12.03.2018.
@@ -32,44 +30,38 @@ public class OnlineMultiplayerState extends State implements PlayServices.Networ
     BitmapFont font;
     List players;
 
-    public OnlineMultiplayerState(GameStateManager gsm) {
-        super(gsm);
+    MockGameWorld world;
+    GameWorldDrawer drawer;
+    SpriteBatch batch;
 
+    public OnlineMultiplayerState(GameStateManager gsm, SpriteBatch batch) {
+        super(gsm);
+        System.out.println("OnlineMultiPlayerState started");
+
+        this.batch=batch;
+        world = new MockGameWorld();
+        drawer = new GameWorldDrawer(batch, world);
         CastleCrush.playServices.setNetworkListener(this);
 
-        font = new BitmapFont();
     }
 
 
     @Override
-    protected void handleInput() {
-        if (Gdx.input.justTouched()) {
-
-            dispose();
-        }
-
-    }
+    protected void handleInput() {}
 
     @Override
     public void update(float dt) {
         handleInput();
     }
 
+
     @Override
     public void render(SpriteBatch sb) {
-        sb.begin();
-
-        sb.draw(new Texture("logo.png"), 0, 0, CastleCrush.WIDTH, CastleCrush.HEIGHT);
-
-        font.setColor((float) 0.5,(float)0.5,(float)0.5,1);
-        font.draw(sb, "You: " + count + "       Opponent: " + opponent, CastleCrush.WIDTH/3, CastleCrush.HEIGHT*3/4);
-        font.getData().setScale(5);
-        sb.end();
+        drawer.render();
     }
 
     @Override
-    public void dispose() {
-    }
+    public void dispose() {}
 
     public void broadcastShotData(){
         ByteBuffer buffer = ByteBuffer.allocate(2*4+1); //capacity = 9, why?
