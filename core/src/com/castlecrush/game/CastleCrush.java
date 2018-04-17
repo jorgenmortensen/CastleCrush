@@ -40,7 +40,6 @@ public class CastleCrush extends ApplicationAdapter {
 	public void create () {
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
-		world = new MockGameWorld();
 		batch = new SpriteBatch();
 		//tegner = new GameWorldDrawer(batch, world);
 		//	img = new Texture("badlogic.jpg");
