@@ -41,7 +41,7 @@ public class SinglePlayerState extends State {
     private Texture background2;
     final int BACKGROUND_MOVE_SPEED = -30;
     boolean fired = false;
-    private int time, oldTime, turnLimit = 5;
+    private int time, oldTime, turnLimit = 15;
     long start, end;
 
     MockGameWorld world;
