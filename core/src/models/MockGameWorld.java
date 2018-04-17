@@ -226,7 +226,7 @@ public class MockGameWorld {
         shape.dispose();
 
         //setting the sprite of the ball and positioning it correctly
-        Sprite sprite = textureAtlas.createSprite("ball_cannon");
+        Sprite sprite = new Sprite(new Texture("ball_cannon.png"));
         sprite.setSize(radius*2, radius*2);
         sprite.setOrigin(0, 0);
         sprite.setOriginCenter();

@@ -78,7 +78,7 @@ public class GameWorldDrawer extends Drawer {
                 new Vector2(
                         (float)Math.cos(cannonLeft.getAngle()*Math.PI/180) * cannonLeft.getPower(),
                         (float)Math.sin(cannonLeft.getAngle()*Math.PI/180) * cannonLeft.getPower()));
-        cannonLeft.setShotsFired(true);
+        //cannonLeft.setShotsFired(true);
     }
 
     @Override
@@ -121,18 +121,21 @@ public class GameWorldDrawer extends Drawer {
         //mockWorld.getCannons().get(0).getCannon().draw(batch);
 
 
-        mockWorld.getPhysicsWorld().step(1/60f, 6, 2);
+
         //mock DELETE BODIES
         if (!physicsWorld.isLocked()){
             mockWorld.destroy((ArrayList<Fixture>) mockWorld.getBodiesToDestroy());
 
         }
         //Draw the projectile
-        if (cannonLeft.isShotsFired()) {
-            if (mockWorld.getProjectile().getHasHit()) {
-            } else {
-                drawObject(mockWorld.getProjectile());
-            }
+//        if (cannonLeft.isShotsFired()) {
+//            if (mockWorld.getProjectile().getHasHit()) {
+//            } else {
+//                drawObject(mockWorld.getProjectile());
+//            }
+//        }
+        if (cannonLeft.isShotsFired()){
+            drawObject(mockWorld.getProjectile());
         }
 
         //Draw the power bar
@@ -145,6 +148,8 @@ public class GameWorldDrawer extends Drawer {
 
         batch.end();
         debugRenderer.render(physicsWorld,camera.combined);
+        //Should be placed after bacth.end():
+        mockWorld.getPhysicsWorld().step(1/60f, 6, 2);
     }
 
     private void drawObject(Drawable object) {

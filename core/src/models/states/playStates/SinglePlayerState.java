@@ -10,12 +10,16 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.castlecrush.game.CastleCrush;
 
+import org.lwjgl.Sys;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import controllers.game_world.GameWorldController;
 import models.MockGameWorld;
 import models.entities.Cannon;
+import models.entities.Player;
 import models.entities.Projectile;
 import models.states.GameStateManager;
 import models.states.State;
@@ -48,9 +52,14 @@ public class SinglePlayerState extends State {
     private Texture background2;
     final int BACKGROUND_MOVE_SPEED = -30;
     boolean fired = false;
+    private int time, oldTime, turnLimit = 20;
+    long start, end;
 
     MockGameWorld world;
     GameWorldDrawer drawer;
+    GameWorldController controller;
+
+    private Player player1, player2, activePlayer;
 
     public SinglePlayerState(GameStateManager gsm) {
         super(gsm);
@@ -70,7 +79,6 @@ public class SinglePlayerState extends State {
                 new Sprite(new Texture("ball_cannon.png")),
                 cannon.getWidth() / 10,cannon.getWidth() / 10, new Vector2(0,0), world);
 
-        makeMovingBackground();
 
         angleActive = true;
         powerActive = false;
@@ -78,57 +86,80 @@ public class SinglePlayerState extends State {
 
         world.setCannons(new ArrayList<Cannon>(Arrays.asList(cannon, null)));
         drawer = new GameWorldDrawer(new SpriteBatch(), world);
+        //controller = new GameWorldController();
+
+        player1 = new Player();
+        player2 = new Player();
+        player1.setId("Player 1!");
+        player2.setId("Player 2!!!");
+        activePlayer = player1;
+
+        start = System.currentTimeMillis();
     }
 
-    private void makeMovingBackground(){
-        background1 = new Texture(Gdx.files.internal("loop_background_castles.png"));
-        background2 = new Texture(Gdx.files.internal("loop_background_castles.png")); // identical
-        xMax = CastleCrush.WIDTH;
-        xCoordBg1 = xMax;
-        xCoordBg2 = 0;
-    }
 
     @Override
     protected void handleInput() {
         if (Gdx.input.justTouched()) {
-            if (angleActive) {
+            if (activePlayer.isAngleActive()) {
+                System.out.println(activePlayer.getId()+ "  Angle: "+activePlayer.isAngleActive());
+                System.out.println("Power: "+activePlayer.isPowerActive());
                 float angle = cannon.getAngle();
-                angleActive = false;
-                powerActive = true;
-            } else if (powerActive) {
+
+                activePlayer.switchAngleActive();
+                activePlayer.switchPowerActive();
+
+                System.out.println(activePlayer.getId()+ "  Angle: "+activePlayer.isAngleActive());
+                System.out.println("Power: "+activePlayer.isPowerActive());
+
+            } else if (activePlayer.isPowerActive()) {
                 float power = cannon.getPower();
-                powerActive = false;
+
+                System.out.println(activePlayer.getId()+ "  Angle: "+activePlayer.isAngleActive());
+                System.out.println("Power: "+activePlayer.isPowerActive());
+
+                activePlayer.switchPowerActive();
+
+                System.out.println(activePlayer.getId()+ "  Angle: "+activePlayer.isAngleActive());
+                System.out.println("Power: "+activePlayer.isPowerActive());
+
             }
         }
-        if (!angleActive && !powerActive && (counter == 0)) {
+        if (!activePlayer.isAngleActive() && !activePlayer.isPowerActive()) {
             //world.setProsjektil(projectile);
             //world.getProsjektil().fire(cannon.getAngle(), cannon.getPower());
             //world.getCannons().get(0).setShotsFired(true);
             ///projectile.fire(cannon.getAngle(), cannon.getPower());
             if (!fired) {
                 drawer.fire();
-                fired = true;
+                //fired = true;
+                switchPlayer();
             }
-            counter++;
             //shotsFired = true;
         }
     }
     int counter = 0;
     @Override
     public void update(float dt) {
-        handleInput();
-        // makes the background move to the left
-        xCoordBg1 += BACKGROUND_MOVE_SPEED * Gdx.graphics.getDeltaTime();
-        xCoordBg2 = xCoordBg1 - xMax;  // We move the background, not the camera
-        if (xCoordBg1 <= 0) {
-            xCoordBg1 = xMax;
-            xCoordBg2 = 0;
+        end = System.currentTimeMillis();
+        oldTime = time;
+        time = (int) Math.floor((end-start)/1000);
+        if (time>oldTime){
+            System.out.println(time);
+        }
+        if (time>=turnLimit){
+            System.out.println("Switching player turns!");
+            System.out.println("Current ctive player: " + activePlayer.getId());
+            switchPlayer();
+            System.out.println("New active player " + activePlayer.getId());
         }
 
+        handleInput();
+
         //Make the angle and power increment between respectively 0-90 and 0-100
-        float angleSpeed = (float)0.5;
-        float powerSpeed = (float)2;
-        if (angleActive) {
+        float angleSpeed = (float)3;
+        float powerSpeed = (float)4;
+        if (activePlayer.isAngleActive()) {
             if (cannon.getAngle() >= 90) {
                 angleUp = false;
             } else if (cannon.getAngle() <= 0) {
@@ -139,7 +170,7 @@ public class SinglePlayerState extends State {
             } else if (!angleUp) {
                 cannon.setAngle(cannon.getAngle() - angleSpeed);
             }
-        } else if (powerActive) {
+        } else if (activePlayer.isPowerActive()) {
             if (cannon.getPower() >= 100) {
                 powerUp = false;
             } else if (cannon.getPower() <= 0) {
@@ -152,7 +183,6 @@ public class SinglePlayerState extends State {
             }
         }
         cannon.update(dt);
-        projectile.update(dt);
     }
 
     @Override
@@ -190,5 +220,35 @@ public class SinglePlayerState extends State {
     @Override
     public void dispose() {
         drawer.dispose();
+    }
+
+    private void switchPlayer(){
+        start = System.currentTimeMillis();
+        time = 0;
+        //Deactivates variables
+        if (activePlayer.isAngleActive()){
+            activePlayer.switchAngleActive();
+        }
+        if (activePlayer.isPowerActive()){
+            activePlayer.switchPowerActive();
+        }
+
+        cannon.setPower(0);
+        cannon.setAngle(0);
+
+        System.out.println("Switching");
+        //Changes active player
+        if (activePlayer == player1){
+            activePlayer = player2;
+        } else if (activePlayer == player2){
+            activePlayer = player1;
+        }
+        //Activates variables
+        if (!activePlayer.isAngleActive()){
+            activePlayer.switchAngleActive();
+        }
+        if (activePlayer.isPowerActive()) {
+            activePlayer.switchPowerActive();
+        }
     }
 }
