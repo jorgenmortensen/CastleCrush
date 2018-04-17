@@ -165,6 +165,8 @@ public class Cannon implements Drawable{
         cannonSprite.setRotation(90 - factor*getAngle());
     }
 
-
+    public float getShootingAngle (){
+        return 90 - factor*getAngle();
+    }
 
 }

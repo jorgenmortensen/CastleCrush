@@ -124,7 +124,7 @@ public class GameWorldDrawer extends Drawer {
 //                drawObject(mockWorld.getProjectile());
 //            }
 //        }
-        if (mockWorld.getProjectile().isFired()){
+        if (true){
             drawObject(mockWorld.getProjectile());
         }
 
