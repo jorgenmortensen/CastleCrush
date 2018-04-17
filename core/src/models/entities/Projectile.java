@@ -55,25 +55,12 @@ public class Projectile implements Drawable {
     public void scheduleSelfDestruct (final Fixture fixture){
         if (!scheduleActive){
             final SinglePlayerState stat = state;
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    if (getSpeed(getBody().getLinearVelocity()) < 3){
-                        setHasHit(true);
-                        gameWorld.addBodyToDestroy(fixture);
-                        try {
-                            stat.switchPlayer();
-                        } catch (Exception e) {
-                            System.out.println("ERROOOOOOOR");
-                            e.printStackTrace();
-                        }
-                        Cannon cannon = gameWorld.getCannons().get(0);
-                        gameWorld.createProjectile(cannon.getX(),cannon.getY(), gameWorld.getScreenWidth()/40, stat);
-                    }
-                }
-            };
-            Timer timer = new Timer();
-            timer.scheduleAtFixedRate(timerTask, 40, 4000);
+            if (getSpeed(getBody().getLinearVelocity()) < 3) {
+                setHasHit(true);
+                gameWorld.addBodyToDestroy(fixture);
+                Cannon cannon = gameWorld.getCannons().get(0);
+                gameWorld.createProjectile(cannon.getX(), cannon.getY(), gameWorld.getScreenWidth() / 40, stat);
+            }
             /*timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
