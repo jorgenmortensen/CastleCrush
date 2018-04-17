@@ -23,6 +23,7 @@ public abstract class State {
         cam = new OrthographicCamera();
         mouse = new Vector3();
     }
+    
 
     protected boolean isOnButton(Button button) {
         if (((CastleCrush.HEIGHT - Gdx.input.getY()) > button.getYpos()) &&
