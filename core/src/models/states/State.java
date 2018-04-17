@@ -1,4 +1,4 @@
-package states;
+package models.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.castlecrush.game.CastleCrush;
 
-import components.Button;
+import models.components.Button;
 
 /**
  * Created by Jørgen on 24.01.2018.

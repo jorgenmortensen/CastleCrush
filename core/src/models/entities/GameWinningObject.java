@@ -1,20 +1,19 @@
-package entities;
+package models.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector3;
 
 /**
  * Created by Jørgen on 09.03.2018.
  */
 
-public class Projectile implements Drawable {
+public class GameWinningObject implements Drawable {
 
     private int x;
     private int y;
     private int width;
     private int height;
 
-    private Vector3 velocity;
+    private boolean isHit;
 
     @Override
     public void Draw(SpriteBatch batch) {

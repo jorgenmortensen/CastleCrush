@@ -1,22 +1,21 @@
-package entities;
+package models.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 /**
  * Created by Jørgen on 09.03.2018.
  */
 
-public class PowerUp implements Drawable {
+// Fundamental blocks for the castle
+
+public class Box implements Drawable {
 
     private int x;
     private int y;
     private int width;
     private int height;
 
-    private Vector3 velocity;
-    private Image image;
+    private boolean isHit;
 
     @Override
     public void Draw(SpriteBatch batch) {
@@ -62,16 +61,4 @@ public class PowerUp implements Drawable {
     public int getHeight() {
         return this.height;
     }
-
-    public void move(int dx, int dy) {
-
-    }
-
-    public void update(float dt) {
-
-    }
-
-
-
-
 }

@@ -1,21 +1,24 @@
-package entities;
+package models.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+import java.util.List;
 
 /**
  * Created by Jørgen on 09.03.2018.
  */
 
-
-public class Cannon implements Drawable{
+public class Level implements Drawable {
 
     private int x;
     private int y;
     private int width;
     private int height;
 
-    private float angle;
-    private float power;
+    private List<PowerUp> powerUps;
+    private List<models.entities.Castle> castles;
+    private List<models.entities.Cannon> cannons;
+    private models.entities.Projectile projectile;
 
     @Override
     public void Draw(SpriteBatch batch) {
@@ -61,19 +64,4 @@ public class Cannon implements Drawable{
     public int getHeight() {
         return this.height;
     }
-
-
-    //Fires the shot, with a given angle and power
-    public void Fire() {
-
-    }
-
-
-    //Updates the game with the interval dt
-    public void update(float dt) {
-
-    }
-
-
-
 }

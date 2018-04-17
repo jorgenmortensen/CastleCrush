@@ -1,4 +1,4 @@
-package entities;
+package models.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -6,14 +6,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * Created by Jørgen on 09.03.2018.
  */
 
-public class GameWinningObject implements Drawable {
+
+public class Cannon implements Drawable{
 
     private int x;
     private int y;
     private int width;
     private int height;
 
-    private boolean isHit;
+    private float angle;
+    private float power;
 
     @Override
     public void Draw(SpriteBatch batch) {
@@ -59,4 +61,19 @@ public class GameWinningObject implements Drawable {
     public int getHeight() {
         return this.height;
     }
+
+
+    //Fires the shot, with a given angle and power
+    public void Fire() {
+
+    }
+
+
+    //Updates the game with the interval dt
+    public void update(float dt) {
+
+    }
+
+
+
 }

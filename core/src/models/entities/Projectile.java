@@ -1,24 +1,20 @@
-package entities;
+package models.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import java.util.List;
+import com.badlogic.gdx.math.Vector3;
 
 /**
  * Created by Jørgen on 09.03.2018.
  */
 
-public class Level implements Drawable {
+public class Projectile implements Drawable {
 
     private int x;
     private int y;
     private int width;
     private int height;
 
-    private List<PowerUp> powerUps;
-    private List<Castle> castles;
-    private List<Cannon> cannons;
-    private Projectile projectile;
+    private Vector3 velocity;
 
     @Override
     public void Draw(SpriteBatch batch) {

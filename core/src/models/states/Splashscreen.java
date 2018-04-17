@@ -1,13 +1,10 @@
-package states;
+package models.states;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.castlecrush.game.CastleCrush;
-
-import states.menuStates.StartMenuScreen;
 
 /**
  * Created by erikkjernlie on 06/04/2018.
@@ -24,7 +21,7 @@ public class Splashscreen extends State {
     private Texture t;
 
 
-    public Splashscreen(GameStateManager gsm) {
+    public Splashscreen(models.states.GameStateManager gsm) {
         super(gsm);
         this.am = new AssetManager();
         this.startTime = TimeUtils.millis();
@@ -39,7 +36,7 @@ public class Splashscreen extends State {
     public void update(float dt) {
         handleInput();
         if(am.update() && TimeUtils.timeSinceMillis(startTime) > 1000){
-            gsm.set(new StartMenuScreen(gsm));
+            gsm.set(new models.states.menuStates.StartMenuScreen(gsm));
             dispose();
         }
 

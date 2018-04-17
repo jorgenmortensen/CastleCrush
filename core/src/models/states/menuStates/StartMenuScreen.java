@@ -1,4 +1,4 @@
-package states.menuStates;
+package models.states.menuStates;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -7,9 +7,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.castlecrush.game.CastleCrush;
 
-import components.Button;
-import states.GameStateManager;
-import states.TutorialState;
+import models.components.Button;
+import models.states.State;
+import models.states.GameStateManager;
+import models.states.TutorialState;
 
 import static com.castlecrush.game.CastleCrush.xCoordBg1;
 import static com.castlecrush.game.CastleCrush.xCoordBg2;
@@ -18,7 +19,7 @@ import static com.castlecrush.game.CastleCrush.xCoordBg2;
  * Created by Jørgen on 12.03.2018.
  */
 
-public class StartMenuScreen extends states.State {
+public class StartMenuScreen extends State {
 
     Button btnPlay;
     Button btnHelp;

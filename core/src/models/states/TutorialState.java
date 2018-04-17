@@ -1,4 +1,4 @@
-package states;
+package models.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -8,9 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.castlecrush.game.CastleCrush;
 
-import components.Button;
-import components.SlidingObjectXdirection;
-import states.menuStates.StartMenuScreen;
+import models.components.Button;
 
 /**
  * Created by Jørgen on 05.04.2018.
@@ -23,7 +21,7 @@ public class TutorialState extends State {
     Texture texture3;
     Texture texture4;
     Button back;
-    private SlidingObjectXdirection sf;
+    private models.components.SlidingObjectXdirection sf;
     public boolean screenTouched;
 
     OrthographicCamera cam;
@@ -44,7 +42,7 @@ public class TutorialState extends State {
                 CastleCrush.HEIGHT / 10,
                 new Sprite(new Texture("return_menu.png")));
         
-        sf = new SlidingObjectXdirection(-CastleCrush.HEIGHT/4, 3*CastleCrush.HEIGHT/4, CastleCrush.HEIGHT/4, CastleCrush.HEIGHT/4, new Sprite(new Texture("sliding_finger.png")),5*CastleCrush.WIDTH/4, -900);
+        sf = new models.components.SlidingObjectXdirection(-CastleCrush.HEIGHT/4, 3*CastleCrush.HEIGHT/4, CastleCrush.HEIGHT/4, CastleCrush.HEIGHT/4, new Sprite(new Texture("sliding_finger.png")),5*CastleCrush.WIDTH/4, -900);
         screenTouched = false;
     }
 
@@ -85,7 +83,7 @@ public class TutorialState extends State {
             cam.update();
         }
         if ((cam.position.x > CastleCrush.WIDTH * 3 / 4) && isOnBackBtn()) {
-            gsm.set(new StartMenuScreen(gsm));
+            gsm.set(new models.states.menuStates.StartMenuScreen(gsm));
             dispose();
         }
     }
@@ -105,7 +103,7 @@ public class TutorialState extends State {
         handleInput();
         if (Gdx.input.isKeyPressed(Input.Keys.BACK)){
             System.out.println("PRESSED");
-            gsm.set(new StartMenuScreen(gsm));
+            gsm.set(new models.states.menuStates.StartMenuScreen(gsm));
         }
         sf.update(dt);
 

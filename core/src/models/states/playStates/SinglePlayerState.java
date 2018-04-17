@@ -1,4 +1,4 @@
-package states.playStates;
+package models.states.playStates;
 
 /**
  * Created by Jørgen on 12.03.2018.

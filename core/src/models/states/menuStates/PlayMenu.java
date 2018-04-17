@@ -1,4 +1,4 @@
-package states.menuStates;
+package models.states.menuStates;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -7,18 +7,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.castlecrush.game.CastleCrush;
 
-import components.Button;
-import components.GravityButton;
-import states.GameStateManager;
-import states.State;
-
-import static states.menuStates.StartMenuScreen.changed_logo;
-import static states.menuStates.StartMenuScreen.crushed;
-import static states.menuStates.StartMenuScreen.little_crushed;
-import static states.menuStates.StartMenuScreen.logo;
-import static states.menuStates.StartMenuScreen.startTime;
-import static states.menuStates.StartMenuScreen.with_u;
-import static states.menuStates.StartMenuScreen.without_castle;
+import models.components.Button;
+import models.components.GravityButton;
+import models.states.State;
 
 /**
  * Created by erikkjernlie on 05/04/2018.
@@ -41,7 +32,7 @@ public class PlayMenu extends State {
 
     // remember to change every .PNG to .png.
 
-    public PlayMenu(GameStateManager gsm) {
+    public PlayMenu(models.states.GameStateManager gsm) {
         super(gsm);
         makeMovingBackground();
         xMax = CastleCrush.WIDTH;
@@ -130,23 +121,23 @@ public class PlayMenu extends State {
 
     //Make the castle in the logo crush and tranforming it to a U
     public void logoCrush() {
-        long time = TimeUtils.timeSinceMillis(startTime);
-        if (time > 3500 && little_crushed) {
-            logo = new Texture("logo_little_crushed.png");;;
-            little_crushed = false;
-            changed_logo = true;
-        } else if (time > 7000 && crushed) {
-            logo = new Texture("logo_crushed.png");;
-            crushed = false;
-            changed_logo = true;
-        } else if (time > 10000  && without_castle) {
-            logo = new Texture("logo_without_castle.png");;
-            without_castle = false;
-            changed_logo = true;
-        } else if (time > 13000 && with_u) {
-            logo = new Texture("logo_with_u.png");;
-            with_u = false;
-            changed_logo = true;
+        long time = TimeUtils.timeSinceMillis(StartMenuScreen.startTime);
+        if (time > 3500 && StartMenuScreen.little_crushed) {
+            StartMenuScreen.logo = new Texture("logo_little_crushed.png");;;
+            StartMenuScreen.little_crushed = false;
+            StartMenuScreen.changed_logo = true;
+        } else if (time > 7000 && StartMenuScreen.crushed) {
+            StartMenuScreen.logo = new Texture("logo_crushed.png");;
+            StartMenuScreen.crushed = false;
+            StartMenuScreen.changed_logo = true;
+        } else if (time > 10000  && StartMenuScreen.without_castle) {
+            StartMenuScreen.logo = new Texture("logo_without_castle.png");;
+            StartMenuScreen.without_castle = false;
+            StartMenuScreen.changed_logo = true;
+        } else if (time > 13000 && StartMenuScreen.with_u) {
+            StartMenuScreen.logo = new Texture("logo_with_u.png");;
+            StartMenuScreen.with_u = false;
+            StartMenuScreen.changed_logo = true;
         }
     }
 
@@ -176,7 +167,7 @@ public class PlayMenu extends State {
 
 
 
-        sb.draw(logo, 0, CastleCrush.HEIGHT * 7 / 10, CastleCrush.WIDTH, 3*CastleCrush.HEIGHT/10);
+        sb.draw(StartMenuScreen.logo, 0, CastleCrush.HEIGHT * 7 / 10, CastleCrush.WIDTH, 3*CastleCrush.HEIGHT/10);
 
         sb.draw(btnSound.getBtn(), btnSound.getXpos(), btnSound.getYpos(),btnSound.getBtnWidth(), btnSound.getBtnHeight());
         sb.end();
