@@ -36,6 +36,8 @@ public class CastleCrush extends ApplicationAdapter {
 	private GameStateManager gsm;
 	private OrthographicCamera fullscreen;
 
+
+
 	@Override
 	public void create () {
 		WIDTH = Gdx.graphics.getWidth();
