@@ -157,6 +157,7 @@ public class GameWorldDrawer extends Drawer {
 
         }
         mockWorld.getPhysicsWorld().step(1/60f, 6, 2);
+        debugRenderer.render(mockWorld.getPhysicsWorld(), camera.combined);
     }
 
     private void drawObject(Drawable object) {
