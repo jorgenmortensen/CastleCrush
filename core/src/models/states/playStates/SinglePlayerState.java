@@ -117,7 +117,7 @@ public class SinglePlayerState extends State {
             //world.getProsjektil().fire(cannon.getAngle(), cannon.getPower());
             //world.getCannons().get(0).setShotsFired(true);
             ///projectile.fire(cannon.getAngle(), cannon.getPower());
-            if (true) {
+            if (!world.getProjectile().isFired()) {
                 fire();
                 //fired = true;
                 //switchPlayer();
@@ -224,8 +224,8 @@ public class SinglePlayerState extends State {
 
     public void fire() {
         world.setProjectileVelocity(new Vector2(
-                (float)Math.cos(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower(),
-                (float)Math.sin(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower()));
+                (float)Math.cos(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower()/3,
+                (float)Math.sin(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower()/3));
         world.getProjectile().setFired(true);
     }
 }
