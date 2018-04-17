@@ -19,8 +19,8 @@ public class SinglePlayerState extends State {
 
     public SinglePlayerState(GameStateManager gsm){
         super(gsm);
-        world = new MockGameWorld();
-        drawer = new GameWorldDrawer(new SpriteBatch(), world);
+        world = new MockGameWorld(gsm);
+        drawer = new GameWorldDrawer(new SpriteBatch(), world, gsm);
     }
 
     @Override

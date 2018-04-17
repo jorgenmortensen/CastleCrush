@@ -26,6 +26,7 @@ import models.entities.Drawable;
 import models.entities.GameWinningObject;
 import models.entities.Player;
 import models.entities.Projectile;
+import models.states.GameStateManager;
 
 
 /**
@@ -56,9 +57,11 @@ public class MockGameWorld {
     private Player player1;
     private Player player2;
 
+    GameStateManager gsm;
 
-    public MockGameWorld() {
+    public MockGameWorld(GameStateManager gsm) {
         mockBoxes = new ArrayList<Drawable>();
+        this.gsm = gsm;
         cannons = new ArrayList<Cannon>();
         groundLevel = screenHeight/25;
         player1 = new Player("player1");
@@ -108,7 +111,7 @@ public class MockGameWorld {
 
 
 
-    private void  makeMirroredCastle(Player player) {
+    private void makeMirroredCastle(Player player) {
         for (int i = mockBoxes.size()- 1; i >= 0; i--) {
             float boxXpos, boxYpos;
             if (mockBoxes.get(i) instanceof GameWinningObject){
@@ -226,6 +229,7 @@ public class MockGameWorld {
         sprite.setOrigin(0, 0);
         sprite.setOriginCenter();
 
+        //Setting the velocity
         body.setLinearVelocity(15.0f, 0.0f);
         projectile = new Projectile(body, sprite, radius*2, radius*2, this);
         body.setUserData(projectile);

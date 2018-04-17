@@ -20,6 +20,9 @@ import models.entities.Cannon;
 import models.entities.Castle;
 import models.entities.Drawable;
 import models.entities.GameWinningObject;
+import models.states.GameStateManager;
+import models.states.State;
+import models.states.menuStates.GameOverMenu;
 import views.Drawer;
 
 /**
@@ -39,7 +42,7 @@ public class GameWorldDrawer extends Drawer {
     private float SCALE;
     private float screenWidth;
     private float screenHeight;
-
+    GameStateManager gsm;
 
 
     private int PTM_ratio;
@@ -47,8 +50,9 @@ public class GameWorldDrawer extends Drawer {
     Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 
 
-    public GameWorldDrawer(SpriteBatch batch, MockGameWorld world){
+    public GameWorldDrawer(SpriteBatch batch, MockGameWorld world, GameStateManager gsm){
         super(batch);
+        this.gsm = gsm;
         this.mockWorld = world;
         this.physicsWorld = mockWorld.getPhysicsWorld();
         SCALE = world.getSCALE();
@@ -67,14 +71,30 @@ public class GameWorldDrawer extends Drawer {
         batch.begin();
         batch.draw(background, 0,0, screenWidth, screenHeight);
         drawGround();
-        System.out.println("Player 1: " + mockWorld.getPlayer1().getGameWinningObject().getHit());
-        System.out.println("Player 2: " + mockWorld.getPlayer2().getGameWinningObject().getHit());
+
+
+        //Check if game is over, if so, the gameOverMenu becomes active
         if (mockWorld.getPlayer1().getGameWinningObject().getHit()){
-            Texture t = new Texture("player2.png");
-            batch.draw(t,screenWidth*0.1f,screenHeight*0.1f, screenWidth*0.8f, screenHeight*0.8f);
+            final State gameOverMenu = new GameOverMenu(gsm, false, true);
+            //TODO, Opponent wins, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    gsm.set(gameOverMenu);
+
+                }
+            });
+
         } else if (mockWorld.getPlayer2().getGameWinningObject().getHit()){
-            Texture t = new Texture("player1.png");
-            batch.draw(t,screenWidth*0.1f,screenHeight*0.1f, screenWidth*0.8f, screenHeight*0.8f);
+            final State gameOverMenu = new GameOverMenu(gsm, false, true);
+            //TODO, You win, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    gsm.set(gameOverMenu);
+                }
+            });
+
         } else {
             for (Drawable obj : mockWorld.getBoxes()) {
                 if (obj instanceof Box) {
@@ -87,14 +107,11 @@ public class GameWorldDrawer extends Drawer {
                 drawObject(obj);
             }
 
-
             if (mockWorld.getProjectile().getHasHit()) {
             } else {
                 drawObject(mockWorld.getProjectile());
             }
         }
-
-
 
         batch.end();
         // debugRenderer.render(physicsWorld,camera.combined);
@@ -127,9 +144,9 @@ public class GameWorldDrawer extends Drawer {
 
     @Override
     public void dispose() {
-
+        background.dispose();
         debugRenderer.dispose();
-
+        physicsWorld.dispose();
     }
 
     public int getCameraWidth() {
