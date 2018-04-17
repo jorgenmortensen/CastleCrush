@@ -1,9 +1,7 @@
 package models.entities;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 
@@ -57,7 +55,26 @@ public class Projectile implements Drawable {
     public void scheduleSelfDestruct (final Fixture fixture){
         if (!scheduleActive){
             final SinglePlayerState stat = state;
-            timer = new Timer();
+            TimerTask timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    if (getSpeed(getBody().getLinearVelocity()) < 3){
+                        setHasHit(true);
+                        gameWorld.addBodyToDestroy(fixture);
+                        try {
+                            stat.switchPlayer();
+                        } catch (Exception e) {
+                            System.out.println("ERROOOOOOOR");
+                            e.printStackTrace();
+                        }
+                        Cannon cannon = gameWorld.getCannons().get(0);
+                        gameWorld.createProjectile(cannon.getX(),cannon.getY(), gameWorld.getScreenWidth()/40, stat);
+                    }
+                }
+            };
+            Timer timer = new Timer();
+            timer.scheduleAtFixedRate(timerTask, 40, 4000);
+            /*timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -74,7 +91,7 @@ public class Projectile implements Drawable {
                     }
 
                 }
-            }, 3000,500);
+            }, 3000,500);*/
             this.scheduleActive = true;
         }
 

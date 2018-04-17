@@ -3,18 +3,9 @@ package models.states.playStates;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.castlecrush.game.CastleCrush;
-
-import org.lwjgl.Sys;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import controllers.game_world.GameWorldController;
 import models.MockGameWorld;
@@ -24,9 +15,6 @@ import models.entities.Projectile;
 import models.states.GameStateManager;
 import models.states.State;
 import views.game_world.GameWorldDrawer;
-
-import static java.lang.Math.negateExact;
-import static java.lang.Math.round;
 
 /**
  * Created by Jørgen on 12.03.2018.
@@ -53,7 +41,7 @@ public class SinglePlayerState extends State {
     private Texture background2;
     final int BACKGROUND_MOVE_SPEED = -30;
     boolean fired = false;
-    private int time, oldTime, turnLimit = 20;
+    private int time, oldTime, turnLimit = 5;
     long start, end;
 
     MockGameWorld world;
