@@ -30,6 +30,7 @@ import views.Drawer;
  */
 
 public class GameWorldDrawer extends Drawer {
+
     private Texture background = new Texture("background_without_ground.png");
     //private Sprite background;
     private Castle castleLeft, castleRight;
@@ -50,12 +51,15 @@ public class GameWorldDrawer extends Drawer {
     Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 
 
-    public GameWorldDrawer(SpriteBatch batch, MockGameWorld world, GameStateManager gsm){
+    public GameWorldDrawer(SpriteBatch batch, MockGameWorld mockWorld, GameStateManager gsm){
         super(batch);
         this.gsm = gsm;
-        this.mockWorld = world;
+        this.mockWorld = mockWorld;
+        this.cannonLeft = mockWorld.getCannons().get(0);
+        this.cannonRight = mockWorld.getCannons().get(1); //This is NULL as of now
+
         this.physicsWorld = mockWorld.getPhysicsWorld();
-        SCALE = world.getSCALE();
+        SCALE = mockWorld.getSCALE();
         screenWidth = CastleCrush.WIDTH*SCALE;
         screenHeight = CastleCrush.HEIGHT*SCALE;
 
@@ -67,10 +71,16 @@ public class GameWorldDrawer extends Drawer {
 
     @Override
     public void render() {
+        batch.setProjectionMatrix(camera.combined);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         batch.begin();
+        //Draw the background
         batch.draw(background, 0,0, screenWidth, screenHeight);
         drawGround();
+
+        //Draw the ground
+
 
 
         //Check if game is over, if so, the gameOverMenu becomes active
@@ -86,7 +96,7 @@ public class GameWorldDrawer extends Drawer {
             });
 
         } else if (mockWorld.getPlayer2().getGameWinningObject().getHit()){
-            final State gameOverMenu = new GameOverMenu(gsm, false, true);
+            final State gameOverMenu = new GameOverMenu(gsm, true, false);
             //TODO, You win, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
             Gdx.app.postRunnable(new Runnable() {
                 @Override
@@ -103,26 +113,47 @@ public class GameWorldDrawer extends Drawer {
                     }
                 }
             }
-            for (Drawable obj : mockWorld.getCannons()) {
-                drawObject(obj);
-            }
+          //  for (Drawable obj : mockWorld.getCannons()) {
+           //     drawObject(obj);
+           // }
 
-            if (mockWorld.getProjectile().getHasHit()) {
-            } else {
+            if (mockWorld.getProjectile().isFired()) {
                 drawObject(mockWorld.getProjectile());
             }
         }
 
-        batch.end();
         // debugRenderer.render(physicsWorld,camera.combined);
+        //Draw the power bar
+        if (cannonLeft.getPower() > 0) {
+            batch.draw(new Texture("powerBar.png"), cannonLeft.getX(),
+                    cannonLeft.getY() / 2,
+                    (cannonLeft.getPower() * cannonLeft.getWidth() * 4 / 5) / 100,
+                    cannonLeft.getHeight() / 2);
+        }
+        if (cannonRight.getPower() > 0) {
+            batch.draw(new Texture("powerBar.png"), cannonRight.getX(),
+                    cannonRight.getY() / 2,
+                    (cannonRight.getPower() * cannonRight.getWidth() * 4 / 5) / 100,
+                    cannonRight.getHeight() / 2);
+        }
 
-        mockWorld.getPhysicsWorld().step(1/60f, 6, 2);
+
+
+        cannonLeft.getDrawable().draw(batch);
+        cannonLeft.getWheel().draw(batch);
+        cannonRight.getDrawable().draw(batch);
+        cannonRight.getWheel().draw(batch);
+
+        batch.end();
+
+        //Should be placed after bacth.end():
         //mock DELETE BODIES
         if (!physicsWorld.isLocked()){
             mockWorld.destroy((ArrayList<Fixture>) mockWorld.getBodiesToDestroy());
 
         }
-
+        mockWorld.getPhysicsWorld().step(1/60f, 6, 2);
+        debugRenderer.render(mockWorld.getPhysicsWorld(), camera.combined);
     }
 
     private void drawObject(Drawable object) {
@@ -137,7 +168,9 @@ public class GameWorldDrawer extends Drawer {
     }
 
     private void drawGround() {
-        mockWorld.getGround().getDrawable().draw(batch);
+        if (mockWorld.getGround() != null){
+            mockWorld.getGround().getDrawable().draw(batch);
+        }
     }
 
 
@@ -147,6 +180,7 @@ public class GameWorldDrawer extends Drawer {
         background.dispose();
         debugRenderer.dispose();
         physicsWorld.dispose();
+        batch.dispose();
     }
 
     public int getCameraWidth() {

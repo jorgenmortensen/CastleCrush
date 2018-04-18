@@ -5,4 +5,5 @@ package models.states.playStates;
  */
 
 public class OnlineMultiplayerState {
+
 }

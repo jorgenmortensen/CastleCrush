@@ -17,6 +17,7 @@ import com.castlecrush.game.CastleCrush;
 import com.codeandweb.physicseditor.PhysicsShapeCache;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -27,6 +28,7 @@ import models.entities.GameWinningObject;
 import models.entities.Player;
 import models.entities.Projectile;
 import models.states.GameStateManager;
+import models.states.playStates.SinglePlayerState;
 
 
 /**
@@ -56,6 +58,8 @@ public class MockGameWorld {
     private float groundLevel;
     private Player player1;
     private Player player2;
+    private SinglePlayerState state;
+    public Projectile testProjectile;
 
     GameStateManager gsm;
 
@@ -74,16 +78,35 @@ public class MockGameWorld {
         physicsWorld = new World(new Vector2(0, -10), true);
         physicsWorld.setContactListener(new GameCollision(this));
         this.generateBodies();
-
+        this.state = state;
     }
+
+
 
     private void generateBodies() {
         createGround();
         makeCastle(screenWidth*0.8f, screenWidth*0.2f, screenHeight*0.6f, player2);
         makeMirroredCastle(player1);
-        createProjectile( screenWidth/2 , 2, screenWidth/50f);
+        // createProjectile( screenWidth/2 , 2, screenWidth/50f);
         //createGameWinningObject(screenWidth*0.5f, groundLevel, boxWidth*2, boxHeight*2, 100, new Sprite(new Texture("gwo1.png")));
 
+        Cannon cannon1 = new Cannon(screenWidth*1/3,
+                groundLevel, screenWidth/30, screenHeight/30,
+                new Sprite(new Texture("cannon.png")),
+                new Sprite(new Texture("wheel.png")), null, true);
+
+        Cannon cannon2 = new Cannon(screenWidth*2/3,
+                groundLevel, screenWidth/30, screenHeight/30,
+                new Sprite(new Texture("cannon.png")),
+                new Sprite(new Texture("wheel.png")), null, false);
+
+//        Cannon cannon3 = new Cannon(screenWidth/2, groundLevel, screenWidth/20, screenHeight/20,
+//                new Sprite(new Texture("cannon.png")),
+//                new Sprite(new Texture("wheel.png")), null);
+
+
+        setCannons(new ArrayList<Cannon>(Arrays.asList(cannon1, cannon2)));
+        projectile = createProjectile(cannon1.getX(), groundLevel, screenHeight/40);
     }
 
     public void makeCastle(float startPosX, float castleWidth, float castleHeight, Player player) {
@@ -158,6 +181,7 @@ public class MockGameWorld {
         shape.dispose();
 
 
+
         Sprite groundSprite = textureAtlas.createSprite("bottom_ground");
         //groundSprite.setScale(Gdx.graphics.getWidth(), 1);
         groundSprite.setSize(Gdx.graphics.getWidth(), groundHeight/2);
@@ -176,7 +200,7 @@ public class MockGameWorld {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(boxWidth/2, boxHeight/2);
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.friction = 1.0f;
+        fixtureDef.friction = 0.9f;
         fixtureDef.density = density;
         fixtureDef.restitution = 0.0f;
         fixtureDef.shape = shape;
@@ -204,9 +228,13 @@ public class MockGameWorld {
         return box;
     }
 
-
-    private void createProjectile(float xPos, float yPos, float radius){
+    public Projectile createProjectile(float xPos, float yPos, float radius){
         //creating the physical shape of the ball and setting physical attributes
+        if (projectile != null) {
+            addBodyToDestroy(projectile.getBody().getFixtureList().get(0));
+            projectile = null;
+        }
+
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(xPos, yPos);
@@ -224,16 +252,20 @@ public class MockGameWorld {
         shape.dispose();
 
         //setting the sprite of the ball and positioning it correctly
-        Sprite sprite = textureAtlas.createSprite("ball_cannon");
+        Sprite sprite = new Sprite(new Texture("ball_cannon.png"));
         sprite.setSize(radius*2, radius*2);
         sprite.setOrigin(0, 0);
         sprite.setOriginCenter();
 
-        //Setting the velocity
-        body.setLinearVelocity(15.0f, 0.0f);
-        projectile = new Projectile(body, sprite, radius*2, radius*2, this);
-        body.setUserData(projectile);
+        Projectile tempProjectile = new Projectile(body, new Vector2(xPos, yPos), sprite, radius*2, radius*2, this);
+        body.setUserData(tempProjectile);
 
+        return tempProjectile;
+
+    }
+
+    public void setProjectileVelocity(Vector2 velocity) {
+        projectile.getBody().setLinearVelocity(velocity);
     }
 
     // GameWinningObject is like a box, just with another texture
@@ -281,7 +313,6 @@ public class MockGameWorld {
         }
         removeAllBodiesToDestroy();
     }
-
 
     public World getPhysicsWorld() {
         return physicsWorld;
@@ -338,5 +369,17 @@ public class MockGameWorld {
 
     public Player getPlayer2() {
         return player2;
+    }
+
+    public void setCannons(List cannons) {
+        this.cannons = cannons;
+    }
+
+    public void setProjectile(Player player) {
+        this.projectile = createProjectile(player.getCannon().getX(), player.getCannon().getY(),screenHeight/40);
+    }
+
+    public float getScreenWidth() {
+        return screenWidth;
     }
 }

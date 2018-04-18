@@ -28,7 +28,7 @@ import static models.states.menuStates.StartMenuScreen.without_castle;
 // PROBLEMS: local multiplayer button doesn't work, the rest does
 
 
-public class PlayMenu extends State {
+public class PlayMenu extends models.states.State {
 
     float xMax;
     private Texture background1;
@@ -63,7 +63,6 @@ public class PlayMenu extends State {
                 CastleCrush.HEIGHT / 10,
                 new Sprite(new Texture("single.png")), CastleCrush.HEIGHT);
 
-        //Local multiplayer button
         btnLocal = new GravityButton(CastleCrush.WIDTH / 3,
                 3*CastleCrush.HEIGHT / 10,
                 CastleCrush.WIDTH / 3,
@@ -173,9 +172,6 @@ public class PlayMenu extends State {
                 btnLocal.getYpos(),
                 btnLocal.getBtnWidth(),
                 btnLocal.getBtnHeight());
-
-
-
 
         sb.draw(logo, 0, CastleCrush.HEIGHT * 7 / 10, CastleCrush.WIDTH, 3*CastleCrush.HEIGHT/10);
 

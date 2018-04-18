@@ -155,6 +155,7 @@ public class StartMenuScreen extends models.states.State {
     }
 
     public long getStartTime(){
+
         return this.startTime;
     }
 

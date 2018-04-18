@@ -2,6 +2,7 @@ package models.entities;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 
 /**
@@ -10,10 +11,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 
 public interface Drawable {
 
-    public Sprite getDrawable();
+   public Sprite getDrawable();
 
-    public Body getBody();
-
-
+   public Body getBody();
 
 }
