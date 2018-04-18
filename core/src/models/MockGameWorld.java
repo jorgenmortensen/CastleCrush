@@ -58,7 +58,6 @@ public class MockGameWorld {
     private float groundLevel;
     private Player player1;
     private Player player2;
-    public Projectile testProjectile;
 
 
     GameStateManager gsm;
@@ -85,8 +84,6 @@ public class MockGameWorld {
         createGround();
         makeCastle(screenWidth*0.8f, screenWidth*0.2f, screenHeight*0.6f, player2);
         makeMirroredCastle(player1);
-        // createProjectile( screenWidth/2 , 2, screenWidth/50f);
-        //createGameWinningObject(screenWidth*0.5f, groundLevel, boxWidth*2, boxHeight*2, 100, new Sprite(new Texture("gwo1.png")));
 
         Cannon cannon1 = new Cannon(screenWidth*1/3,
                 groundLevel, screenWidth/30, screenHeight/30,
@@ -97,10 +94,6 @@ public class MockGameWorld {
                 groundLevel, screenWidth/30, screenHeight/30,
                 new Sprite(new Texture("cannon.png")),
                 new Sprite(new Texture("wheel.png")), null, false);
-
-//        Cannon cannon3 = new Cannon(screenWidth/2, groundLevel, screenWidth/20, screenHeight/20,
-//                new Sprite(new Texture("cannon.png")),
-//                new Sprite(new Texture("wheel.png")), null);
 
 
         setCannons(new ArrayList<Cannon>(Arrays.asList(cannon1, cannon2)));
@@ -155,7 +148,6 @@ public class MockGameWorld {
                 moveBox(mirroredBox,  screenWidth - boxXpos, boxYpos);
                 mockBoxes.add(mirroredBox);
             }
-            //float boxWidth = originalBox.getDrawable().getWidth();
 
         }
     }
@@ -185,9 +177,7 @@ public class MockGameWorld {
 
 
         Sprite groundSprite = textureAtlas.createSprite("bottom_ground");
-        //groundSprite.setScale(Gdx.graphics.getWidth(), 1);
         groundSprite.setSize(Gdx.graphics.getWidth(), groundHeight/2);
-        // mockBoxes.add(new Box(body, groundSprite));
         ground = new Box(body, groundSprite, 0, 0, 0);
         body.setUserData(ground);
     }
@@ -210,13 +200,10 @@ public class MockGameWorld {
         body = physicsWorld.createBody(bodyDef);
         body.createFixture(fixtureDef);
         body.setTransform(xPos, yPos, 0);
-        //body.setAngularVelocity(3);
         shape.dispose();
         Random ran = new Random();
         int number = ran.nextInt(15);
-        Sprite boxSprite;
         if (sprite != null){
-            boxSprite = sprite;
         } else if(number == 10){
             sprite = new Sprite(new Texture("window_box.png"));
         } else {
@@ -290,7 +277,6 @@ public class MockGameWorld {
         body = physicsWorld.createBody(bodyDef);
         body.createFixture(fixtureDef);
         body.setTransform(xPos, yPos, 0);
-        //body.setAngularVelocity(3);
         shape.dispose();
         sprite.setSize(boxWidth, boxHeight);
         sprite.setOriginCenter();

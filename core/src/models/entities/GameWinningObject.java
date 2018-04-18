@@ -31,20 +31,5 @@ public class GameWinningObject extends Box {
         super.isHit(isHit);
         CastleCrush.music.play();
     }
-    //Function to make the sprite change when the GWO is hit
-    /*
-    public int getCounter() {
-        return counter;
-    }
-    */
-    /* public void isHit(){
-        counter += 1;
-        if(counter == 1){
-            this.sprite = sprite1;
-        } else if (counter == 2){
-            this.sprite = sprite2;
-        }
 
-    }
-    */
 }

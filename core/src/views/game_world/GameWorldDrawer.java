@@ -33,9 +33,7 @@ public class GameWorldDrawer extends Drawer {
 
     private Texture background = new Texture("background_without_ground.png");
     //private Sprite background;
-    private Castle castleLeft, castleRight;
     private Cannon cannonLeft, cannonRight;
-    private GameWinningObject heartLeft, heartRight;
     private MockGameWorld mockWorld;
     private World physicsWorld;
     private OrthographicCamera camera;
@@ -45,8 +43,6 @@ public class GameWorldDrawer extends Drawer {
     private float screenHeight;
     GameStateManager gsm;
 
-
-    private int PTM_ratio;
 
     Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 
@@ -113,16 +109,12 @@ public class GameWorldDrawer extends Drawer {
                     }
                 }
             }
-          //  for (Drawable obj : mockWorld.getCannons()) {
-           //     drawObject(obj);
-           // }
 
             if (mockWorld.getProjectile().isFired()) {
                 drawObject(mockWorld.getProjectile());
             }
         }
 // bli i viewet
-        // debugRenderer.render(physicsWorld,camera.combined);
         //Draw the power bar
         if (cannonLeft.getPower() > 0) {
             batch.draw(new Texture("powerBar.png"), cannonLeft.getX() + cannonLeft.getWidth(),
@@ -164,8 +156,6 @@ public class GameWorldDrawer extends Drawer {
     }
 
     private void drawObject(Drawable object) {
-       // batch.draw(object.getDrawable(), object.getBody().getLocalCenter().x, object.getBody().getLocalCenter().y, object.getWidth(), object.getHeight());
-        Vector2 position = object.getBody().getPosition();
         float xPos = object.getBody().getPosition().x - object.getDrawable().getWidth()/2;
         float yPos = object.getBody().getPosition().y - object.getDrawable().getHeight()/2;
         float degrees = (float) Math.toDegrees(object.getBody().getAngle());

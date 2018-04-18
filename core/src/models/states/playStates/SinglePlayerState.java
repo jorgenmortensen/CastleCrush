@@ -54,13 +54,6 @@ public class SinglePlayerState extends State {
         world = new MockGameWorld(gsm);
         angleUp = true;
         font = new BitmapFont();
-        //cannon = new Cannon(Math.round((width / 20) * world.getSCALE()),
-        //        Math.round((width / 20)*world.getSCALE()),
-        //        Math.round((width / 10) * world.getSCALE()),
-        //        Math.round((width / 20) * world.getSCALE()),
-        //        new Sprite(new Texture("cannon.png")),
-        //        new Sprite(new Texture("wheel.png")), null);
-
         cannon1 = world.getCannons().get(0);
         cannon2 = world.getCannons().get(1);
         activeCannon = cannon1;
@@ -102,16 +95,9 @@ public class SinglePlayerState extends State {
 
 
         if (!activePlayer.isAngleActive() && !activePlayer.isPowerActive()) {
-            //world.setProsjektil(projectile);
-            //world.getProsjektil().fire(cannon.getAngle(), cannon.getPower());
-            //world.getCannons().get(0).setShotsFired(true);
-            ///projectile.fire(cannon.getAngle(), cannon.getPower());
             if (!world.getProjectile().isFired()) {
                 fire();
-                //fired = true;
-                //switchPlayer();
             }
-            //shotsFired = true;
         }
     }
     int counter = 0;
