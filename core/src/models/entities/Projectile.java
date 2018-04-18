@@ -171,4 +171,11 @@ public class Projectile implements Drawable {
         position.add(velocity.x, velocity.y);
         velocity.scl(1/dt);
     }
+
+    public double getAbsoluteSpeed(){
+        float x = body.getLinearVelocity().x;
+        float y = body.getLinearVelocity().y;
+        return Math.sqrt(x*x+y*y);
+    }
+
 }

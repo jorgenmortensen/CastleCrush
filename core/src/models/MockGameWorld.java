@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -25,6 +26,7 @@ import models.entities.Box;
 import models.entities.Cannon;
 import models.entities.Drawable;
 import models.entities.GameWinningObject;
+import models.entities.OneWayWall;
 import models.entities.Player;
 import models.entities.Projectile;
 import models.states.GameStateManager;
@@ -60,6 +62,7 @@ public class MockGameWorld {
     private Player player2;
     private SinglePlayerState state;
     public Projectile testProjectile;
+
 
     GameStateManager gsm;
 
@@ -107,6 +110,11 @@ public class MockGameWorld {
 
         setCannons(new ArrayList<Cannon>(Arrays.asList(cannon1, cannon2)));
         projectile = createProjectile(cannon1.getX(), groundLevel, screenHeight/40);
+
+        createOneWayWalls(cannon1.getX() - projectile.getDrawable().getWidth()/2);
+        createOneWayWalls(cannon2.getX() + projectile.getDrawable().getWidth()/2);
+
+
     }
 
     public void makeCastle(float startPosX, float castleWidth, float castleHeight, Player player) {
@@ -119,7 +127,7 @@ public class MockGameWorld {
             int number = ran.nextInt(numVerticalBoxes) + extraBoxes;
             for (int j = 0; j < number; j++) {
                 if (startPosX + i * boxWidth < screenWidth) {
-                    if (j == 0 && i == 0){
+                    if (j == 0 && i == numHorizontalBoxes-1){
                         GameWinningObject gameWinningObject = createGameWinningObject(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight / 3, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, new Sprite(new Texture("gwo3.png")));
                         player.setGameWinningObject(gameWinningObject);
                     } else if (j == number - 1) {
@@ -348,6 +356,29 @@ public class MockGameWorld {
         if (!bodiesToDestroy.contains(b)){
             bodiesToDestroy.add(b);
         }
+    }
+
+    private void createOneWayWalls(float x) {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.friction = 0.1f;
+
+        EdgeShape shape = new EdgeShape();
+        shape.set(x, groundLevel, x, groundLevel + screenHeight);
+        fixtureDef.shape = shape;
+
+        Body body;
+        body = physicsWorld.createBody(bodyDef);
+        body.createFixture(fixtureDef);
+        body.setTransform(0, 0, 0);
+
+        shape.dispose();
+
+
+        OneWayWall wall = new OneWayWall(body);
+        body.setUserData(wall);
     }
 
     public void removeAllBodiesToDestroy(){

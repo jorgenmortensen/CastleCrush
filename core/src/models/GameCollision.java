@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 
 import models.entities.Box;
 import models.entities.GameWinningObject;
+import models.entities.OneWayWall;
 import models.entities.Projectile;
 
 /**
@@ -20,9 +21,11 @@ import models.entities.Projectile;
 public class GameCollision implements ContactListener {
     private MockGameWorld gameWorld;
     private Sound sound;
+    private boolean hasTurnedOfContact;
 
-    public GameCollision(MockGameWorld world){
+    public GameCollision(MockGameWorld world) {
         this.gameWorld = world;
+        this.hasTurnedOfContact = false;
     }
 
     @Override
@@ -36,35 +39,35 @@ public class GameCollision implements ContactListener {
         Fixture fa = contact.getFixtureA();
         Fixture fb = contact.getFixtureB();
 
-        if (contact.isTouching()){
-            if (!(fa.getBody().getType().equals(BodyDef.BodyType.StaticBody))){
-                if (fa.getBody().getUserData() instanceof Projectile || fb.getBody().getUserData() instanceof Projectile){
-                    if (fa.getBody().getUserData() instanceof GameWinningObject){
+        if (contact.isTouching()) {
+            if (!(fa.getBody().getType().equals(BodyDef.BodyType.StaticBody))) {
+                if (fa.getBody().getUserData() instanceof Projectile || fb.getBody().getUserData() instanceof Projectile) {
+                    if (fa.getBody().getUserData() instanceof GameWinningObject) {
                         ((GameWinningObject) fa.getBody().getUserData()).isHit(true);
                         gameWorld.addBodyToDestroy(fa);
                         System.out.println("COllided.");
-                    } else if (fb.getBody().getUserData() instanceof GameWinningObject){
+                    } else if (fb.getBody().getUserData() instanceof GameWinningObject) {
                         ((GameWinningObject) fa.getBody().getUserData()).isHit(true);
                         gameWorld.addBodyToDestroy(fb);
                         System.out.println("COllided.");
                     } else if (fa.getBody().getUserData() instanceof Box) {
                         // Speed limitation
-                        if (getSpeed(fb.getBody().getLinearVelocity())>10){
+                        if (getSpeed(fb.getBody().getLinearVelocity()) > 10) {
                             ((Box) fa.getBody().getUserData()).isHit(true);
                             gameWorld.addBodyToDestroy(fa);
 
                         }
-                        if (fb.getBody().getUserData() instanceof Projectile){
+                        if (fb.getBody().getUserData() instanceof Projectile) {
                             ((Projectile) fb.getBody().getUserData()).scheduleSelfDestruct(fb);
                         }
                     } else if (fb.getBody().getUserData() instanceof Box) {
                         // Speed limitation
-                        if (getSpeed(fa.getBody().getLinearVelocity())>10){
+                        if (getSpeed(fa.getBody().getLinearVelocity()) > 10) {
                             ((Box) fa.getBody().getUserData()).isHit(true);
                             gameWorld.addBodyToDestroy(fb);
 
                         }
-                        if (fa.getBody().getUserData() instanceof Projectile){
+                        if (fa.getBody().getUserData() instanceof Projectile) {
                             ((Projectile) fa.getBody().getUserData()).scheduleSelfDestruct(fa);
                         }
                     }
@@ -74,11 +77,11 @@ public class GameCollision implements ContactListener {
         }
     }
 
-    private double getSpeed (Vector2 vector){
+    private double getSpeed(Vector2 vector) {
         double x = vector.x;
         double y = vector.y;
 
-        return Math.sqrt(x*x+y*y);
+        return Math.sqrt(x * x + y * y);
     }
 
     @Override
@@ -88,11 +91,31 @@ public class GameCollision implements ContactListener {
 
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
+        Fixture fa = contact.getFixtureA();
+        Fixture fb = contact.getFixtureB();
 
+        // One way wall logic
+        if (fa.getBody().getUserData() instanceof OneWayWall || fb.getBody().getUserData() instanceof OneWayWall) {
+            if (fa.getBody().getUserData() instanceof OneWayWall) {
+                if (fb.getBody().getUserData() instanceof Projectile) {
+                    contact.setEnabled(false);
+                    hasTurnedOfContact = true;
+                }
+            } else if (fb.getBody().getUserData() instanceof OneWayWall) {
+                if (fa.getBody().getUserData() instanceof Projectile) {
+                    contact.setEnabled(false);
+                    hasTurnedOfContact = true;
+                }
+            }
+        }
     }
+
 
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
-
+        if (hasTurnedOfContact){
+            contact.setEnabled(true);
+            hasTurnedOfContact = false;
+        }
     }
 }
