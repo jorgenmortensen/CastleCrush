@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import models.states.GameStateManager;
+import models.states.Splashscreen;
 import models.states.playStates.SinglePlayerState;
 
 public class CastleCrush extends ApplicationAdapter {
@@ -38,7 +39,7 @@ public class CastleCrush extends ApplicationAdapter {
 		music.setVolume(0.5f);
 		music.play();
 		Gdx.gl.glClearColor(0, 0, 0, 1);
-		gsm.push(new SinglePlayerState(gsm));
+		gsm.push(new Splashscreen(gsm));
 		//world = new MockGameWorld();
 		//drawer = new GameWorldDrawer(batch, world);
 	//	img = new Texture("badlogic.jpg");
