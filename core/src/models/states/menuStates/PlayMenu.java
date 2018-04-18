@@ -40,8 +40,6 @@ public class PlayMenu extends models.states.State {
     private Button btnSound;
 
 
-    // remember to change every .PNG to .png.
-
     public PlayMenu(GameStateManager gsm) {
         super(gsm);
         makeMovingBackground();
