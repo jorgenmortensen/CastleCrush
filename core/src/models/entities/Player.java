@@ -11,10 +11,6 @@ public class Player {
     private String id;
     private GameWinningObject gameWinningObject;
 
-    public Player(String id) {
-        this.id = id;
-    }
-
     public void setGameWinningObject(GameWinningObject gameWinningObject){
         this.gameWinningObject = gameWinningObject;
     }

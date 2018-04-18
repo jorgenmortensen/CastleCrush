@@ -3,6 +3,7 @@ package models;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -15,7 +16,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.castlecrush.game.CastleCrush;
-import com.codeandweb.physicseditor.PhysicsShapeCache;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +30,7 @@ import models.entities.OneWayWall;
 import models.entities.Player;
 import models.entities.Projectile;
 import models.states.GameStateManager;
+import views.game_world.GameWorldDrawer;
 
 
 /**
@@ -58,6 +59,16 @@ public class MockGameWorld {
     private float groundLevel;
     private Player player1;
     private Player player2;
+    private Player activePlayer;
+
+    private boolean angleActive;
+    private boolean powerActive;
+    private boolean shotsFired;
+    private Cannon activeCannon;
+    private Cannon cannon1, cannon2;
+    boolean angleUp;
+    boolean powerUp;
+    GameWorldDrawer drawer;
 
 
     GameStateManager gsm;
@@ -65,10 +76,29 @@ public class MockGameWorld {
     public MockGameWorld(GameStateManager gsm) {
         mockBoxes = new ArrayList<Drawable>();
         this.gsm = gsm;
+        angleUp = true;
         cannons = new ArrayList<Cannon>();
         groundLevel = screenHeight/25;
-        player1 = new Player("player1");
-        player2 = new Player("player2");
+        cannon1 = this.getCannons().get(0);
+        cannon2 = this.getCannons().get(1);
+        player1 = new Player(cannon1);
+        player2 = new Player(cannon2);
+        player1.setId("Player 1!");
+        player2.setId("Player 2!!!");
+        activePlayer = player1;
+        angleActive = true;
+        powerActive = false;
+        shotsFired = false;
+        activeCannon = player1.getCannon();
+
+        drawer = new GameWorldDrawer(new SpriteBatch(), this, gsm);
+        //controller = new GameWorldController();
+
+        start = System.currentTimeMillis();
+
+
+
+
         textureAtlas = new TextureAtlas("sprites.txt");
         boxWidth = screenWidth/20;
         boxHeight = screenWidth/20;
@@ -392,5 +422,51 @@ public class MockGameWorld {
 
     public float getScreenWidth() {
         return screenWidth;
+    }
+
+    private int time, oldTime, turnLimit = 15, shootingTimeLimit = 5;
+    long start, end;
+
+    public void fire() {
+        start = System.currentTimeMillis();
+        time = 0;
+        this.setProjectileVelocity(new Vector2(
+                (float)Math.cos(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower()/3,
+                (float)Math.sin(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower()/3));
+        this.getProjectile().setFired(true);
+    }
+
+    public void switchPlayer(){
+        start = System.currentTimeMillis();
+        time = 0;
+        //Deactivates variables
+        if (activePlayer.isAngleActive()){
+            activePlayer.switchAngleActive();
+        }
+        if (activePlayer.isPowerActive()){
+            activePlayer.switchPowerActive();
+        }
+
+        activeCannon.setPower(0);
+        activeCannon.setAngle(0);
+
+        System.out.println("Switching");
+        //Changes active player
+        if (activePlayer == player1){
+            activePlayer = player2;
+
+        } else if (activePlayer == player2){
+            activePlayer = player1;
+        }
+        activeCannon = activePlayer.getCannon();
+        //Activates variables
+        if (!activePlayer.isAngleActive()){
+            activePlayer.switchAngleActive();
+        }
+        if (activePlayer.isPowerActive()) {
+            activePlayer.switchPowerActive();
+        }
+        activeCannon = activePlayer.getCannon();
+        this.setProjectile(activePlayer);
     }
 }

@@ -44,14 +44,14 @@ public class SinglePlayerState extends State {
     long start, end;
 
     MockGameWorld world;
-    GameWorldDrawer drawer;
+    f
     GameWorldController controller;
 
     private Player player1, player2, activePlayer;
 
     public SinglePlayerState(GameStateManager gsm) {
         super(gsm);
-        world = new MockGameWorld(gsm);
+        /* world = new MockGameWorld(gsm);
         angleUp = true;
         font = new BitmapFont();
         cannon1 = world.getCannons().get(0);
@@ -73,6 +73,7 @@ public class SinglePlayerState extends State {
         activePlayer = player1;
 
         start = System.currentTimeMillis();
+        */
     }
 
 
@@ -103,6 +104,8 @@ public class SinglePlayerState extends State {
     int counter = 0;
     @Override
     public void update(float dt) {
+        world.update
+
         end = System.currentTimeMillis();
         oldTime = time;
         time = (int) Math.floor((end-start)/1000);
@@ -144,45 +147,6 @@ public class SinglePlayerState extends State {
         drawer.dispose();
     }
 
-    public void switchPlayer(){
-        start = System.currentTimeMillis();
-        time = 0;
-        //Deactivates variables
-        if (activePlayer.isAngleActive()){
-            activePlayer.switchAngleActive();
-        }
-        if (activePlayer.isPowerActive()){
-            activePlayer.switchPowerActive();
-        }
 
-        activeCannon.setPower(0);
-        activeCannon.setAngle(0);
 
-        System.out.println("Switching");
-        //Changes active player
-        if (activePlayer == player1){
-            activePlayer = player2;
-        } else if (activePlayer == player2){
-            activePlayer = player1;
-        }
-        activeCannon = activePlayer.getCannon();
-        //Activates variables
-        if (!activePlayer.isAngleActive()){
-            activePlayer.switchAngleActive();
-        }
-        if (activePlayer.isPowerActive()) {
-            activePlayer.switchPowerActive();
-        }
-
-        world.setProjectile(activePlayer);
-    }
-
-    public void fire() {
-        start = System.currentTimeMillis();
-        time = 0;
-        world.setProjectileVelocity(new Vector2(
-                (float)Math.cos(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower()/3,
-                (float)Math.sin(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower()/3));
-        world.getProjectile().setFired(true);
-    }
 }
