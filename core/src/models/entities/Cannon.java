@@ -8,8 +8,10 @@ import com.badlogic.gdx.physics.box2d.Body;
  */
 
 
-public class Cannon implements Drawable{
+public class Cannon {
 
+    private boolean powerActive;
+    private boolean angleActive;
     private float x;
     private float y;
     private float width;
@@ -18,24 +20,25 @@ public class Cannon implements Drawable{
     private Sprite cannonSprite;
     private Body body;
     private boolean shotsFired, angleUp, powerUp;
-    private float angleSpeed = (float)3, powerSpeed = (float)4;
+    private float angleSpeed = 3f, powerSpeed = 4f;
     private float factor;
 
     private float angle;
     private float power;
 
-    public Cannon(float x, float y, float width, float height, Sprite cannon, Sprite wheel, Body body, boolean facingRight) {
+    public Cannon(float x, float y, float width, float height, Sprite cannon, Sprite wheel, boolean facingRight) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.wheelSprite = wheel;
         this.cannonSprite = cannon;
-        this.body = body;
         this.shotsFired = true;
         this.angleUp = true;
         this.powerUp = false;
         this.angle = 90;
+        angleActive = true;
+        powerActive = false;
 
         cannonSprite.setPosition(x, y);
         cannonSprite.setSize(width, height);
@@ -78,14 +81,19 @@ public class Cannon implements Drawable{
         }
     }
 
-    @Override
-    public Sprite getDrawable() {
-        return cannonSprite;
+
+    public void switchAngleActive(){
+       angleActive = !angleActive;
     }
 
-    @Override
-    public Body getBody() {
-        return body;
+    public void switchPowerActive(){
+      powerActive = !powerActive;
+    }
+
+
+
+    public Sprite getCannonSprite() {
+        return cannonSprite;
     }
 
     public float getX() {
@@ -120,16 +128,12 @@ public class Cannon implements Drawable{
         this.height = height;
     }
 
-    public Sprite getWheel() {
+    public Sprite getWheelSprite() {
         return wheelSprite;
     }
 
     public void setWheel(Sprite sprite) {
         this.wheelSprite = sprite;
-    }
-
-    public void setBody(Body body) {
-        this.body = body;
     }
 
     public float getAngle() {
@@ -159,6 +163,9 @@ public class Cannon implements Drawable{
     //Fires the shot, with a given angle and power
     public void Fire() {
     }
+    public boolean isAngleActive(){return angleActive;}
+
+    public boolean isPowerActive() {return powerActive;}
 
     //Updates the game with the interval dt
     public void update(float dt) {

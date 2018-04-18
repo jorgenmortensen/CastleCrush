@@ -19,11 +19,11 @@ import models.entities.Projectile;
  */
 
 public class GameCollision implements ContactListener {
-    private MockGameWorld gameWorld;
+    private GameWorld gameWorld;
     private Sound sound;
     private boolean hasTurnedOfContact;
 
-    public GameCollision(MockGameWorld world) {
+    public GameCollision(GameWorld world) {
         this.gameWorld = world;
         this.hasTurnedOfContact = false;
     }

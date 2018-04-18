@@ -26,26 +26,27 @@ public class Player {
     private Cannon cannon;
 
     public Player(Cannon cannon) {
-        angleActive = true;
-        powerActive = false;
+//        moved to cannon
+//        angleActive = true;
+//        powerActive = false;
         this.cannon = cannon;
     }
-
-    public void switchAngleActive(){
-        if (angleActive==true){
-            angleActive=false;
-        } else if(angleActive==false){
-            angleActive=true;
-        }
-    }
-
-    public void switchPowerActive(){
-        if (powerActive==true){
-            powerActive=false;
-        } else if (powerActive==false){
-            powerActive=true;
-        }
-    }
+//moved to cannon
+//    public void switchAngleActive(){
+//        if (angleActive==true){
+//            angleActive=false;
+//        } else if(angleActive==false){
+//            angleActive=true;
+//        }
+//    }
+//
+//    public void switchPowerActive(){
+//        if (powerActive){
+//            powerActive=false;
+//        } else if (powerActive){
+//            powerActive=true;
+//        }
+//    }
 
     public String getId() {
         return this.id;
@@ -54,10 +55,10 @@ public class Player {
     public void setId(String id) {
         this.id = id;
     }
-
-    public boolean isAngleActive(){return angleActive;}
-
-    public boolean isPowerActive() {return powerActive;}
+//moved to cannon
+//    public boolean isAngleActive(){return angleActive;}
+//
+//    public boolean isPowerActive() {return powerActive;}
 
     public Cannon getCannon() {
         return cannon;

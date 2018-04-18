@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 
 import java.util.Timer;
 
-import models.MockGameWorld;
+import models.GameWorld;
 
 /**
  * Created by Jørgen on 09.03.2018.
@@ -25,7 +25,7 @@ public class Projectile implements Drawable {
     private Sprite sprite;
     private boolean isFired;
     private boolean hasHit = false;
-    private MockGameWorld gameWorld;
+    private GameWorld gameWorld;
     private boolean scheduleActive = false;
 
 
@@ -33,7 +33,7 @@ public class Projectile implements Drawable {
     private Vector2 velocity;
 
     public Projectile(Body body, Vector2 position, Sprite sprite,
-                      float width, float height, MockGameWorld world) {
+                      float width, float height, GameWorld world) {
         this.body = body;
         this.position = position;
         this.sprite = sprite;
@@ -53,8 +53,6 @@ public class Projectile implements Drawable {
             if (getSpeed(getBody().getLinearVelocity()) < 3) {
                 setHasHit(true);
                 gameWorld.addBodyToDestroy(fixture);
-                Cannon cannon = gameWorld.getCannons().get(0);
-                gameWorld.createProjectile(cannon.getX(), cannon.getY(), gameWorld.getScreenWidth() / 40);
             }
             /*timer = new Timer();
             timer.schedule(new TimerTask() {

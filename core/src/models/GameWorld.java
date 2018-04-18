@@ -15,10 +15,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.castlecrush.game.CastleCrush;
-import com.codeandweb.physicseditor.PhysicsShapeCache;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -30,13 +28,15 @@ import models.entities.OneWayWall;
 import models.entities.Player;
 import models.entities.Projectile;
 import models.states.GameStateManager;
+import models.states.State;
+import models.states.menuStates.GameOverMenu;
 
 
 /**
  * Created by Ludvig on 07/04/2018.
  */
 
-public class MockGameWorld {
+public class GameWorld {
 
     static final float STEP_TIME = 1f / 60f;
     static final int VELOCITY_ITERATIONS = 6;
@@ -51,21 +51,33 @@ public class MockGameWorld {
 
     private List<Drawable> mockBoxes;
     private Box ground;
-    private List cannons;
     private Projectile projectile;
     private float screenWidth = CastleCrush.WIDTH*SCALE;
     private float screenHeight = CastleCrush.HEIGHT*SCALE;
     private float groundLevel;
     private Player player1;
     private Player player2;
+    private Player activePlayer;
+    private Cannon activeCannon;
 
+//    sprites
+    private String bottomGroundString= "bottom_ground";
+    private String windowBoxString= "window_box.png";
+    private String normalBoxString= "normal_box.png";
+    private String cannonString= "cannon.png";
+    private String cannonBallString = "ball_cannon.png";
+    private String gameWinningObjectString= "gwo3.png";
+    private String powerBarString= "powerBar.png";
+
+
+    private int time, oldTime, turnLimit = 15, shootingTimeLimit = 5;
+    long start, end;
 
     GameStateManager gsm;
 
-    public MockGameWorld(GameStateManager gsm) {
+    public GameWorld(GameStateManager gsm) {
         mockBoxes = new ArrayList<Drawable>();
         this.gsm = gsm;
-        cannons = new ArrayList<Cannon>();
         groundLevel = screenHeight/25;
         player1 = new Player("player1");
         player2 = new Player("player2");
@@ -76,7 +88,9 @@ public class MockGameWorld {
         physicsWorld = new World(new Vector2(0, -10), true);
         physicsWorld.setContactListener(new GameCollision(this));
         this.generateBodies();
+
     }
+
 
 
 
@@ -87,16 +101,13 @@ public class MockGameWorld {
 
         Cannon cannon1 = new Cannon(screenWidth*1/3,
                 groundLevel, screenWidth/30, screenHeight/30,
-                new Sprite(new Texture("cannon.png")),
-                new Sprite(new Texture("wheel.png")), null, true);
+                cannonSprite, wheelSprite,  true);
 
         Cannon cannon2 = new Cannon(screenWidth*2/3,
                 groundLevel, screenWidth/30, screenHeight/30,
-                new Sprite(new Texture("cannon.png")),
-                new Sprite(new Texture("wheel.png")), null, false);
+                cannonSprite, wheelSprite,  false);
 
 
-        setCannons(new ArrayList<Cannon>(Arrays.asList(cannon1, cannon2)));
         projectile = createProjectile(cannon1.getX(), groundLevel, screenHeight/40);
 
         createOneWayWalls(cannon1.getX() - projectile.getDrawable().getWidth()/2);
@@ -115,7 +126,7 @@ public class MockGameWorld {
             for (int j = 0; j < number; j++) {
                 if (startPosX + i * boxWidth < screenWidth) {
                     if (j == 0 && i == numHorizontalBoxes-1){
-                        GameWinningObject gameWinningObject = createGameWinningObject(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight / 3, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, new Sprite(new Texture("gwo3.png")));
+                        GameWinningObject gameWinningObject = createGameWinningObject(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight / 3, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, gameWinningObjectSprite);
                         player.setGameWinningObject(gameWinningObject);
                     } else if (j == number - 1) {
                         Box box = createBox(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight / 3, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, new Sprite(new Texture("roof_box.png")));
@@ -175,8 +186,6 @@ public class MockGameWorld {
         shape.dispose();
 
 
-
-        Sprite groundSprite = textureAtlas.createSprite("bottom_ground");
         groundSprite.setSize(Gdx.graphics.getWidth(), groundHeight/2);
         ground = new Box(body, groundSprite, 0, 0, 0);
         body.setUserData(ground);
@@ -205,9 +214,9 @@ public class MockGameWorld {
         int number = ran.nextInt(15);
         if (sprite != null){
         } else if(number == 10){
-            sprite = new Sprite(new Texture("window_box.png"));
+            sprite = windowSprite;
         } else {
-            sprite = new Sprite(new Texture("normal_box.png"));
+            sprite = boxSprite;
         }
         sprite.setSize(boxWidth, boxHeight);
         sprite.setOriginCenter();
@@ -241,7 +250,7 @@ public class MockGameWorld {
         shape.dispose();
 
         //setting the sprite of the ball and positioning it correctly
-        Sprite sprite = new Sprite(new Texture("ball_cannon.png"));
+        Sprite sprite = cannonBallSprite;
         sprite.setSize(radius*2, radius*2);
         sprite.setOrigin(0, 0);
         sprite.setOriginCenter();
@@ -312,8 +321,6 @@ public class MockGameWorld {
 
     public List<Drawable> getBoxes(){return mockBoxes;}
 
-    public List<Cannon> getCannons(){return cannons;}
-
     public Box getGround() {
         return ground;
     }
@@ -360,6 +367,134 @@ public class MockGameWorld {
         OneWayWall wall = new OneWayWall(body);
         body.setUserData(wall);
     }
+        public void update(float dt) {
+            activeCannon = activePlayer.getCannon();
+
+            if (activeCannon.isAngleActive()) {
+                activePlayer.getCannon().updateAngle();
+            } else if (activeCannon.isPowerActive()) {
+                activePlayer.getCannon().updatePower();
+            }
+            activePlayer.getCannon().update(dt);
+
+            end = System.currentTimeMillis();
+            oldTime = time;
+            time = (int) Math.floor((end - start) / 1000);
+            if (time > oldTime) {
+                System.out.println(time);
+            }
+            if (time >= turnLimit && getProjectile().isFired()) {
+                System.out.println("Switching player turns! You waited too long 😞");
+                System.out.println("Current active player: " + activePlayer.getId());
+                switchPlayer();
+                System.out.println("New active player " + activePlayer.getId());
+            }
+            // Time limit after shooting
+            if ((getProjectile().isFired() && time > shootingTimeLimit && getProjectile().getAbsoluteSpeed() < 5) || time > turnLimit) {
+                System.out.println("Switching player turns! Cannon ball has lived for 5 seconds");
+                System.out.println("Current active player: " + activePlayer.getId());
+                switchPlayer();
+                System.out.println("New active player " + activePlayer.getId());
+            }
+
+
+            if (!physicsWorld.isLocked()){
+                destroy((ArrayList<Fixture>) getBodiesToDestroy());
+            }
+
+            //Check if game is over, if so, the gameOverMenu becomes active
+            if (getPlayer1().getGameWinningObject().getHit()) {
+                final State gameOverMenu = new GameOverMenu(gsm, false, true);
+                //TODO, Opponent wins, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        gsm.set(gameOverMenu);
+
+                    }
+                });
+
+            } else if (getPlayer2().getGameWinningObject().getHit()) {
+                final State gameOverMenu = new GameOverMenu(gsm, true, false);
+                //TODO, You win, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        gsm.set(gameOverMenu);
+                    }
+                });
+
+            }
+            getPhysicsWorld().step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+
+
+        }
+
+    public void switchPlayer(){
+        start = System.currentTimeMillis();
+        time = 0;
+        //Deactivates variables
+        if (activeCannon.isAngleActive()){
+            activeCannon.switchAngleActive();
+        }
+        if (activeCannon.isPowerActive()){
+            activeCannon.switchPowerActive();
+        }
+        activePlayer.getCannon().setPower(0);
+        activePlayer.getCannon().setAngle(0);
+
+        System.out.println("Switching");
+        //Changes active player
+        if (activePlayer == player1){
+            activePlayer = player2;
+        } else if (activePlayer == player2){
+            activePlayer = player1;
+        }
+        //Activates variables
+        if (!activeCannon.isAngleActive()){
+            activeCannon.switchAngleActive();
+        }
+        if (activeCannon.isPowerActive()) {
+            activeCannon.switchPowerActive();
+        }
+
+        spawnProjectile();
+    }
+
+
+    public void updatePowerBar() {
+        powerBar.setPosition(activePlayer.getCannon().getX(), activePlayer.getCannon().getY());
+        powerBar.setSize(screenWidth/50, powerBar.getHeight());
+        //fiks marker
+    }
+
+    //        batch.draw(new Texture("powerBar.png"), cannonLeft.getX() + cannonLeft.getWidth(),
+    //                cannonLeft.getY() + cannonLeft.getHeight(),
+    //                (100 * cannonLeft.getWidth() * 4 / 5) / 100,
+    //                cannonLeft.getHeight() / 2);
+    //        // - cannonLeft.getHeight() / 8 is to get the marker correct
+    //        batch.draw(new Texture("marker.png"),cannonLeft.getX() + cannonLeft.getWidth() + (cannonLeft.getPower() * cannonLeft.getWidth() * 4 / 5) / 100 - cannonLeft.getHeight() / 8,
+    //                cannonLeft.getY()+cannonLeft.getHeight() + cannonLeft.getHeight() / 2,
+    //                cannonLeft.getHeight() / 4,cannonLeft.getHeight() / 4);
+//        if ( cannonLeft.getPower() > 0) {
+
+//    }
+//        if (cannonRight.getPower() > 0) {
+//        batch.draw(new Texture("powerBar.png"), cannonRight.getX(),
+//                cannonRight.getY() / 2,
+//                (cannonRight.getPower() * cannonRight.getWidth() * 4 / 5) / 100,
+//                cannonRight.getHeight() / 2);
+//    }
+
+
+    public void fire() {
+        start = System.currentTimeMillis();
+        time = 0;
+        setProjectileVelocity(new Vector2(
+                (float)Math.cos(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower()/3,
+                (float)Math.sin(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower()/3));
+        getProjectile().setFired(true);
+    }
 
     public void removeAllBodiesToDestroy(){
         bodiesToDestroy = new ArrayList<Fixture>();
@@ -382,15 +517,14 @@ public class MockGameWorld {
         return player2;
     }
 
-    public void setCannons(List cannons) {
-        this.cannons = cannons;
-    }
-
-    public void setProjectile(Player player) {
-        this.projectile = createProjectile(player.getCannon().getX(), player.getCannon().getY(),screenHeight/40);
+    public void spawnProjectile() {
+        this.projectile = createProjectile(activeCannon.getX(), activeCannon.getY(),screenHeight/40);
     }
 
     public float getScreenWidth() {
         return screenWidth;
     }
+
+
+
 }

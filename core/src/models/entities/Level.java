@@ -16,12 +16,11 @@ public class Level {
     private int width;
     private int height;
 
-    private List<PowerUp> powerUps;
     private Castle castleLeft, castleRight;
     private Cannon cannonLeft, cannonRight;
     private Projectile projectile;
 
-    public Level(/*List<PowerUp> powerUps,*/ List<Castle> castles/*, List<Cannon> cannons Projectile projectile */ ) {
+    public Level(List<Castle> castles/*, List<Cannon> cannons Projectile projectile */ ) {
         //this.powerUps = powerUps;
         //this.castles = castles;
         //this.cannons = cannons;

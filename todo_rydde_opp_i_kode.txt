@@ -1,0 +1,14 @@
+todo rydde opp i kode
+
+
+angle og power må flyttes fra Player til Cannon
+flytte input til controller
+
+
+alle spriter må addes til GameWorldDrawer sin SpriteList, via addSprite. Dvs alle ting som skal rendres må legges til via denne metoden.
+
+projectile entity må fikses
+
+world bør ta inn SinglePlayer state og via den kalle GMS for å bytte state, i stedet for å ta inn GMS.
+
+lage en egen klasse om kun har ansvar for å lage objekter
