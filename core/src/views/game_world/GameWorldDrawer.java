@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
@@ -17,9 +16,7 @@ import java.util.ArrayList;
 import models.MockGameWorld;
 import models.entities.Box;
 import models.entities.Cannon;
-import models.entities.Castle;
 import models.entities.Drawable;
-import models.entities.GameWinningObject;
 import models.states.GameStateManager;
 import models.states.State;
 import models.states.menuStates.GameOverMenu;
@@ -128,10 +125,13 @@ public class GameWorldDrawer extends Drawer {
 
         }
         if (cannonRight.getPower() > 0) {
-            batch.draw(new Texture("powerBar.png"), cannonRight.getX(),
-                    cannonRight.getY() / 2,
-                    (cannonRight.getPower() * cannonRight.getWidth() * 4 / 5) / 100,
+            batch.draw(new Texture("powerBar.png"), cannonRight.getX() - cannonRight.getWidth(),
+                    cannonRight.getY() / 2 + cannonLeft.getHeight(),
+                    (100 * cannonRight.getWidth() * 4 / 5) / 100,
                     cannonRight.getHeight() / 2);
+            batch.draw(new Texture("marker.png"),cannonRight.getX() - cannonRight.getWidth() + (cannonRight.getPower() * cannonRight.getWidth() * 4 / 5) / 100 - cannonRight.getHeight() / 8,
+                    cannonLeft.getY()+cannonLeft.getHeight() + cannonLeft.getHeight() / 2,
+                    cannonLeft.getHeight() / 4,cannonLeft.getHeight() / 4);
         }
 
 

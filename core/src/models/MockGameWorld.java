@@ -15,7 +15,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.castlecrush.game.CastleCrush;
-import com.codeandweb.physicseditor.PhysicsShapeCache;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,12 +87,12 @@ public class MockGameWorld {
         Cannon cannon1 = new Cannon(screenWidth*1/3,
                 groundLevel, screenWidth/30, screenHeight/30,
                 new Sprite(new Texture("cannon.png")),
-                new Sprite(new Texture("wheel.png")), null, true);
+                new Sprite(new Texture("empty.png")), null, true);
 
-        Cannon cannon2 = new Cannon(screenWidth*2/3,
+        Cannon cannon2 = new Cannon(screenWidth*2/3 - screenWidth/30,
                 groundLevel, screenWidth/30, screenHeight/30,
                 new Sprite(new Texture("cannon.png")),
-                new Sprite(new Texture("wheel.png")), null, false);
+                new Sprite(new Texture("empty.png")), null, false);
 
 
         setCannons(new ArrayList<Cannon>(Arrays.asList(cannon1, cannon2)));
