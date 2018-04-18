@@ -76,9 +76,6 @@ public class GameWorldDrawer extends Drawer {
     public void render() {
         batch.setProjectionMatrix(camera.combined);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        if (batch.isDrawing()){
-            batch.end();
-        }
         batch.begin();
         //Draw the background
         batch.draw(background, 0,0, CastleCrush.WIDTH*SCALE, CastleCrush.HEIGHT*SCALE);
@@ -149,6 +146,7 @@ public class GameWorldDrawer extends Drawer {
         cannonRight.getDrawable().draw(batch);
         cannonRight.getWheel().draw(batch);
 
+        batch.end();
 
         //Should be placed after bacth.end():
         //mock DELETE BODIES

@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -24,6 +25,7 @@ import java.util.Random;
 import models.entities.Box;
 import models.entities.Cannon;
 import models.entities.Drawable;
+import models.entities.OneWayWall;
 import models.entities.Player;
 import models.entities.Projectile;
 import models.states.playStates.SinglePlayerState;
@@ -47,7 +49,7 @@ public class MockGameWorld {
 
     private List<Drawable> mockBoxes;
     private Box ground;
-    private List cannons;
+    private List cannons, onewaywalls;
     private Projectile projectile;
     private float screenWidth = CastleCrush.WIDTH*SCALE;
     private float screenHeight = CastleCrush.HEIGHT*SCALE;
@@ -123,6 +125,10 @@ public class MockGameWorld {
 //                new Sprite(new Texture("cannon.png")),
 //                new Sprite(new Texture("wheel.png")), null);
 
+        OneWayWall wall1 = createOneWayWalls(screenWidth*1/3-1, false);
+        OneWayWall wall2 = createOneWayWalls(screenWidth*2/3+screenWidth/30+1, true);
+        onewaywalls = new ArrayList<OneWayWall>(Arrays.asList(wall1, wall2));
+
 
         setCannons(new ArrayList<Cannon>(Arrays.asList(cannon1, cannon2)));
         projectile = createProjectile(cannon1.getX(), groundLevel, screenHeight/40, state);
@@ -187,6 +193,38 @@ public class MockGameWorld {
         // mockBoxes.add(new Box(body, groundSprite));
         ground = new Box(body, groundSprite, 0, 0, 0);
         body.setUserData(ground);
+    }
+
+    private OneWayWall createOneWayWalls(float x, boolean leteThroughRight){
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.friction = 0.1f;
+
+        EdgeShape shape = new EdgeShape();
+        shape.set(x, groundLevel, x, groundLevel+screenHeight);
+        fixtureDef.shape = shape;
+
+        Body body;
+        body = physicsWorld.createBody(bodyDef);
+        body.createFixture(fixtureDef);
+        body.setTransform(0,0,0);
+
+        shape.dispose();
+
+
+        OneWayWall wall = new OneWayWall(body, leteThroughRight);
+        body.setUserData(wall);
+
+        return wall;
+
+//        Sprite groundSprite = textureAtlas.createSprite("bottom_ground");
+//        //groundSprite.setScale(Gdx.graphics.getWidth(), 1);
+//        groundSprite.setSize(Gdx.graphics.getWidth(), groundHeight/2);
+//        // mockBoxes.add(new Box(body, groundSprite));
+//        ground = new Box(body, groundSprite, 0, 0, 0);
+//        body.setUserData(ground);
     }
 
 

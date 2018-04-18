@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
 import models.entities.Box;
+import models.entities.OneWayWall;
 import models.entities.Projectile;
 
 /**
@@ -17,9 +18,11 @@ import models.entities.Projectile;
 
 public class GameCollision implements ContactListener {
     private MockGameWorld gameWorld;
+    private boolean hasTurnedOfContact;
 
     public GameCollision(MockGameWorld world){
         this.gameWorld = world;
+        this.hasTurnedOfContact = false;
     }
 
     @Override
@@ -34,7 +37,8 @@ public class GameCollision implements ContactListener {
         Fixture fb = contact.getFixtureB();
 
         if (contact.isTouching()){
-            if (!(fa.getBody().getType().equals(BodyDef.BodyType.StaticBody))){
+            // If one objects fixture is a static one, no collision logic should be applied
+            if (!(fa.getBody().getType().equals(BodyDef.BodyType.StaticBody)) && !(fb.getBody().getType().equals(BodyDef.BodyType.StaticBody))){
                 if (fa.getBody().getUserData() instanceof Projectile || fb.getBody().getUserData() instanceof Projectile){
                     //System.out.println("Prosjektil");
                     if (fa.getBody().getUserData() instanceof Box) {
@@ -63,6 +67,8 @@ public class GameCollision implements ContactListener {
                 }
             }
 
+
+
         }
     }
 
@@ -75,16 +81,54 @@ public class GameCollision implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
-
     }
 
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
 
+        Fixture fa = contact.getFixtureA();
+        Fixture fb = contact.getFixtureB();
+
+        // One way wall logic
+        if (fa.getBody().getUserData() instanceof OneWayWall || fb.getBody().getUserData() instanceof OneWayWall){
+            System.out.println("A one way wall has been hit");
+            if (fa.getBody().getUserData() instanceof OneWayWall &&  ((OneWayWall) fa.getBody().getUserData()).isLetThroughRight()){
+                System.out.println("Maybe let through right");
+                if (fb.getBody().getUserData() instanceof Projectile){
+                    System.out.println("Letting through right");
+                    contact.setEnabled(false);
+                    hasTurnedOfContact = true;
+                }
+            } else if (fb.getBody().getUserData() instanceof OneWayWall && ((OneWayWall) fb.getBody().getUserData()).isLetThroughRight()){
+                System.out.println("Maybe let through right");
+                if (fa.getBody().getUserData() instanceof Projectile){
+                    System.out.println("Letting through right");
+                    contact.setEnabled(false);
+                    hasTurnedOfContact = true;
+                }
+            } else if (fa.getBody().getUserData() instanceof OneWayWall && !((OneWayWall) fa.getBody().getUserData()).isLetThroughRight()){
+                System.out.println("Maybe let through left");
+                if (fb.getBody().getUserData() instanceof Projectile){
+                    System.out.println("Letting through left");
+                    contact.setEnabled(false);
+                    hasTurnedOfContact = true;
+                }
+            } else if (fb.getBody().getUserData() instanceof OneWayWall && !((OneWayWall) fb.getBody().getUserData()).isLetThroughRight()){
+                System.out.println("Maybe let through left");
+                if (fa.getBody().getUserData() instanceof Projectile){
+                    System.out.println("Letting through left");
+                    contact.setEnabled(false);
+                    hasTurnedOfContact = true;
+                }
+            }
+        }
     }
 
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
-
+        if (hasTurnedOfContact){
+            contact.setEnabled(true);
+            hasTurnedOfContact = false;
+        }
     }
 }
