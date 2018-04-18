@@ -82,7 +82,7 @@ public class GameWorldDrawer extends Drawer {
         //Draw the ground
 
 
-
+// -> model
         //Check if game is over, if so, the gameOverMenu becomes active
         if (mockWorld.getPlayer1().getGameWinningObject().getHit()){
             final State gameOverMenu = new GameOverMenu(gsm, false, true);
@@ -121,7 +121,7 @@ public class GameWorldDrawer extends Drawer {
                 drawObject(mockWorld.getProjectile());
             }
         }
-
+// bli i viewet
         // debugRenderer.render(physicsWorld,camera.combined);
         //Draw the power bar
         if (cannonLeft.getPower() > 0) {
@@ -148,6 +148,8 @@ public class GameWorldDrawer extends Drawer {
 
         //Should be placed after bacth.end():
         //mock DELETE BODIES
+
+//        -> model
         if (!physicsWorld.isLocked()){
             mockWorld.destroy((ArrayList<Fixture>) mockWorld.getBodiesToDestroy());
 
@@ -186,13 +188,4 @@ public class GameWorldDrawer extends Drawer {
     public int getCameraWidth() {
         return (int) (camera.viewportWidth *camera.zoom);
     }
-
-    @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height, true);
-
-        batch.setProjectionMatrix(camera.combined);
-    }
-
-
 }

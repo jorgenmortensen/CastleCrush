@@ -22,7 +22,6 @@ import views.game_world.GameWorldDrawer;
 
 public class SinglePlayerState extends State {
 
-    Projectile projectile;
     Cannon cannon1, cannon2, activeCannon;
     int width = CastleCrush.WIDTH;
     int height = CastleCrush.HEIGHT;
@@ -100,6 +99,8 @@ public class SinglePlayerState extends State {
 
             }
         }
+
+
         if (!activePlayer.isAngleActive() && !activePlayer.isPowerActive()) {
             //world.setProsjektil(projectile);
             //world.getProsjektil().fire(cannon.getAngle(), cannon.getPower());
@@ -150,33 +151,6 @@ public class SinglePlayerState extends State {
     @Override
     public void render(SpriteBatch sb) {
         drawer.render();
-        /*sb.begin();
-
-        sb.draw(background1, 0, 0, CastleCrush.WIDTH, CastleCrush.HEIGHT);
-        //sb.draw(background2, xCoordBg2, 0, CastleCrush.WIDTH, CastleCrush.HEIGHT);
-
-        if (shotsFired) {
-            sb.draw(projectile.getSprite(), projectile.getPosition().x, projectile.getPosition().y,
-                    projectile.getWidth(), projectile.getHeight());
-        }
-
-        sb.draw(cannon.getDrawable(),
-                cannon.getX(),
-                cannon.getY(),
-                cannon.getWidth() * 3 / 10,
-                cannon.getHeight() * 3 / 10,
-                cannon.getWidth(),
-                cannon.getHeight(), 1, 1,
-                cannon.getCannon().getRotation());
-
-        sb.draw(cannon.getWheel(), cannon.getX(), cannon.getY() - 20, cannon.getWidth() * 2 / 5,
-                cannon.getHeight());
-
-        font.draw(sb, "Angle: " + cannon.getAngle() + " Power: " + cannon.getPower() + " Rotation"
-                 + cannon.getCannon().getRotation(),
-                0, height / 10);
-
-        sb.end();*/
     }
 
     @Override

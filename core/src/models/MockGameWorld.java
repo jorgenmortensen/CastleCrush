@@ -30,7 +30,6 @@ import models.entities.OneWayWall;
 import models.entities.Player;
 import models.entities.Projectile;
 import models.states.GameStateManager;
-import models.states.playStates.SinglePlayerState;
 
 
 /**
@@ -49,7 +48,6 @@ public class MockGameWorld {
 
     private List<Fixture> bodiesToDestroy = new ArrayList<Fixture>();
     private TextureAtlas textureAtlas;
-    private PhysicsShapeCache physicsBodies;
 
     private List<Drawable> mockBoxes;
     private Box ground;
@@ -60,7 +58,6 @@ public class MockGameWorld {
     private float groundLevel;
     private Player player1;
     private Player player2;
-    private SinglePlayerState state;
     public Projectile testProjectile;
 
 
@@ -77,11 +74,9 @@ public class MockGameWorld {
         boxWidth = screenWidth/20;
         boxHeight = screenWidth/20;
         Box2D.init();
-        physicsBodies = new PhysicsShapeCache("physics.xml");
         physicsWorld = new World(new Vector2(0, -10), true);
         physicsWorld.setContactListener(new GameCollision(this));
         this.generateBodies();
-        this.state = state;
     }
 
 
@@ -113,7 +108,6 @@ public class MockGameWorld {
 
         createOneWayWalls(cannon1.getX() - projectile.getDrawable().getWidth()/2);
         createOneWayWalls(cannon2.getX() + projectile.getDrawable().getWidth()/2);
-
 
     }
 
