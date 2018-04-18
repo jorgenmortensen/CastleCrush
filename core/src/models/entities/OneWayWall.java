@@ -7,7 +7,7 @@ public class OneWayWall {
     private Body body;
     private boolean letThroughRight;
 
-    public OneWayWall(Body body, boolean letThroughRight){
+    public OneWayWall(Body body){
         this.body = body;
         this.letThroughRight = letThroughRight;
     }

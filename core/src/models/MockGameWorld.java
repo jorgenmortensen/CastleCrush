@@ -125,8 +125,8 @@ public class MockGameWorld {
 //                new Sprite(new Texture("cannon.png")),
 //                new Sprite(new Texture("wheel.png")), null);
 
-        OneWayWall wall1 = createOneWayWalls(screenWidth*1/3-1, false);
-        OneWayWall wall2 = createOneWayWalls(screenWidth*2/3+screenWidth/30+1, true);
+        OneWayWall wall1 = createOneWayWalls(screenWidth*1/3-screenHeight/40);
+        OneWayWall wall2 = createOneWayWalls(screenWidth*2/3+screenWidth/30);
         onewaywalls = new ArrayList<OneWayWall>(Arrays.asList(wall1, wall2));
 
 
@@ -195,7 +195,7 @@ public class MockGameWorld {
         body.setUserData(ground);
     }
 
-    private OneWayWall createOneWayWalls(float x, boolean leteThroughRight){
+    private OneWayWall createOneWayWalls(float x){
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
 
@@ -214,7 +214,7 @@ public class MockGameWorld {
         shape.dispose();
 
 
-        OneWayWall wall = new OneWayWall(body, leteThroughRight);
+        OneWayWall wall = new OneWayWall(body);
         body.setUserData(wall);
 
         return wall;

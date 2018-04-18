@@ -91,32 +91,13 @@ public class GameCollision implements ContactListener {
 
         // One way wall logic
         if (fa.getBody().getUserData() instanceof OneWayWall || fb.getBody().getUserData() instanceof OneWayWall){
-            System.out.println("A one way wall has been hit");
-            if (fa.getBody().getUserData() instanceof OneWayWall &&  ((OneWayWall) fa.getBody().getUserData()).isLetThroughRight()){
-                System.out.println("Maybe let through right");
+            if (fa.getBody().getUserData() instanceof OneWayWall){
                 if (fb.getBody().getUserData() instanceof Projectile){
-                    System.out.println("Letting through right");
                     contact.setEnabled(false);
                     hasTurnedOfContact = true;
                 }
-            } else if (fb.getBody().getUserData() instanceof OneWayWall && ((OneWayWall) fb.getBody().getUserData()).isLetThroughRight()){
-                System.out.println("Maybe let through right");
+            } else if (fb.getBody().getUserData() instanceof OneWayWall){
                 if (fa.getBody().getUserData() instanceof Projectile){
-                    System.out.println("Letting through right");
-                    contact.setEnabled(false);
-                    hasTurnedOfContact = true;
-                }
-            } else if (fa.getBody().getUserData() instanceof OneWayWall && !((OneWayWall) fa.getBody().getUserData()).isLetThroughRight()){
-                System.out.println("Maybe let through left");
-                if (fb.getBody().getUserData() instanceof Projectile){
-                    System.out.println("Letting through left");
-                    contact.setEnabled(false);
-                    hasTurnedOfContact = true;
-                }
-            } else if (fb.getBody().getUserData() instanceof OneWayWall && !((OneWayWall) fb.getBody().getUserData()).isLetThroughRight()){
-                System.out.println("Maybe let through left");
-                if (fa.getBody().getUserData() instanceof Projectile){
-                    System.out.println("Letting through left");
                     contact.setEnabled(false);
                     hasTurnedOfContact = true;
                 }

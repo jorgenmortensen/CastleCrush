@@ -41,7 +41,7 @@ public class SinglePlayerState extends State {
     private Texture background2;
     final int BACKGROUND_MOVE_SPEED = -30;
     boolean fired = false;
-    private int time, oldTime, turnLimit = 15;
+    private int time, oldTime, turnLimit = 15, shootingTimeLimit = 5;
     long start, end;
 
     MockGameWorld world;
@@ -122,8 +122,16 @@ public class SinglePlayerState extends State {
         if (time>oldTime){
             System.out.println(time);
         }
-        if (time>=turnLimit){
-            System.out.println("Switching player turns!");
+        // Time limit for turns
+        if (time>=turnLimit && !world.getProjectile().isFired()){
+            System.out.println("Switching player turns! You waited too long :(");
+            System.out.println("Current active player: " + activePlayer.getId());
+            switchPlayer();
+            System.out.println("New active player " + activePlayer.getId());
+        }
+        // Time limit after shooting
+        if ((world.getProjectile().isFired() && time>shootingTimeLimit && world.getProjectile().getAbsoluteSpeed()<5) || time>turnLimit) {
+            System.out.println("Switching player turns! Cannon ball has lived for 5 seconds");
             System.out.println("Current active player: " + activePlayer.getId());
             switchPlayer();
             System.out.println("New active player " + activePlayer.getId());
@@ -211,6 +219,8 @@ public class SinglePlayerState extends State {
     }
 
     public void fire() {
+        start = System.currentTimeMillis();
+        time = 0;
         world.setProjectileVelocity(new Vector2(
                 (float)Math.cos(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower()/3,
                 (float)Math.sin(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower()/3));
