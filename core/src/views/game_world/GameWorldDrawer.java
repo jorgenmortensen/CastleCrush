@@ -125,10 +125,15 @@ public class GameWorldDrawer extends Drawer {
         // debugRenderer.render(physicsWorld,camera.combined);
         //Draw the power bar
         if (cannonLeft.getPower() > 0) {
-            batch.draw(new Texture("powerBar.png"), cannonLeft.getX(),
-                    cannonLeft.getY() / 2,
-                    (cannonLeft.getPower() * cannonLeft.getWidth() * 4 / 5) / 100,
+            batch.draw(new Texture("powerBar.png"), cannonLeft.getX() + cannonLeft.getWidth(),
+                    cannonLeft.getY() + cannonLeft.getHeight(),
+                    (100 * cannonLeft.getWidth() * 4 / 5) / 100,
                     cannonLeft.getHeight() / 2);
+            // - cannonLeft.getHeight() / 8 is to get the marker correct
+            batch.draw(new Texture("marker.png"),cannonLeft.getX() + cannonLeft.getWidth() + (cannonLeft.getPower() * cannonLeft.getWidth() * 4 / 5) / 100 - cannonLeft.getHeight() / 8,
+                    cannonLeft.getY()+cannonLeft.getHeight() + cannonLeft.getHeight() / 2,
+                    cannonLeft.getHeight() / 4,cannonLeft.getHeight() / 4);
+
         }
         if (cannonRight.getPower() > 0) {
             batch.draw(new Texture("powerBar.png"), cannonRight.getX(),
