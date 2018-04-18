@@ -1,7 +1,9 @@
 package models.states.menuStates;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 import com.castlecrush.game.CastleCrush;
 
 import models.states.GameStateManager;
@@ -19,6 +21,9 @@ public class SettingsMenu extends State{
 
     @Override
     protected void handleInput() {
+        if (Gdx.input.justTouched() && isOnButton(backBtn)) {
+            goBack();
+        }
     }
 
     @Override
@@ -29,7 +34,12 @@ public class SettingsMenu extends State{
     @Override
     public void render(SpriteBatch sb) {
         sb.begin();
+
         sb.draw(new Texture("background_without_ground.png"), 0, 0, CastleCrush.WIDTH, CastleCrush.HEIGHT);
+
+        sb.draw(backBtn.getBtn(), backBtn.getXpos(), backBtn.getYpos(),
+                backBtn.getBtnWidth(), backBtn.getBtnHeight());
+
         sb.end();
     }
 

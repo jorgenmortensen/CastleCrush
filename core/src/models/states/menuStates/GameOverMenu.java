@@ -20,7 +20,6 @@ public class GameOverMenu extends State {
     private Texture background;
     private Texture winner;
     private Texture loser;
-    private Button backToMainMenuBtn;
     private Button rematchBtn;
     private boolean winnerScreen;
     private boolean isHost;
@@ -37,9 +36,6 @@ public class GameOverMenu extends State {
     }
 
     private void initButtons() {
-        backToMainMenuBtn = new Button(CastleCrush.WIDTH * 4 / 5, 0,
-                CastleCrush.WIDTH / 10, CastleCrush.WIDTH / 10,
-                new Sprite(new Texture(("homeBtn.png"))));
         rematchBtn = new Button(CastleCrush.WIDTH / 5, 0,
                 CastleCrush.WIDTH / 10, CastleCrush.WIDTH / 10,
                 new Sprite(new Texture("rematchBtn.png")));
@@ -48,8 +44,8 @@ public class GameOverMenu extends State {
     @Override
     protected void handleInput() {
         if (Gdx.input.justTouched()) {
-            if (isOnButton(backToMainMenuBtn)) {
-                gsm.set(new StartMenuScreen(gsm));
+            if (isOnButton(backBtn)) {
+                goToMainMenu();
             }
             else if (isOnButton(rematchBtn) && isHost) {
                 gsm.set(new SinglePlayerState(gsm));
@@ -77,8 +73,8 @@ public class GameOverMenu extends State {
                     CastleCrush.WIDTH * 0.8f, CastleCrush.HEIGHT * 0.8f);
         }
 
-        sb.draw(backToMainMenuBtn.getBtn(), backToMainMenuBtn.getXpos(), backToMainMenuBtn.getYpos(),
-            backToMainMenuBtn.getBtnWidth(), backToMainMenuBtn.getBtnHeight());
+        sb.draw(backBtn.getBtn(), backBtn.getXpos(), backBtn.getYpos(),
+            backBtn.getBtnWidth(), backBtn.getBtnHeight());
 
         if (isHost) {
             sb.draw(rematchBtn.getBtn(), rematchBtn.getXpos(), rematchBtn.getYpos(),

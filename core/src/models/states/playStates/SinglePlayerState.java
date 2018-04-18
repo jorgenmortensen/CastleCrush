@@ -25,7 +25,6 @@ public class SinglePlayerState extends State {
 
     @Override
     protected void handleInput() {
-
     }
 
     @Override

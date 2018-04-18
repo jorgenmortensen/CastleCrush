@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import models.states.menuStates.PlayMenu;
 import models.states.menuStates.StartMenuScreen;
 
 /**
@@ -31,7 +32,6 @@ public class Splashscreen extends State {
 
     @Override
     protected void handleInput() {
-
     }
 
     @Override
@@ -40,7 +40,6 @@ public class Splashscreen extends State {
         if(am.update() && TimeUtils.timeSinceMillis(startTime) > 4000){
             gsm.set(new StartMenuScreen(gsm));
         }
-
     }
 
     @Override

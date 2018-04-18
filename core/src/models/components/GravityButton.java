@@ -1,6 +1,7 @@
 package models.components;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 /**
@@ -37,6 +38,10 @@ public class GravityButton extends Button {
             bump(vel);
         }
 
+    }
+
+    public Vector3 getPosition() {
+        return position;
     }
 
     // when the button hits the desired position, it makes a little bump
