@@ -60,7 +60,7 @@ public class GameWorld {
     private Cannon activeCannon;
 
 //    sprites
-    private String bottomGroundString= "bottom_ground";
+    private String bottomGroundString= "bottom_ground.png";
     private String windowBoxString= "window_box.png";
     private String normalBoxString= "normal_box.png";
     private String cannonString= "cannon.png";
@@ -90,27 +90,29 @@ public class GameWorld {
         Box2D.init();
         physicsWorld = new World(new Vector2(0, -10), true);
         physicsWorld.setContactListener(new GameCollision(this));
-        this.generateBodies();
         this.drawer = drawer;
         drawableList = new ArrayList<Drawable>();
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         createPlayerAndCannon();
+        generateBodies();
     }
 
     private void createPlayerAndCannon(){
         Sprite cannonSprite1 = new Sprite(new Texture(cannonString));
         Sprite cannonSprite2 = new Sprite(new Texture(cannonString));
-        Cannon cannon1 = new Cannon(screenWidth*1/3,
+        Cannon cannon1 = new Cannon(player1, screenWidth*1/3,
                 groundLevel, screenWidth/30, screenHeight/30,
                 cannonSprite1,  true);
 
-        Cannon cannon2 = new Cannon(screenWidth*2/3,
+        Cannon cannon2 = new Cannon(player2, screenWidth*2/3,
                 groundLevel, screenWidth/30, screenHeight/30,
                 cannonSprite2, false);
-        player1 = new Player("player1", cannon1);
-        player2 = new Player("player2", cannon1);
+        player1 = new Player("player1", this, cannon1);
+        player2 = new Player("player2", this, cannon2);
 
+        activePlayer = player1;
+        activeCannon = player1.getCannon();
     }
 
 
@@ -119,7 +121,6 @@ public class GameWorld {
         createGround();
         makeCastle(screenWidth*0.8f, screenWidth*0.2f, screenHeight*0.6f, player2);
         makeMirroredCastle(player1);
-
 
 
 //      lage det første prosjektilet, før changeplayer
@@ -144,6 +145,7 @@ public class GameWorld {
                         Sprite sprite = new Sprite(new Texture(gameWinningObjectString));
                         GameWinningObject gameWinningObject = createGameWinningObject(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight / 3, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, sprite);
                         player.setGameWinningObject(gameWinningObject);
+
                     } else if (j == number - 1) {
                         Box box = createBox(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight / 3, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, new Sprite(new Texture("roof_box.png")));
                     } else {
@@ -237,7 +239,7 @@ public class GameWorld {
         } else if(number == 10){
             sprite = new Sprite(new Texture(windowBoxString));
         } else {
-            sprite = sprite = new Sprite(new Texture(normalBoxString));
+            sprite  = new Sprite(new Texture(normalBoxString));
         }
         sprite.setSize(boxWidth, boxHeight);
         sprite.setOriginCenter();
@@ -264,6 +266,10 @@ public class GameWorld {
         CircleShape shape = new CircleShape();
         shape.setRadius(radius);
         FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.friction = friction;
+        fixtureDef.density = density;
+        fixtureDef.restitution = restitution;
+        fixtureDef.shape = shape;
         Body body;
         body = physicsWorld.createBody(bodyDef);
         body.createFixture(fixtureDef);
@@ -297,7 +303,6 @@ public class GameWorld {
         projectile = Projectile.getInstance();
         projectile.init(body, sprite, this);
         body.setUserData(projectile);
-        addToRenderList(sprite);
         if (!drawableList.contains(projectile)){
             drawableList.add(projectile);
         }
@@ -351,6 +356,82 @@ public class GameWorld {
 
         addToRenderList(sprite);
         return gameWinningObject;
+    }
+
+
+    public void update(float dt) {
+        activeCannon = activePlayer.getCannon();
+
+        System.out.println("drawables       "+drawableList.size());
+        System.out.println("boxes       "+mockBoxes.size());
+
+
+        if (activeCannon.isAngleActive()) {
+            activePlayer.getCannon().updateAngle();
+        } else if (activeCannon.isPowerActive()) {
+            activePlayer.getCannon().updatePower();
+        }
+        activePlayer.getCannon().update(dt);
+
+        end = System.currentTimeMillis();
+        oldTime = time;
+        time = (int) Math.floor((end - start) / 1000);
+        if (time > oldTime) {
+            System.out.println(time);
+        }
+        if (time >= turnLimit && getProjectile().isFired()) {
+            System.out.println("Switching player turns! You waited too long 😞");
+            System.out.println("Current active player: " + activePlayer.getId());
+            switchPlayer();
+            System.out.println("New active player " + activePlayer.getId());
+        }
+        // Time limit after shooting
+        if ((projectile.isFired() && time > shootingTimeLimit && projectile.getAbsoluteSpeed() < 5) || time > turnLimit) {
+            System.out.println("Switching player turns! Cannon ball has lived for 5 seconds");
+            System.out.println("Current active player: " + activePlayer.getId());
+            switchPlayer();
+            System.out.println("New active player " + activePlayer.getId());
+        }
+
+
+        if (!physicsWorld.isLocked()){
+            destroy((ArrayList<Fixture>) getBodiesToDestroy());
+        }
+
+        //Check if game is over, if so, the gameOverMenu becomes active
+        if (getPlayer1().getGameWinningObject().getHit()) {
+//            //TODO, Opponent wins, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
+////            Gdx.app.postRunnable(new Runnable() {
+//                @Override
+//                public void run() {
+                    state.gameOver();
+
+//                }
+//            });
+
+        } else if (getPlayer2().getGameWinningObject().getHit()) {
+//            //TODO, You win, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
+//            Gdx.app.postRunnable(new Runnable() {
+//                @Override
+//                public void run() {
+                    state.gameOver();
+//                }
+//            });
+
+        }
+        physicsWorld.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+
+        //set correct position of bodies that have a body
+        for (Drawable drawable: drawableList) {
+            if (drawable.getBody() != null){
+                float xPos = drawable.getBody().getPosition().x - drawable.getDrawable().getWidth()/2;
+                float yPos = drawable.getBody().getPosition().y - drawable.getDrawable().getHeight()/2;
+                float degrees = (float) Math.toDegrees(drawable.getBody().getAngle());
+                drawable.getDrawable().setPosition(xPos, yPos);
+                drawable.getDrawable().setRotation(degrees);
+            }
+        }
+
     }
 
 
@@ -412,77 +493,6 @@ public class GameWorld {
     }
 
 
-        public void update(float dt) {
-            activeCannon = activePlayer.getCannon();
-
-            if (activeCannon.isAngleActive()) {
-                activePlayer.getCannon().updateAngle();
-            } else if (activeCannon.isPowerActive()) {
-                activePlayer.getCannon().updatePower();
-            }
-            activePlayer.getCannon().update(dt);
-
-            end = System.currentTimeMillis();
-            oldTime = time;
-            time = (int) Math.floor((end - start) / 1000);
-            if (time > oldTime) {
-                System.out.println(time);
-            }
-            if (time >= turnLimit && getProjectile().isFired()) {
-                System.out.println("Switching player turns! You waited too long 😞");
-                System.out.println("Current active player: " + activePlayer.getId());
-                switchPlayer();
-                System.out.println("New active player " + activePlayer.getId());
-            }
-            // Time limit after shooting
-            if ((projectile.isFired() && time > shootingTimeLimit && projectile.getAbsoluteSpeed() < 5) || time > turnLimit) {
-                System.out.println("Switching player turns! Cannon ball has lived for 5 seconds");
-                System.out.println("Current active player: " + activePlayer.getId());
-                switchPlayer();
-                System.out.println("New active player " + activePlayer.getId());
-            }
-
-
-            if (!physicsWorld.isLocked()){
-                destroy((ArrayList<Fixture>) getBodiesToDestroy());
-            }
-
-            //Check if game is over, if so, the gameOverMenu becomes active
-            if (getPlayer1().getGameWinningObject().getHit()) {
-                //TODO, Opponent wins, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
-                Gdx.app.postRunnable(new Runnable() {
-                    @Override
-                    public void run() {
-                        state.gameOver();
-
-                    }
-                });
-
-            } else if (getPlayer2().getGameWinningObject().getHit()) {
-                //TODO, You win, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
-                Gdx.app.postRunnable(new Runnable() {
-                    @Override
-                    public void run() {
-                        state.gameOver();
-                    }
-                });
-
-            }
-            getPhysicsWorld().step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-
-            //draw all drawables that have a body
-            for (Drawable drawable: drawableList) {
-                if (drawable.getBody() != null){
-                    float xPos = drawable.getBody().getPosition().x - drawable.getDrawable().getWidth()/2;
-                    float yPos = drawable.getBody().getPosition().y - drawable.getDrawable().getHeight()/2;
-                    float degrees = (float) Math.toDegrees(drawable.getBody().getAngle());
-                    drawable.getDrawable().setPosition(xPos, yPos);
-                    drawable.getDrawable().setRotation(degrees);
-                }
-            }
-
-        }
-
     public void switchPlayer(){
         start = System.currentTimeMillis();
         time = 0;
@@ -495,6 +505,8 @@ public class GameWorld {
         }
         activePlayer.getCannon().setPower(0);
         activePlayer.getCannon().setAngle(0);
+        activeCannon.resetHasFiredThisTurn();
+
 
         System.out.println("Switching");
         //Changes active player
@@ -542,26 +554,9 @@ public class GameWorld {
 //    }
 
     public void input() {
-        if (activeCannon.isAngleActive()) {
-            float angle = activeCannon.getAngle();
-
-            activeCannon.switchAngleActive();
-            activeCannon.switchPowerActive();
-
-        } else if (activeCannon.isPowerActive()) {
-            float power = activeCannon.getPower();
-
-            activeCannon.isPowerActive();
-
-        }
-
-
-        if (!activeCannon.isAngleActive() && !activeCannon.isPowerActive()) {
-        if (!projectile.isFired()) {
-            fire();
-        }
+        activeCannon.progressShootingSequence();
+// må legge til input for knapp
     }
-}
 
 
 
@@ -591,18 +586,12 @@ public class GameWorld {
         return player2;
     }
 
-
-    public float getScreenWidth() {
-        return screenWidth;
-    }
-
     public void dispose() {
         physicsWorld.dispose();
     }
 
     private void addToRenderList(Sprite sprite) {
 //        alle sprites that are shown on screen is added here
-
         drawer.addSprite(sprite);
     }
 

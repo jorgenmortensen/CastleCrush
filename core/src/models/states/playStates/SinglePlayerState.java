@@ -52,6 +52,12 @@ public class SinglePlayerState extends State {
         controller = new GameWorldController(world);
 
     }
+
+    @Override
+    protected void handleInput() {
+        controller.handleInput();
+    }
+
     public void gameOver () {
             gsm.set(new GameOverMenu(gsm, false));
         }
@@ -73,7 +79,7 @@ public class SinglePlayerState extends State {
     @Override
     public void update ( float dt){
         world.update(dt);
-        controller.handleInput();
+
     }
 
 }
@@ -136,7 +142,6 @@ public class SinglePlayerState extends State {
 //            System.out.println("New active player " + activePlayer.getId());
 //        }
 //
-//        handleInput();
 //
 //        //Make the angle and power increment between respectively 0-90 and 0-100
 //        if (activePlayer.isAngleActive()) {

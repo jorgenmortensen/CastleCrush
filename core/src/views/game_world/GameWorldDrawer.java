@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.castlecrush.game.CastleCrush;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import models.GameWorld;
@@ -51,6 +52,7 @@ public class GameWorldDrawer extends Drawer {
         viewport = new ExtendViewport(screenWidth, screenHeight, cam);
         viewport.update(CastleCrush.WIDTH, CastleCrush.HEIGHT, true);
         batch.setProjectionMatrix(cam.combined);
+        spriteList = new ArrayList<Sprite>();
 
 
 
@@ -70,6 +72,8 @@ public class GameWorldDrawer extends Drawer {
 
     @Override
     public void render() {
+        System.out.println("sprites        "+spriteList.size());
+
         batch.setProjectionMatrix(cam.combined);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 

@@ -78,7 +78,6 @@ public class PlayMenu extends models.states.State {
 
     }
 
-    @Override
     protected void handleInput() {
         if (Gdx.input.justTouched() && isOnButton(btnSingle)) {
             gsm.set(new SinglePlayerState(gsm));

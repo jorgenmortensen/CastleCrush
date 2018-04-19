@@ -22,11 +22,14 @@ public class Cannon {
     private boolean shotsFired, angleUp, powerUp;
     private float angleSpeed = 3f, powerSpeed = 4f, maxPower = 100;
     private float factor;
+    private boolean hasFiredThisTurn;
+    private Player player;
 
     private float angle;
     private float power;
 
-    public Cannon(float x, float y, float width, float height, Sprite cannon, boolean facingRight) {
+    public Cannon(Player player, float x, float y, float width, float height, Sprite cannon, boolean facingRight) {
+        this.player = player;
         this.x = x;
         this.y = y;
         this.width = width;
@@ -38,12 +41,11 @@ public class Cannon {
         this.angle = 90;
         angleActive = true;
         powerActive = false;
+        hasFiredThisTurn = false;
 
         cannonSprite.setPosition(x, y);
         cannonSprite.setSize(width, height);
         cannonSprite.setOriginCenter();
-        wheelSprite.setPosition(x,y);
-        wheelSprite.setSize(width/2, height/2);
 
         if (facingRight){
             factor = 1;
@@ -53,6 +55,24 @@ public class Cannon {
         }
 
     }
+
+    public void progressShootingSequence() {
+        if (isAngleActive()) {
+            switchAngleActive();
+            switchPowerActive();
+
+        } else if (isPowerActive()) {
+            isPowerActive();
+
+        }
+
+        if (!isAngleActive() && !isPowerActive() && !hasFiredThisTurn) {
+            hasFiredThisTurn = true;
+            player.fireCannon();
+        }
+    }
+
+
 
     public void updateAngle(){
         if (getAngle() >= 90) {
@@ -169,5 +189,13 @@ public class Cannon {
 
     public float getMaxPower() {
         return maxPower;
+    }
+
+    public boolean isHasFiredThisTurn() {
+        return hasFiredThisTurn;
+    }
+
+    public void resetHasFiredThisTurn() {
+        this.hasFiredThisTurn = false;
     }
 }

@@ -1,5 +1,7 @@
 package models.entities;
 
+import models.GameWorld;
+
 /**
  * Created by Jørgen on 09.03.2018.
  */
@@ -10,15 +12,16 @@ public class Player {
 
     private String id;
     private GameWinningObject gameWinningObject;
-
+    private GameWorld world;
 
     private Cannon cannon;
 
-    public Player(String id, Cannon cannon) {
+    public Player(String id, GameWorld world, Cannon cannon) {
 //        moved to cannon
 //        angleActive = true;
 //        powerActive = false;
         this.id = id;
+        this.world = world;
         this.cannon = cannon;
 
     }
@@ -61,5 +64,9 @@ public class Player {
 
     public Cannon getCannon() {
         return cannon;
+    }
+
+    public void fireCannon(){
+        world.fire();
     }
 }
