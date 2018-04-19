@@ -27,17 +27,6 @@ import views.Drawer;
 public class GameWorldDrawer extends Drawer {
 
     private Texture background = new Texture("background_without_ground.png");
-    //private Sprite background;
-//    private Cannon cannonLeft, cannonRight;
-//    private GameWorld mockWorld;
-//    private World physicsWorld;
-//    GameStateManager gsm;
-
-//    private Sprite cannonSprite;
-//    private Sprite wheelSprite;
-//    private Sprite cannonBallSprite;
-
-//    private float SCALE;
     private float screenWidth;
     private float screenHeight;
     private ExtendViewport viewport;
@@ -56,24 +45,10 @@ public class GameWorldDrawer extends Drawer {
 
 
 
-//        this.gsm = gsm;
-//        this.mockWorld = world;
-//        this.cannonSprite = world
-//        this.cannonLeft = world.getCannons().get(0);
-//        this.cannonRight = world.getCannons().get(1); //This is NULL as of now
-//
-//        this.physicsWorld = world.getPhysicsWorld();
-//        SCALE = world.getSCALE();
-//        screenWidth = CastleCrush.WIDTH*SCALE;
-//        screenHeight = CastleCrush.HEIGHT*SCALE;
-//
-//        camera = new OrthographicCamera();
     }
 
     @Override
     public void render() {
-        System.out.println("sprites        "+spriteList.size());
-
         batch.setProjectionMatrix(cam.combined);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -86,14 +61,60 @@ public class GameWorldDrawer extends Drawer {
         }
 
         batch.end();
-        //Draw the ground
     }
 
+
+
+    public void addSprite(Sprite sprite) {
+        if (!spriteList.contains(sprite))
+            spriteList.add(sprite);
+    }
+
+    public void removeSprite(Sprite sprite) {
+        if (spriteList.contains(sprite))
+        spriteList.remove(sprite);
+    }
+
+
+
+    @Override
+    public void dispose() {
+        background.dispose();
+        batch.dispose();
+        }
+
+
+
+
+    //  moved to update() in  world
+    //        if (mockWorld.getPlayer1().getGameWinningObject().getHit()){
+    //        //Check if game is over, if so, the gameOverMenu becomes active
+    public void addSprite(Sprite sprite, float xPos, float yPos, float width, float height, float rotation) {
+        sprite.setBounds(xPos, yPos, width, height);
+        sprite.setRotation(rotation);
+        spriteList.add(sprite);
+    }
+//    private void drawObject(Drawable object) {
+//        float xPos = object.getBody().getPosition().x - object.getDrawable().getWidth()/2;
+//        float yPos = object.getBody().getPosition().y - object.getDrawable().getHeight()/2;
+//        float degrees = (float) Math.toDegrees(object.getBody().getAngle());
+//        object.getDrawable().setPosition(xPos, yPos);
+//        object.getDrawable().setRotation(degrees);
+//        object.getDrawable().draw(batch);
+//    }
+
+
+    //            final State gameOverMenu = new GameOverMenu(gsm, false, true);
+    //    private void drawGround() {
+//        if (mockWorld.getGround() != null){
+//            mockWorld.getGround().getDrawable().draw(batch);
+//        }
+//    }
+
+
+
+//
 //var i render()
-//  moved to update() in  world
-//        //Check if game is over, if so, the gameOverMenu becomes active
-//        if (mockWorld.getPlayer1().getGameWinningObject().getHit()){
-//            final State gameOverMenu = new GameOverMenu(gsm, false, true);
 //            //TODO, Opponent wins, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
 //            Gdx.app.postRunnable(new Runnable() {
 //                @Override
@@ -150,42 +171,16 @@ public class GameWorldDrawer extends Drawer {
 
 
 
-    private void drawObject(Drawable object) {
-        float xPos = object.getBody().getPosition().x - object.getDrawable().getWidth()/2;
-        float yPos = object.getBody().getPosition().y - object.getDrawable().getHeight()/2;
-        float degrees = (float) Math.toDegrees(object.getBody().getAngle());
-        object.getDrawable().setPosition(xPos, yPos);
-        object.getDrawable().setRotation(degrees);
-        object.getDrawable().draw(batch);
-    }
-
-//    private void drawGround() {
-//        if (mockWorld.getGround() != null){
-//            mockWorld.getGround().getDrawable().draw(batch);
-//        }
-//    }
+//        this.gsm = gsm;
+//        this.mockWorld = world;
+//        this.cannonSprite = world
+//        this.cannonLeft = world.getCannons().get(0);
+//        this.cannonRight = world.getCannons().get(1); //This is NULL as of now
 //
-    public void addSprite(Sprite sprite, float xPos, float yPos, float width, float height, float rotation) {
-        sprite.setBounds(xPos, yPos, width, height);
-        sprite.setRotation(rotation);
-        spriteList.add(sprite);
-    }
-
-    public void addSprite(Sprite sprite) {
-        spriteList.add(sprite);
-    }
-
-    public void removeSprite(Sprite sprite) {
-        spriteList.remove(sprite);
-    }
-
-
-
-    @Override
-    public void dispose() {
-        background.dispose();
-        batch.dispose();
-        }
-
-
+//        this.physicsWorld = world.getPhysicsWorld();
+//        SCALE = world.getSCALE();
+//        screenWidth = CastleCrush.WIDTH*SCALE;
+//        screenHeight = CastleCrush.HEIGHT*SCALE;
+//
+//        camera = new OrthographicCamera();
 }

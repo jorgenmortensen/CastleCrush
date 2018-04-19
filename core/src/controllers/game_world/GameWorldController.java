@@ -27,6 +27,7 @@ private GameWorld world;
     public void handleInput() {
         if (Gdx.input.justTouched()) {
             world.input();
+            System.out.println("press screeen");
 
 //            if (activePlayer.isAngleActive()) {
 //                float angle = activeCannon.getAngle();

@@ -16,13 +16,12 @@ public class Player {
 
     private Cannon cannon;
 
-    public Player(String id, GameWorld world, Cannon cannon) {
+    public Player(String id, GameWorld world) {
 //        moved to cannon
 //        angleActive = true;
 //        powerActive = false;
         this.id = id;
         this.world = world;
-        this.cannon = cannon;
 
     }
 
@@ -67,6 +66,10 @@ public class Player {
     }
 
     public void fireCannon(){
-        world.fire();
+        world.fireProjectile();
+    }
+
+    public void setCannon(Cannon cannon) {
+        this.cannon = cannon;
     }
 }

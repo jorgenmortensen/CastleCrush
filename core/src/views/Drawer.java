@@ -28,6 +28,10 @@ public abstract class Drawer extends ApplicationAdapter {
     public void render() {
     }
 
+    public OrthographicCamera getCam() {
+        return cam;
+    }
+
     public void dispose() {
         batch.dispose();
     }

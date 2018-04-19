@@ -58,19 +58,25 @@ public class GameWorld {
     private Player player2;
     private Player activePlayer;
     private Cannon activeCannon;
+    private Cannon cannon2;
+    private Cannon cannon1;
 
 //    sprites
     private String bottomGroundString= "bottom_ground.png";
     private String windowBoxString= "window_box.png";
     private String normalBoxString= "normal_box.png";
+    private String roofBoxString= "roof_box.png";
     private String cannonString= "cannon.png";
     private String cannonBallString = "ball_cannon.png";
     private String gameWinningObjectString= "gwo3.png";
     private String powerBarString= "powerBar.png";
-
-    private Sprite powerBar = new Sprite(new Texture(powerBarString));
     private List<Drawable> drawableList;
-
+    private float cannonWidth;
+    private float cannonHeight;
+    private float cannon1position;
+    private float cannon2position;
+    Box[][] castleMatrix, mirroredCastleMatrix;
+    String [][] boxStrings;
 
     private int time, oldTime, turnLimit = 15, shootingTimeLimit = 5;
     long start, end;
@@ -94,93 +100,166 @@ public class GameWorld {
         drawableList = new ArrayList<Drawable>();
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+        cannonWidth = screenWidth/30;
+        cannonHeight = screenHeight/30;
+        cannon1position = screenWidth/3;
+        cannon2position = screenWidth*2/3 - cannonWidth;
         createPlayerAndCannon();
         generateBodies();
+        System.out.println("HAHA " + screenWidth + "divided by 3:" + screenWidth/3);
+//        cannonWidth = screenWidth/30;
+//        cannonHeight = screenHeight/30;
     }
 
     private void createPlayerAndCannon(){
+        Sprite powerbarSprite1 = new Sprite(new Texture(powerBarString));
+        Sprite powerbarSprite2 = new Sprite(new Texture(powerBarString));
         Sprite cannonSprite1 = new Sprite(new Texture(cannonString));
         Sprite cannonSprite2 = new Sprite(new Texture(cannonString));
-        Cannon cannon1 = new Cannon(player1, screenWidth*1/3,
-                groundLevel, screenWidth/30, screenHeight/30,
-                cannonSprite1,  true);
+        addToRenderList(cannonSprite1);
+        addToRenderList(cannonSprite2);
+        addToRenderList(powerbarSprite1);
+        addToRenderList(powerbarSprite2);
+        player1 = new Player("player1", this);
+        player2 = new Player("player2", this);
 
-        Cannon cannon2 = new Cannon(player2, screenWidth*2/3,
-                groundLevel, screenWidth/30, screenHeight/30,
-                cannonSprite2, false);
-        player1 = new Player("player1", this, cannon1);
-        player2 = new Player("player2", this, cannon2);
+
+        cannon1 = new Cannon(player1, cannon1position,
+                groundLevel, cannonWidth, cannonHeight,
+                cannonSprite1,  powerbarSprite1, true);
+
+        cannon2 = new Cannon(player2, cannon2position,
+                groundLevel, cannonWidth, cannonHeight,
+                cannonSprite2, powerbarSprite2, false);
+        player1.setCannon(cannon1);
+        player2.setCannon(cannon2);
+
+
 
         activePlayer = player1;
         activeCannon = player1.getCannon();
+        activeCannon.activate();
     }
 
 
     private void generateBodies() {
 //        **********la stå intil videre*********
         createGround();
-        makeCastle(screenWidth*0.8f, screenWidth*0.2f, screenHeight*0.6f, player2);
-        makeMirroredCastle(player1);
+        makeCastle( screenWidth*0.2f, screenHeight*0.6f);
+      //  makeMirroredCastle(player1);
 
 
 //      lage det første prosjektilet, før changeplayer
         spawnProjectile();
 
         createOneWayWalls(player1.getCannon().getX() - projectile.getDrawable().getWidth()/2);
-        createOneWayWalls(player2.getCannon().getX() + projectile.getDrawable().getWidth()/2);
+        createOneWayWalls(player2.getCannon().getX() + player2.getCannon().getWidth()+ projectile.getDrawable().getWidth()/2);
 //*****************************************************
     }
 
-    public void makeCastle(float startPosX, float castleWidth, float castleHeight, Player player) {
+    public void makeCastle(float castleWidth, float castleHeight) {
+        // Makes castle for player1
         int numHorizontalBoxes = (int) Math.floor((castleWidth / boxWidth));
         int numVerticalBoxes = (int) Math.floor((castleHeight / boxHeight));
+        float xPos1, yPos;
         Random ran = new Random();
-        //Make the vertical left wall
-        for (int i = 0; i < numHorizontalBoxes; i++) {
-            int extraBoxes = (int)(10*(1-(castleHeight)/screenHeight));
-            int number = ran.nextInt(numVerticalBoxes) + extraBoxes;
-            for (int j = 0; j < number; j++) {
-                if (startPosX + i * boxWidth < screenWidth) {
-                    if (j == 0 && i == numHorizontalBoxes-1){
-                        Sprite sprite = new Sprite(new Texture(gameWinningObjectString));
-                        GameWinningObject gameWinningObject = createGameWinningObject(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight / 3, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, sprite);
-                        player.setGameWinningObject(gameWinningObject);
 
-                    } else if (j == number - 1) {
-                        Box box = createBox(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight / 3, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, new Sprite(new Texture("roof_box.png")));
-                    } else {
-                        Box box = createBox(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight / 3, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, null);
-                    }
+        boxStrings = new  String[][] {
+                {gameWinningObjectString, normalBoxString, windowBoxString, roofBoxString},
+                {normalBoxString, windowBoxString, normalBoxString, normalBoxString, roofBoxString},
+                {normalBoxString, normalBoxString, normalBoxString, roofBoxString},
+                {normalBoxString, normalBoxString, windowBoxString, roofBoxString}
+        };
+
+        float startPosX = screenWidth*0.25f-boxWidth*boxStrings.length;
+
+        castleMatrix = new Box[boxStrings.length][];
+        mirroredCastleMatrix = new Box[boxStrings.length][];
+        for (int i = 0; i<boxStrings.length; i++){
+            castleMatrix[i] = new Box[boxStrings[i].length];
+            mirroredCastleMatrix[boxStrings.length-1-i] = new Box[boxStrings[i].length];
+            for (int j=0; j<boxStrings[i].length; j++){
+                xPos1 = startPosX+i*boxWidth; //screenWidth - (startPosX + i * boxWidth);
+                yPos = groundLevel + j * boxHeight + boxHeight / 3;
+                if (boxStrings[i][j] == gameWinningObjectString){
+                    Sprite sprite = new Sprite(new Texture(gameWinningObjectString));
+                    GameWinningObject gameWinningObject = createGameWinningObject(xPos1, yPos, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, sprite);
+                    player1.setGameWinningObject(gameWinningObject);
+                    castleMatrix[i][j] = gameWinningObject;
+
+                    Sprite sprite2 = new Sprite(new Texture(gameWinningObjectString));
+                    GameWinningObject gameWinningObject2 = createGameWinningObject(screenWidth-xPos1, yPos, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, sprite2);
+                    player2.setGameWinningObject(gameWinningObject2);
+                    System.out.println(mirroredCastleMatrix.length+", "+i);
+                    System.out.println(mirroredCastleMatrix[boxStrings.length-1-i].length);
+                    mirroredCastleMatrix[boxStrings.length-1-i][j] = gameWinningObject2;
+                } else if (boxStrings[i][j] == normalBoxString){
+                    castleMatrix[i][j] = createBox(xPos1, yPos, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, normalBoxString);
+                    mirroredCastleMatrix[boxStrings.length-1-i][j]= createBox(screenWidth-xPos1, yPos, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, normalBoxString);
+                } else if (boxStrings[i][j] == roofBoxString) {
+                    castleMatrix[i][j] = createBox(xPos1, yPos, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, roofBoxString);
+                    mirroredCastleMatrix[boxStrings.length-1-i][j]= createBox(screenWidth-xPos1, yPos, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, roofBoxString);
+                } else if (boxStrings[i][j] == windowBoxString){
+                    castleMatrix[i][j] = createBox(xPos1, yPos, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, windowBoxString);
+                    mirroredCastleMatrix[boxStrings.length-1-i][j]= createBox(screenWidth-xPos1, yPos, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, windowBoxString);
                 }
             }
         }
     }
 
+//
+//    public void makeRandomCastle(float startPosX, float castleWidth, float castleHeight, Player player) {
+//        int numHorizontalBoxes = (int) Math.floor((castleWidth / boxWidth));
+//        int numVerticalBoxes = (int) Math.floor((castleHeight / boxHeight));
+//        Random ran = new Random();
+//        //Make the vertical left wall
+//        for (int i = 0; i < numHorizontalBoxes; i++) {
+//            int extraBoxes = (int)(10*(1-(castleHeight)/screenHeight));
+//            int number = ran.nextInt(numVerticalBoxes) + extraBoxes;
+//            for (int j = 0; j < number; j++) {
+//                if (startPosX + i * boxWidth < screenWidth) {
+//                    if (j == 0 && i == numHorizontalBoxes-1){
+//                        Sprite sprite = new Sprite(new Texture(gameWinningObjectString));
+//                        GameWinningObject gameWinningObject = createGameWinningObject(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight / 3, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, sprite);
+//                        player.setGameWinningObject(gameWinningObject);
+//
+//                    } else if (j == number - 1) {
+//                        Box box = createBox(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight / 3, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, new Sprite(new Texture("roof_box.png")));
+//                    } else {
+//                        Box box = createBox(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight / 3, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, null);
+//                    }
+//                }
+//            }
+//        }
+//    }
 
 
-    private void makeMirroredCastle(Player player) {
-        for (int i = mockBoxes.size()- 1; i >= 0; i--) {
-            float boxXpos, boxYpos;
-            if (mockBoxes.get(i) instanceof GameWinningObject){
-                GameWinningObject gameWinningObject = (GameWinningObject) mockBoxes.get(i);
-                GameWinningObject mirroredGameWinningObject = createGameWinningObject(gameWinningObject.getBody().getPosition().x, gameWinningObject.getBody().getPosition().y, gameWinningObject.getWidth(), gameWinningObject.getHeight(), gameWinningObject.getDensity(), gameWinningObject.getDrawable());
-                player.setGameWinningObject(mirroredGameWinningObject);
-                boxXpos = mirroredGameWinningObject.getBody().getPosition().x;
-                boxYpos = mirroredGameWinningObject.getBody().getPosition().y;
-                moveBox(mirroredGameWinningObject,  screenWidth - boxXpos, boxYpos);
-                mockBoxes.add(mirroredGameWinningObject);
-            } else {
-                Box originalBox = (Box) mockBoxes.get(i);
-                Box mirroredBox = createBox(originalBox.getBody().getPosition().x, originalBox.getBody().getPosition().y, originalBox.getWidth(), originalBox.getHeight(), originalBox.getDensity(), originalBox.getDrawable());
-                boxXpos = originalBox.getBody().getPosition().x;
-                boxYpos = originalBox.getBody().getPosition().y;
-                moveBox(mirroredBox,  screenWidth - boxXpos, boxYpos);
-                mockBoxes.add(mirroredBox);
-            }
 
-        }
-        drawableList.addAll(mockBoxes);
-    }
+//    private void makeMirroredCastle(Player player) {
+//        for (int i = mockBoxes.size()- 1; i >= 0; i--) {
+//            float boxXpos, boxYpos;
+//            if (mockBoxes.get(i) instanceof GameWinningObject){
+//                GameWinningObject gameWinningObject = (GameWinningObject) mockBoxes.get(i);
+//                Sprite sprite = new Sprite(new Texture(gameWinningObjectString));
+//                GameWinningObject mirroredGameWinningObject = createGameWinningObject(gameWinningObject.getBody().getPosition().x, gameWinningObject.getBody().getPosition().y, gameWinningObject.getWidth(), gameWinningObject.getHeight(), gameWinningObject.getDensity(), sprite);
+//                player.setGameWinningObject(mirroredGameWinningObject);
+//                boxXpos = mirroredGameWinningObject.getBody().getPosition().x;
+//                boxYpos = mirroredGameWinningObject.getBody().getPosition().y;
+//                moveBox(mirroredGameWinningObject,  screenWidth - boxXpos, boxYpos);
+//                mockBoxes.add(mirroredGameWinningObject);
+//            } else {
+//                Box originalBox = (Box) mockBoxes.get(i);
+//                Sprite sprite = new Sprite(new Texture(normalBoxString));
+//                Box mirroredBox = createBox(originalBox.getBody().getPosition().x, originalBox.getBody().getPosition().y, originalBox.getWidth(), originalBox.getHeight(), originalBox.getDensity(), sprite);
+//                boxXpos = originalBox.getBody().getPosition().x;
+//                boxYpos = originalBox.getBody().getPosition().y;
+//                moveBox(mirroredBox,  screenWidth - boxXpos, boxYpos);
+//                mockBoxes.add(mirroredBox);
+//            }
+//
+//        }
+//        drawableList.addAll(mockBoxes);
+//    }
 
     private void createGround() {
         if (ground != null) physicsWorld.destroyBody(ground.getBody());
@@ -214,7 +293,7 @@ public class GameWorld {
 
 
 
-    private Box createBox(float xPos, float yPos, float boxWidth, float boxHeight, float density, Sprite sprite){
+    private Box createBox(float xPos, float yPos, float boxWidth, float boxHeight, float density, String spriteString){
         //creating and setting up the physical shape of the box
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -232,26 +311,18 @@ public class GameWorld {
         body.setTransform(xPos, yPos, 0);
         shape.dispose();
 
-
-        Random ran = new Random();
-        int number = ran.nextInt(15);
-        if (sprite != null){
-        } else if(number == 10){
-            sprite = new Sprite(new Texture(windowBoxString));
-        } else {
-            sprite  = new Sprite(new Texture(normalBoxString));
-        }
+        Sprite sprite = new Sprite(new Texture(spriteString));
         sprite.setSize(boxWidth, boxHeight);
         sprite.setOriginCenter();
         Box box = new Box(body, sprite, boxWidth, boxHeight, density);
-        mockBoxes.add(box);
+//        mockBoxes.add(box);
         body.setUserData(box);
 
         addToRenderList(sprite);
+        drawableList.add(box);
 
         return box;
     }
-
 
 
     public Body createProjectileBody(float xPos, float yPos, float radius, float friction, float density, float restitution){
@@ -290,12 +361,11 @@ public class GameWorld {
 
     public void spawnProjectile() {
         // used for spawning projectile at beginning of game and when the turn switches
-
         float xPos = activeCannon.getX();
         float yPos = activeCannon.getY();
-        float radius = screenWidth/40;
+        float radius = screenWidth/60;
         float friction = 0.5f;
-        float density = 2f;
+        float density = 20f;
         float restitution = 0.2f;
 
         Body body = createProjectileBody(xPos, yPos, radius, friction, density, restitution);
@@ -354,43 +424,43 @@ public class GameWorld {
         mockBoxes.add(gameWinningObject);
         body.setUserData(gameWinningObject);
 
+        drawableList.add(gameWinningObject);
         addToRenderList(sprite);
         return gameWinningObject;
     }
 
 
     public void update(float dt) {
+
         activeCannon = activePlayer.getCannon();
+        activeCannon.updatePowerBar();
+//        projectile.getBody().setAngularVelocity(0);
+        System.out.println(activeCannon.getX()+"      xcannon");
+        System.out.println(cannon1.getX()+"        cannon1");
+        activeCannon.update();
 
-        System.out.println("drawables       "+drawableList.size());
-        System.out.println("boxes       "+mockBoxes.size());
 
 
-        if (activeCannon.isAngleActive()) {
-            activePlayer.getCannon().updateAngle();
-        } else if (activeCannon.isPowerActive()) {
-            activePlayer.getCannon().updatePower();
-        }
-        activePlayer.getCannon().update(dt);
+
 
         end = System.currentTimeMillis();
         oldTime = time;
         time = (int) Math.floor((end - start) / 1000);
         if (time > oldTime) {
-            System.out.println(time);
+//            System.out.println(time);
         }
         if (time >= turnLimit && getProjectile().isFired()) {
-            System.out.println("Switching player turns! You waited too long 😞");
-            System.out.println("Current active player: " + activePlayer.getId());
+//            System.out.println("Switching player turns! You waited too long 😞");
+//            System.out.println("Current active player: " + activePlayer.getId());
             switchPlayer();
-            System.out.println("New active player " + activePlayer.getId());
+//            System.out.println("New active player " + activePlayer.getId());
         }
         // Time limit after shooting
         if ((projectile.isFired() && time > shootingTimeLimit && projectile.getAbsoluteSpeed() < 5) || time > turnLimit) {
-            System.out.println("Switching player turns! Cannon ball has lived for 5 seconds");
-            System.out.println("Current active player: " + activePlayer.getId());
+//            System.out.println("Switching player turns! Cannon ball has lived for 5 seconds");
+//            System.out.println("Current active player: " + activePlayer.getId());
             switchPlayer();
-            System.out.println("New active player " + activePlayer.getId());
+          //  System.out.println("New active player " + activePlayer.getId());
         }
 
 
@@ -497,16 +567,8 @@ public class GameWorld {
         start = System.currentTimeMillis();
         time = 0;
         //Deactivates variables
-        if (activeCannon.isAngleActive()){
-            activeCannon.switchAngleActive();
-        }
-        if (activeCannon.isPowerActive()){
-            activeCannon.switchPowerActive();
-        }
-        activePlayer.getCannon().setPower(0);
-        activePlayer.getCannon().setAngle(0);
-        activeCannon.resetHasFiredThisTurn();
 
+        activeCannon.deactivate();
 
         System.out.println("Switching");
         //Changes active player
@@ -516,24 +578,18 @@ public class GameWorld {
             activePlayer = player1;
         }
         //Activates variables
-        if (!activeCannon.isAngleActive()){
-            activeCannon.switchAngleActive();
-        }
-        if (activeCannon.isPowerActive()) {
-            activeCannon.switchPowerActive();
-        }
-
+        activeCannon = activePlayer.getCannon();
+        activeCannon.activate();
+        activeCannon.activatePowerBar();
+        drawer.removeSprite(projectile.getDrawable());
         spawnProjectile();
+
     }
 
 
-    public void updatePowerBar() {
-        float cannonWidth = activeCannon.getWidth();
-        float power = activeCannon.getPower();
-        powerBar.setPosition(activePlayer.getCannon().getX(), activePlayer.getCannon().getY());
-        powerBar.setSize(cannonWidth*power/activeCannon.getMaxPower(), powerBar.getHeight());
+
         //fiks marker
-    }
+
 
     //        batch.draw(new Texture("powerBar.png"), cannonLeft.getX() + cannonLeft.getWidth(),
     //                cannonLeft.getY() + cannonLeft.getHeight(),
@@ -560,13 +616,16 @@ public class GameWorld {
 
 
 
-    public void fire() {
+    public void fireProjectile() {
         start = System.currentTimeMillis();
         time = 0;
-        setProjectileVelocity(new Vector2(
+        Vector2 fireVelocity = new Vector2(
                 (float)Math.cos(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower()/3,
-                (float)Math.sin(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower()/3));
+                (float)Math.sin(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower()/3);
+
+        projectile.fire(fireVelocity);
         projectile.setFired(true);
+        addToRenderList(projectile.getDrawable());
     }
 
 
@@ -593,6 +652,10 @@ public class GameWorld {
     private void addToRenderList(Sprite sprite) {
 //        alle sprites that are shown on screen is added here
         drawer.addSprite(sprite);
+    }
+
+    protected void removeFromRenderlist(Sprite sprite) {
+        drawer.removeSprite(sprite);
     }
 
 }

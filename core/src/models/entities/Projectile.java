@@ -16,7 +16,6 @@ public class Projectile implements Drawable {
         return ourInstance;
     }
 
-    private int x, y;
     private float width;
     private float height;
     private Vector2 position;
@@ -28,9 +27,6 @@ public class Projectile implements Drawable {
     private boolean hasHit = false;
     private World physicsWorld;
     private boolean scheduleActive = false;
-
-
-
     private Vector2 velocity;
 
     public void init(Body body,  Sprite sprite, GameWorld world) {
@@ -100,14 +96,6 @@ public class Projectile implements Drawable {
     }
 
 
-    public Vector2 getPosition() {
-        return position;
-    }
-
-    public void setPosition(Vector2 position) {
-        this.position = position;
-    }
-
     public void setWidth(int width) {
         this.width = width;
     }
@@ -128,28 +116,12 @@ public class Projectile implements Drawable {
         return velocity;
     }
 
-    public void setVelocity(Vector2 velocity) {
-        this.velocity = velocity;
-    }
-
     public Sprite getSprite() {
         return sprite;
     }
 
     public void setSprite(Sprite sprite) {
         this.sprite = sprite;
-    }
-
-    @Override
-    public String toString() {
-        return "OldProjectile{" +
-                "position=" + position +
-                ", width=" + width +
-                ", height=" + height +
-                ", body=" + body +
-                ", sprite=" + sprite +
-                ", velocity=" + velocity +
-                '}';
     }
 
 
@@ -162,8 +134,11 @@ public class Projectile implements Drawable {
     }
 
     //Fires the shot, with a given angle and power
-    public void fire(float angle, float power) {
-        setVelocity(new Vector2((float)Math.cos(angle*Math.PI/180) * power, (float)Math.sin(angle*Math.PI/180) * power));
+
+    public void fire(Vector2 velocity) {
+        body.setLinearVelocity(velocity);
+        body.setAngularVelocity(0);
+        System.out.println(velocity.x + "velocity");
     }
 
     public void update(float dt) {
@@ -179,7 +154,15 @@ public class Projectile implements Drawable {
     }
 
 
-
-
-
+    @Override
+    public String toString() {
+        return "OldProjectile{" +
+                "position=" + position +
+                ", width=" + width +
+                ", height=" + height +
+                ", body=" + body +
+                ", sprite=" + sprite +
+                ", velocity=" + velocity +
+                '}';
+    }
 }

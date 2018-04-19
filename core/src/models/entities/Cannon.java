@@ -16,9 +16,8 @@ public class Cannon {
     private float y;
     private float width;
     private float height;
-    private Sprite wheelSprite;
     private Sprite cannonSprite;
-    private Body body;
+    private Sprite powerBarSprite;
     private boolean shotsFired, angleUp, powerUp;
     private float angleSpeed = 3f, powerSpeed = 4f, maxPower = 100;
     private float factor;
@@ -28,13 +27,14 @@ public class Cannon {
     private float angle;
     private float power;
 
-    public Cannon(Player player, float x, float y, float width, float height, Sprite cannon, boolean facingRight) {
+    public Cannon(Player player, float x, float y, float width, float height, Sprite cannon, Sprite powerBarSprite, boolean facingRight) {
         this.player = player;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.cannonSprite = cannon;
+        this.powerBarSprite = powerBarSprite;
         this.shotsFired = true;
         this.angleUp = true;
         this.powerUp = false;
@@ -46,6 +46,8 @@ public class Cannon {
         cannonSprite.setPosition(x, y);
         cannonSprite.setSize(width, height);
         cannonSprite.setOriginCenter();
+        powerBarSprite.setPosition(x, y);
+        powerBarSprite.setSize(width, height/3);
 
         if (facingRight){
             factor = 1;
@@ -60,21 +62,30 @@ public class Cannon {
         if (isAngleActive()) {
             switchAngleActive();
             switchPowerActive();
-
+            System.out.println("stop cannon move");
         } else if (isPowerActive()) {
-            isPowerActive();
-
+            switchPowerActive();
+            System.out.println("power is active");
         }
 
         if (!isAngleActive() && !isPowerActive() && !hasFiredThisTurn) {
             hasFiredThisTurn = true;
+            System.out.println(player+"     player exists");
             player.fireCannon();
         }
     }
 
 
+    public void update() {
+        if (isAngleActive()) {
+            updateAngle();
+        } else if (isPowerActive()) {
+            updatePower();
+        }
+        cannonSprite.setRotation(90 - factor*getAngle());
+    }
 
-    public void updateAngle(){
+    private void updateAngle(){
         if (getAngle() >= 90) {
             angleUp = false;
         } else if (getAngle() <= 0) {
@@ -87,7 +98,7 @@ public class Cannon {
         }
     }
 
-    public void updatePower(){
+    private void updatePower(){
         if (getPower() >= maxPower) {
             powerUp = false;
         } else if (getPower() <= 0) {
@@ -100,19 +111,16 @@ public class Cannon {
         }
     }
 
+    public void updatePowerBar() {
+        powerBarSprite.setSize(width * power / maxPower, powerBarSprite.getHeight());
+        }
 
-    public void switchAngleActive(){
+    private void switchAngleActive(){
        angleActive = !angleActive;
     }
 
-    public void switchPowerActive(){
+    private void switchPowerActive(){
       powerActive = !powerActive;
-    }
-
-
-
-    public Sprite getCannonSprite() {
-        return cannonSprite;
     }
 
     public float getX() {
@@ -147,11 +155,11 @@ public class Cannon {
         this.height = height;
     }
 
-    public float getAngle() {
+    private float getAngle() {
         return angle;
     }
 
-    public void setAngle(float angle) {
+    private void setAngle(float angle) {
         this.angle = angle;
     }
 
@@ -159,7 +167,7 @@ public class Cannon {
         return power;
     }
 
-    public void setPower(float power) {
+    private void setPower(float power) {
         this.power = power;
     }
 
@@ -174,28 +182,48 @@ public class Cannon {
     //Fires the shot, with a given angle and power
     public void Fire() {
     }
-    public boolean isAngleActive(){return angleActive;}
+    private boolean isAngleActive(){return angleActive;}
 
-    public boolean isPowerActive() {return powerActive;}
+    private boolean isPowerActive() {return powerActive;}
 
     //Updates the game with the interval dt
-    public void update(float dt) {
-        cannonSprite.setRotation(90 - factor*getAngle());
-    }
 
     public float getShootingAngle (){
         return 90 - factor*getAngle();
     }
 
-    public float getMaxPower() {
-        return maxPower;
-    }
 
-    public boolean isHasFiredThisTurn() {
-        return hasFiredThisTurn;
-    }
-
-    public void resetHasFiredThisTurn() {
+    private void resetHasFiredThisTurn() {
         this.hasFiredThisTurn = false;
+    }
+
+    public Sprite getPowerBarSprite() {
+        return powerBarSprite;
+    }
+
+    public void activatePowerBar() {
+        powerBarSprite.setPosition(x, y);
+        powerBarSprite.setSize(width, height/3);
+    }
+
+    public void deactivate() {
+        if (isAngleActive()){
+            switchAngleActive();
+        }
+        if (isPowerActive()){
+            switchPowerActive();
+        }
+        setPower(0);
+        setAngle(0);
+        resetHasFiredThisTurn();
+    }
+
+    public void activate() {
+        if (!isAngleActive()){
+            switchAngleActive();
+        }
+        if (isPowerActive()) {
+            switchPowerActive();
+        }
     }
 }

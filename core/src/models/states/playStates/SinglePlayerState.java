@@ -55,7 +55,8 @@ public class SinglePlayerState extends State {
 
     @Override
     protected void handleInput() {
-        controller.handleInput();
+//        JEG VIL IKKE HA DENNE METODEN I STATE, FAEN
+//        controller.handleInput();
     }
 
     public void gameOver () {
@@ -66,7 +67,7 @@ public class SinglePlayerState extends State {
     @Override
     public void render (SpriteBatch sb){
         gameWorldDrawer.render();
-        debugRenderer.render(world.getPhysicsWorld(), cam.combined);
+        debugRenderer.render(world.getPhysicsWorld(), gameWorldDrawer.getCam().combined);
     }
 
         @Override
@@ -77,8 +78,9 @@ public class SinglePlayerState extends State {
     }
 
     @Override
-    public void update ( float dt){
+    public void update (float dt){
         world.update(dt);
+        controller.handleInput();
 
     }
 
