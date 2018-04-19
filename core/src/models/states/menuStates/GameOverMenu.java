@@ -25,7 +25,7 @@ public class GameOverMenu extends State {
     private boolean winnerScreen;
     private boolean isHost;
 
-    public GameOverMenu(GameStateManager gsm, boolean winnerScreen, boolean isHost) {
+    public GameOverMenu(GameStateManager gsm, boolean winnerScreen) {
         super(gsm);
         background = new Texture(Gdx.files.internal("loop_background_castles.png"));
         this.winnerScreen = winnerScreen;
@@ -34,6 +34,9 @@ public class GameOverMenu extends State {
         this.isHost = isHost;
         //Initialize buttons
         initButtons();
+
+        //temp, must fix
+        isHost = true;
     }
 
     private void initButtons() {
@@ -45,7 +48,7 @@ public class GameOverMenu extends State {
                 new Sprite(new Texture("rematchBtn.png")));
     }
 
-    @Override
+//    @Override
     protected void handleInput() {
         if (Gdx.input.justTouched()) {
             if (isOnButton(backToMainMenuBtn)) {

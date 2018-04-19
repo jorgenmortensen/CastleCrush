@@ -15,4 +15,6 @@ public interface Drawable {
 
    public Body getBody();
 
+//   public void setBodyToNull();
+
 }

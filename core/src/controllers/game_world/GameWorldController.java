@@ -44,7 +44,7 @@ private GameWorld world;
 //
 //
 //        if (!activePlayer.isAngleActive() && !activePlayer.isPowerActive()) {
-//            if (!world.getProjectile().isFired()) {
+//            if (!world.getOldProjectile().isFired()) {
 //                fire();
 //            }
         }

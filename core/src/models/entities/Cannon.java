@@ -20,7 +20,7 @@ public class Cannon {
     private Sprite cannonSprite;
     private Body body;
     private boolean shotsFired, angleUp, powerUp;
-    private float angleSpeed = 3f, powerSpeed = 4f;
+    private float angleSpeed = 3f, powerSpeed = 4f, maxPower = 100;
     private float factor;
 
     private float angle;
@@ -68,7 +68,7 @@ public class Cannon {
     }
 
     public void updatePower(){
-        if (getPower() >= 100) {
+        if (getPower() >= maxPower) {
             powerUp = false;
         } else if (getPower() <= 0) {
             powerUp = true;
@@ -127,14 +127,6 @@ public class Cannon {
         this.height = height;
     }
 
-    public Sprite getWheelSprite() {
-        return wheelSprite;
-    }
-
-    public void setWheel(Sprite sprite) {
-        this.wheelSprite = sprite;
-    }
-
     public float getAngle() {
         return angle;
     }
@@ -175,4 +167,7 @@ public class Cannon {
         return 90 - factor*getAngle();
     }
 
+    public float getMaxPower() {
+        return maxPower;
+    }
 }

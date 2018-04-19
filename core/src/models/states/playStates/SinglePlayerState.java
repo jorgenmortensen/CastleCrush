@@ -1,12 +1,14 @@
 package models.states.playStates;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.castlecrush.game.CastleCrush;
 
 import controllers.game_world.GameWorldController;
 import models.GameWorld;
 import models.states.GameStateManager;
 import models.states.State;
+import models.states.menuStates.GameOverMenu;
 import views.game_world.GameWorldDrawer;
 
 /**
@@ -18,9 +20,9 @@ public class SinglePlayerState extends State {
     private GameWorldController controller;
     private GameWorld world;
     private GameWorldDrawer gameWorldDrawer;
-
-    int height = CastleCrush.HEIGHT;
-    int width = CastleCrush.WIDTH;
+    static float SCALE = 0.05f;
+    private float screenWidth;
+    private float screenHeight;
 
 
     //    Cannon cannon1, cannon2, activeCannon;
@@ -35,18 +37,45 @@ public class SinglePlayerState extends State {
 //    private Texture background2;
 //    final int BACKGROUND_MOVE_SPEED = -30;
 //    boolean fired = false;
-   // private int time, oldTime, turnLimit = 15, shootingTimeLimit = 5;
-   // long start, end;
+    // private int time, oldTime, turnLimit = 15, shootingTimeLimit = 5;
+    // long start, end;
 
-   // private Player player1, player2,
+    // private Player player1, player2,
 //      private activePlayer;
 
     public SinglePlayerState(GameStateManager gsm) {
         super(gsm);
+        screenWidth = CastleCrush.WIDTH * SCALE;
+        screenHeight = CastleCrush.HEIGHT * SCALE;
+        gameWorldDrawer = new GameWorldDrawer(new SpriteBatch(), screenWidth, screenHeight);
+        world = new GameWorld(this, gameWorldDrawer, screenWidth, screenHeight);
         controller = new GameWorldController(world);
-        world = new GameWorld(gsm);
-        gameWorldDrawer = new GameWorldDrawer(new SpriteBatch());
 
+    }
+        public void gameOver () {
+            gsm.set(new GameOverMenu(gsm, false));
+        }
+
+        Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
+        @Override
+        public void render (SpriteBatch sb){
+            gameWorldDrawer.render();
+            debugRenderer.render(world.getPhysicsWorld(), cam.combined);
+        }
+
+        @Override
+        public void dispose () {
+            gameWorldDrawer.dispose();
+            world.dispose(); // legges til i world?
+            debugRenderer.dispose();
+        }
+
+        @Override
+        public void update ( float dt){
+            world.update(dt);
+            controller.handleInput();
+        }
+    }
 
 
 //        angleUp = true;
@@ -69,18 +98,9 @@ public class SinglePlayerState extends State {
 //        activePlayer = player1;
 
    //     start = System.currentTimeMillis();
-    }
 
-//      moved to Controller
-//    @Override
-//    protected void handleInput() {
-//        if (Gdx.input.justTouched()) {
-//            if (activePlayer.isAngleActive()) {
-//                float angle = activeCannon.getAngle();
-//
-//                activePlayer.switchAngleActive();
-//                activePlayer.switchPowerActive();
-//
+
+    //
 //            } else if (activePlayer.isPowerActive()) {
 //                float power = activeCannon.getPower();
 //
@@ -91,32 +111,24 @@ public class SinglePlayerState extends State {
 //
 //
 //        if (!activePlayer.isAngleActive() && !activePlayer.isPowerActive()) {
-//            if (!world.getProjectile().isFired()) {
+//            if (!world.getOldProjectile().isFired()) {
 //                fire();
 //            }
 //        }
-//    }
-
-
-    int counter = 0;
-    @Override
-    public void update(float dt) {
-        world.update(dt);
-        controller.handleInput();
 //        end = System.currentTimeMillis();
 //        oldTime = time;
 //        time = (int) Math.floor((end-start)/1000);
 //        if (time>oldTime){
 //            System.out.println(time);
 //        }
-//        if (time>=turnLimit && !world.getProjectile().isFired()){
+//        if (time>=turnLimit && !world.getOldProjectile().isFired()){
 //            System.out.println("Switching player turns! You waited too long 😞");
 //            System.out.println("Current active player: " + activePlayer.getId());
 //            switchPlayer();
 //            System.out.println("New active player " + activePlayer.getId());
 //        }
 //        // Time limit after shooting
-//        if ((world.getProjectile().isFired() && time>shootingTimeLimit && world.getProjectile().getAbsoluteSpeed()<5) || time>turnLimit) {
+//        if ((world.getOldProjectile().isFired() && time>shootingTimeLimit && world.getOldProjectile().getAbsoluteSpeed()<5) || time>turnLimit) {
 //            System.out.println("Switching player turns! Cannon ball has lived for 5 seconds");
 //            System.out.println("Current active player: " + activePlayer.getId());
 //            switchPlayer();
@@ -132,18 +144,19 @@ public class SinglePlayerState extends State {
 //            activePlayer.getCannon().updatePower();
 //        }
 //        activeCannon.update(dt);
-    }
 
-    @Override
-    public void render(SpriteBatch sb) {
-        gameWorldDrawer.render();
-    }
+    //                activePlayer.switchPowerActive();
+    //                activePlayer.switchAngleActive();
+    //
+    //                float angle = activeCannon.getAngle();
+    //            if (activePlayer.isAngleActive()) {
+    //        if (Gdx.input.justTouched()) {
+    //    protected void handleInput() {
+    //    @Override
+//      moved to Controller
 
-    @Override
-    public void dispose() {
-        gameWorldDrawer.dispose();
-//        world.dispose(); legges til i world?
-    }
+//    }
+
 
 //    moved to World
 //    public void switchPlayer(){
@@ -186,6 +199,6 @@ public class SinglePlayerState extends State {
 //        world.setProjectileVelocity(new Vector2(
 //                (float)Math.cos(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower()/3,
 //                (float)Math.sin(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower()/3));
-//        world.getProjectile().setFired(true);
+//        world.getOldProjectile().setFired(true);
 //    }
 }

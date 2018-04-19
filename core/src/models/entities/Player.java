@@ -11,8 +11,16 @@ public class Player {
     private String id;
     private GameWinningObject gameWinningObject;
 
-    public Player(String id) {
+
+    private Cannon cannon;
+
+    public Player(String id, Cannon cannon) {
+//        moved to cannon
+//        angleActive = true;
+//        powerActive = false;
         this.id = id;
+        this.cannon = cannon;
+
     }
 
     public void setGameWinningObject(GameWinningObject gameWinningObject){
@@ -22,22 +30,13 @@ public class Player {
     public GameWinningObject getGameWinningObject(){
         return gameWinningObject;
     }
-
-    private Cannon cannon;
-
-    public Player(Cannon cannon) {
-//        moved to cannon
-//        angleActive = true;
-//        powerActive = false;
-        this.cannon = cannon;
-    }
+    //    public void switchAngleActive(){
+    //        if (angleActive==true){
+    //            angleActive=false;
+    //        } else if(angleActive==false){
+    //            angleActive=true;
+    //        }
 //moved to cannon
-//    public void switchAngleActive(){
-//        if (angleActive==true){
-//            angleActive=false;
-//        } else if(angleActive==false){
-//            angleActive=true;
-//        }
 //    }
 //
 //    public void switchPowerActive(){

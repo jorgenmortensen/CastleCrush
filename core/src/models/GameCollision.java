@@ -11,8 +11,8 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 
 import models.entities.Box;
 import models.entities.GameWinningObject;
+import models.entities.OldProjectile;
 import models.entities.OneWayWall;
-import models.entities.Projectile;
 
 /**
  * Created by erikkjernlie on 15/04/2018.
@@ -41,7 +41,7 @@ public class GameCollision implements ContactListener {
 
         if (contact.isTouching()) {
             if (!(fa.getBody().getType().equals(BodyDef.BodyType.StaticBody))) {
-                if (fa.getBody().getUserData() instanceof Projectile || fb.getBody().getUserData() instanceof Projectile) {
+                if (fa.getBody().getUserData() instanceof OldProjectile || fb.getBody().getUserData() instanceof OldProjectile) {
                     if (fa.getBody().getUserData() instanceof GameWinningObject) {
                         ((GameWinningObject) fa.getBody().getUserData()).isHit(true);
                         gameWorld.addBodyToDestroy(fa);
@@ -57,8 +57,8 @@ public class GameCollision implements ContactListener {
                             gameWorld.addBodyToDestroy(fa);
 
                         }
-                        if (fb.getBody().getUserData() instanceof Projectile) {
-                            ((Projectile) fb.getBody().getUserData()).scheduleSelfDestruct(fb);
+                        if (fb.getBody().getUserData() instanceof OldProjectile) {
+                            ((OldProjectile) fb.getBody().getUserData()).scheduleSelfDestruct(fb);
                         }
                     } else if (fb.getBody().getUserData() instanceof Box) {
                         // Speed limitation
@@ -67,8 +67,8 @@ public class GameCollision implements ContactListener {
                             gameWorld.addBodyToDestroy(fb);
 
                         }
-                        if (fa.getBody().getUserData() instanceof Projectile) {
-                            ((Projectile) fa.getBody().getUserData()).scheduleSelfDestruct(fa);
+                        if (fa.getBody().getUserData() instanceof OldProjectile) {
+                            ((OldProjectile) fa.getBody().getUserData()).scheduleSelfDestruct(fa);
                         }
                     }
                 }
@@ -97,12 +97,12 @@ public class GameCollision implements ContactListener {
         // One way wall logic
         if (fa.getBody().getUserData() instanceof OneWayWall || fb.getBody().getUserData() instanceof OneWayWall) {
             if (fa.getBody().getUserData() instanceof OneWayWall) {
-                if (fb.getBody().getUserData() instanceof Projectile) {
+                if (fb.getBody().getUserData() instanceof OldProjectile) {
                     contact.setEnabled(false);
                     hasTurnedOfContact = true;
                 }
             } else if (fb.getBody().getUserData() instanceof OneWayWall) {
-                if (fa.getBody().getUserData() instanceof Projectile) {
+                if (fa.getBody().getUserData() instanceof OldProjectile) {
                     contact.setEnabled(false);
                     hasTurnedOfContact = true;
                 }

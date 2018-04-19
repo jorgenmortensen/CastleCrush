@@ -1,8 +1,5 @@
 package models.entities;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,13 +15,13 @@ public class Level {
 
     private Castle castleLeft, castleRight;
     private Cannon cannonLeft, cannonRight;
-    private Projectile projectile;
+    private OldProjectile oldProjectile;
 
-    public Level(List<Castle> castles/*, List<Cannon> cannons Projectile projectile */ ) {
+    public Level(List<Castle> castles/*, List<Cannon> cannons OldProjectile oldProjectile */ ) {
         //this.powerUps = powerUps;
         //this.castles = castles;
         //this.cannons = cannons;
-        //this.projectile = projectile;
+        //this.oldProjectile = oldProjectile;
     }
 
     public void setX(int x) {

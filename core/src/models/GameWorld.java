@@ -27,9 +27,10 @@ import models.entities.GameWinningObject;
 import models.entities.OneWayWall;
 import models.entities.Player;
 import models.entities.Projectile;
-import models.states.GameStateManager;
 import models.states.State;
 import models.states.menuStates.GameOverMenu;
+import models.states.playStates.SinglePlayerState;
+import views.game_world.GameWorldDrawer;
 
 
 /**
@@ -41,7 +42,6 @@ public class GameWorld {
     static final float STEP_TIME = 1f / 60f;
     static final int VELOCITY_ITERATIONS = 6;
     static final int POSITION_ITERATIONS = 2;
-    static final float SCALE = 0.05f;
     private World physicsWorld;
     private float boxWidth;
     private float boxHeight;
@@ -51,9 +51,8 @@ public class GameWorld {
 
     private List<Drawable> mockBoxes;
     private Box ground;
-    private Projectile projectile;
-    private float screenWidth = CastleCrush.WIDTH*SCALE;
-    private float screenHeight = CastleCrush.HEIGHT*SCALE;
+    private float screenWidth;
+    private float screenHeight;
     private float groundLevel;
     private Player player1;
     private Player player2;
@@ -70,19 +69,21 @@ public class GameWorld {
     private String powerBarString= "powerBar.png";
 
     private Sprite powerBar = new Sprite(new Texture(powerBarString));
+    private List<Drawable> drawableList;
 
 
     private int time, oldTime, turnLimit = 15, shootingTimeLimit = 5;
     long start, end;
 
-    GameStateManager gsm;
+    private SinglePlayerState state;
+    private Projectile projectile;
+    private GameWorldDrawer drawer;
 
-    public GameWorld(GameStateManager gsm) {
+    public GameWorld(SinglePlayerState state, GameWorldDrawer drawer, float screenWidth, float screenHeight) {
+        this.drawer = drawer;
         mockBoxes = new ArrayList<Drawable>();
-        this.gsm = gsm;
+        this.state = state;
         groundLevel = screenHeight/25;
-        player1 = new Player("player1");
-        player2 = new Player("player2");
         textureAtlas = new TextureAtlas("sprites.txt");
         boxWidth = screenWidth/20;
         boxHeight = screenWidth/20;
@@ -90,18 +91,14 @@ public class GameWorld {
         physicsWorld = new World(new Vector2(0, -10), true);
         physicsWorld.setContactListener(new GameCollision(this));
         this.generateBodies();
-
+        this.drawer = drawer;
+        drawableList = new ArrayList<Drawable>();
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+        createPlayerAndCannon();
     }
 
-
-
-
-    private void generateBodies() {
-//        **********la stå intil videre*********
-        createGround();
-        makeCastle(screenWidth*0.8f, screenWidth*0.2f, screenHeight*0.6f, player2);
-        makeMirroredCastle(player1);
-
+    private void createPlayerAndCannon(){
         Sprite cannonSprite1 = new Sprite(new Texture(cannonString));
         Sprite cannonSprite2 = new Sprite(new Texture(cannonString));
         Cannon cannon1 = new Cannon(screenWidth*1/3,
@@ -111,12 +108,25 @@ public class GameWorld {
         Cannon cannon2 = new Cannon(screenWidth*2/3,
                 groundLevel, screenWidth/30, screenHeight/30,
                 cannonSprite2, false);
+        player1 = new Player("player1", cannon1);
+        player2 = new Player("player2", cannon1);
+
+    }
+
+
+    private void generateBodies() {
+//        **********la stå intil videre*********
+        createGround();
+        makeCastle(screenWidth*0.8f, screenWidth*0.2f, screenHeight*0.6f, player2);
+        makeMirroredCastle(player1);
+
+
 
 //      lage det første prosjektilet, før changeplayer
-        projectile = createProjectile(cannon1.getX(), groundLevel, screenHeight/40);
+        spawnProjectile();
 
-        createOneWayWalls(cannon1.getX() - projectile.getDrawable().getWidth()/2);
-        createOneWayWalls(cannon2.getX() + projectile.getDrawable().getWidth()/2);
+        createOneWayWalls(player1.getCannon().getX() - projectile.getDrawable().getWidth()/2);
+        createOneWayWalls(player2.getCannon().getX() + projectile.getDrawable().getWidth()/2);
 //*****************************************************
     }
 
@@ -167,6 +177,7 @@ public class GameWorld {
             }
 
         }
+        drawableList.addAll(mockBoxes);
     }
 
     private void createGround() {
@@ -181,7 +192,7 @@ public class GameWorld {
         fixtureDef.friction = 0.1f;
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(Gdx.graphics.getWidth()*SCALE,groundHeight/2);
+        shape.setAsBox(screenWidth,groundHeight/2);
         fixtureDef.shape = shape;
 
         Body body;
@@ -195,6 +206,8 @@ public class GameWorld {
         groundSprite.setSize(Gdx.graphics.getWidth(), groundHeight/2);
         ground = new Box(body, groundSprite, 0, 0, 0);
         body.setUserData(ground);
+
+        addToRenderList(groundSprite);
     }
 
 
@@ -231,124 +244,62 @@ public class GameWorld {
         Box box = new Box(body, sprite, boxWidth, boxHeight, density);
         mockBoxes.add(box);
         body.setUserData(box);
+
+        addToRenderList(sprite);
+
         return box;
     }
 
-    public Projectile createProjectile(float xPos, float yPos, float radius){
+
+
+    public Body createProjectileBody(float xPos, float yPos, float radius, float friction, float density, float restitution){
         //creating the physical shape of the ball and setting physical attributes
         if (projectile != null) {
             addBodyToDestroy(projectile.getBody().getFixtureList().get(0));
             projectile = null;
         }
-
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(xPos, yPos);
         CircleShape shape = new CircleShape();
         shape.setRadius(radius);
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.friction = 0.5f;
-        fixtureDef.density = 2f;
-        fixtureDef.restitution = 0.2f;
-        fixtureDef.shape = shape;
         Body body;
         body = physicsWorld.createBody(bodyDef);
         body.createFixture(fixtureDef);
         body.setTransform(xPos, yPos, 0);
         shape.dispose();
+        return body;
+    }
 
+    private Sprite createProjectileSprite(float xPos, float yPos, float radius) {
         //setting the sprite of the ball and positioning it correctly
         Sprite sprite = new Sprite(new Texture(cannonBallString));
-        sprite.setSize(radius*2, radius*2);
+        sprite.setSize(radius * 2, radius * 2);
         sprite.setOriginCenter();
-
-        Projectile tempProjectile = new Projectile(body, new Vector2(xPos, yPos), sprite, radius*2, radius*2, this);
-        body.setUserData(tempProjectile);
-
-        return tempProjectile;
-
-    }
-
-    public void setProjectileVelocity(Vector2 velocity) {
-        projectile.getBody().setLinearVelocity(velocity);
-    }
-
-    // GameWinningObject is like a box, just with another texture
-    // If we want to add functionality to the GameWinningObject - we can use this method and the GameWinningObject-class
-
-
-    private GameWinningObject createGameWinningObject(float xPos, float yPos, float boxWidth, float boxHeight, float density, Sprite sprite){
-        //creating and setting up the physical shape of the box
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(xPos, yPos);
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(boxWidth/2, boxHeight/2);
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.friction = 1.0f;
-        fixtureDef.density = density;
-        fixtureDef.restitution = 0.0f;
-        fixtureDef.shape = shape;
-        Body body;
-        body = physicsWorld.createBody(bodyDef);
-        body.createFixture(fixtureDef);
-        body.setTransform(xPos, yPos, 0);
-        shape.dispose();
-        sprite.setSize(boxWidth, boxHeight);
-        sprite.setOriginCenter();
-        GameWinningObject gameWinningObject = new GameWinningObject(body, sprite, boxWidth, boxHeight, density);
-        mockBoxes.add(gameWinningObject);
-        body.setUserData(gameWinningObject);
-        return gameWinningObject;
+        //OldProjectile tempProjectile = new OldProjectile(body, new Vector2(xPos, yPos), sprite, radius * 2, radius * 2, this);
+        return sprite;
     }
 
 
-    private void moveBox(Drawable box, float xPos, float yPos) {
-        box.getBody().setTransform(xPos, yPos, 0);
-        box.getDrawable().setPosition(xPos, yPos);
-    }
+    public void spawnProjectile() {
+        // used for spawning projectile at beginning of game and when the turn switches
 
-    public void destroy(ArrayList<Fixture> bodiesToDestroy) {
-        for (Fixture bodyToDestroy : bodiesToDestroy) {
-            if (bodyToDestroy.getBody() != null) {
-                physicsWorld.destroyBody(bodyToDestroy.getBody());
-                removeBox((Box) bodyToDestroy.getUserData());
-            }
-        }
-        removeAllBodiesToDestroy();
-    }
+        float xPos = activeCannon.getX();
+        float yPos = activeCannon.getY();
+        float radius = screenWidth/40;
+        float friction = 0.5f;
+        float density = 2f;
+        float restitution = 0.2f;
 
-    public World getPhysicsWorld() {
-        return physicsWorld;
-    }
-
-    public Projectile getProjectile() {
-        return projectile;
-    }
-
-    public List<Drawable> getBoxes(){return mockBoxes;}
-
-    public Box getGround() {
-        return ground;
-    }
-
-    public static float getSCALE() {
-        return SCALE;
-    }
-
-    public List<Fixture> getBodiesToDestroy(){
-        return bodiesToDestroy;
-    }
-
-    public void removeBox(Box b){
-        if (mockBoxes.contains(b)){
-            mockBoxes.remove(b);
-        }
-    }
-
-    public void addBodyToDestroy(Fixture b){
-        if (!bodiesToDestroy.contains(b)){
-            bodiesToDestroy.add(b);
+        Body body = createProjectileBody(xPos, yPos, radius, friction, density, restitution);
+        Sprite sprite = createProjectileSprite(xPos, yPos, radius);
+        projectile = Projectile.getInstance();
+        projectile.init(body, sprite, this);
+        body.setUserData(projectile);
+        addToRenderList(sprite);
+        if (!drawableList.contains(projectile)){
+            drawableList.add(projectile);
         }
     }
 
@@ -374,6 +325,93 @@ public class GameWorld {
         OneWayWall wall = new OneWayWall(body);
         body.setUserData(wall);
     }
+
+    private GameWinningObject createGameWinningObject(float xPos, float yPos, float boxWidth, float boxHeight, float density, Sprite sprite){
+        //creating and setting up the physical shape of the box
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(xPos, yPos);
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(boxWidth/2, boxHeight/2);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.friction = 1.0f;
+        fixtureDef.density = density;
+        fixtureDef.restitution = 0.0f;
+        fixtureDef.shape = shape;
+        Body body;
+        body = physicsWorld.createBody(bodyDef);
+        body.createFixture(fixtureDef);
+        body.setTransform(xPos, yPos, 0);
+        shape.dispose();
+        sprite.setSize(boxWidth, boxHeight);
+        sprite.setOriginCenter();
+        GameWinningObject gameWinningObject = new GameWinningObject(body, sprite, boxWidth, boxHeight, density);
+        mockBoxes.add(gameWinningObject);
+        body.setUserData(gameWinningObject);
+
+        addToRenderList(sprite);
+        return gameWinningObject;
+    }
+
+
+    public void setProjectileVelocity(Vector2 velocity) {
+        projectile.getBody().setLinearVelocity(velocity);
+    }
+
+    // GameWinningObject is like a box, just with another texture
+    // If we want to add functionality to the GameWinningObject - we can use this method and the GameWinningObject-class
+
+
+
+
+    private void moveBox(Drawable box, float xPos, float yPos) {
+        box.getBody().setTransform(xPos, yPos, 0);
+        box.getDrawable().setPosition(xPos, yPos);
+    }
+
+
+    public World getPhysicsWorld() {
+        return physicsWorld;
+    }
+
+    public Projectile getProjectile() {
+        return projectile;
+    }
+
+
+    public void removeBox(Box b){
+        if (mockBoxes.contains(b)){
+            mockBoxes.remove(b);
+        }
+    }
+
+    public void addBodyToDestroy(Fixture b){
+        if (!bodiesToDestroy.contains(b)){
+//            ((Drawable)b.getBody().getUserData().setBodyToNull());
+            bodiesToDestroy.add(b);
+        }
+    }
+
+    public List<Fixture> getBodiesToDestroy(){
+        return bodiesToDestroy;
+    }
+
+    public void removeAllBodiesToDestroy(){
+        bodiesToDestroy = new ArrayList<Fixture>();
+    }
+
+
+    public void destroy(ArrayList<Fixture> bodiesToDestroy) {
+        for (Fixture bodyToDestroy : bodiesToDestroy) {
+            if (bodyToDestroy.getBody() != null) {
+                physicsWorld.destroyBody(bodyToDestroy.getBody());
+                removeBox((Box) bodyToDestroy.getUserData());
+            }
+        }
+        removeAllBodiesToDestroy();
+    }
+
+
         public void update(float dt) {
             activeCannon = activePlayer.getCannon();
 
@@ -397,7 +435,7 @@ public class GameWorld {
                 System.out.println("New active player " + activePlayer.getId());
             }
             // Time limit after shooting
-            if ((getProjectile().isFired() && time > shootingTimeLimit && getProjectile().getAbsoluteSpeed() < 5) || time > turnLimit) {
+            if ((projectile.isFired() && time > shootingTimeLimit && projectile.getAbsoluteSpeed() < 5) || time > turnLimit) {
                 System.out.println("Switching player turns! Cannon ball has lived for 5 seconds");
                 System.out.println("Current active player: " + activePlayer.getId());
                 switchPlayer();
@@ -411,29 +449,37 @@ public class GameWorld {
 
             //Check if game is over, if so, the gameOverMenu becomes active
             if (getPlayer1().getGameWinningObject().getHit()) {
-                final State gameOverMenu = new GameOverMenu(gsm, false, true);
                 //TODO, Opponent wins, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
                 Gdx.app.postRunnable(new Runnable() {
                     @Override
                     public void run() {
-                        gsm.set(gameOverMenu);
+                        state.gameOver();
 
                     }
                 });
 
             } else if (getPlayer2().getGameWinningObject().getHit()) {
-                final State gameOverMenu = new GameOverMenu(gsm, true, false);
                 //TODO, You win, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
                 Gdx.app.postRunnable(new Runnable() {
                     @Override
                     public void run() {
-                        gsm.set(gameOverMenu);
+                        state.gameOver();
                     }
                 });
 
             }
             getPhysicsWorld().step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 
+            //draw all drawables that have a body
+            for (Drawable drawable: drawableList) {
+                if (drawable.getBody() != null){
+                    float xPos = drawable.getBody().getPosition().x - drawable.getDrawable().getWidth()/2;
+                    float yPos = drawable.getBody().getPosition().y - drawable.getDrawable().getHeight()/2;
+                    float degrees = (float) Math.toDegrees(drawable.getBody().getAngle());
+                    drawable.getDrawable().setPosition(xPos, yPos);
+                    drawable.getDrawable().setRotation(degrees);
+                }
+            }
 
         }
 
@@ -470,9 +516,10 @@ public class GameWorld {
 
 
     public void updatePowerBar() {
-
+        float cannonWidth = activeCannon.getWidth();
+        float power = activeCannon.getPower();
         powerBar.setPosition(activePlayer.getCannon().getX(), activePlayer.getCannon().getY());
-        powerBar.setSize(screenWidth/50, powerBar.getHeight());
+        powerBar.setSize(cannonWidth*power/activeCannon.getMaxPower(), powerBar.getHeight());
         //fiks marker
     }
 
@@ -510,7 +557,7 @@ public class GameWorld {
 
 
         if (!activeCannon.isAngleActive() && !activeCannon.isPowerActive()) {
-        if (!getProjectile().isFired()) {
+        if (!projectile.isFired()) {
             fire();
         }
     }
@@ -524,11 +571,7 @@ public class GameWorld {
         setProjectileVelocity(new Vector2(
                 (float)Math.cos(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower()/3,
                 (float)Math.sin(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower()/3));
-        getProjectile().setFired(true);
-    }
-
-    public void removeAllBodiesToDestroy(){
-        bodiesToDestroy = new ArrayList<Fixture>();
+        projectile.setFired(true);
     }
 
 
@@ -548,14 +591,19 @@ public class GameWorld {
         return player2;
     }
 
-    public void spawnProjectile() {
-        this.projectile = createProjectile(activeCannon.getX(), activeCannon.getY(),screenHeight/40);
-    }
 
     public float getScreenWidth() {
         return screenWidth;
     }
 
+    public void dispose() {
+        physicsWorld.dispose();
+    }
 
+    private void addToRenderList(Sprite sprite) {
+//        alle sprites that are shown on screen is added here
+
+        drawer.addSprite(sprite);
+    }
 
 }

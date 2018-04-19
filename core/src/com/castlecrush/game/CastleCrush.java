@@ -40,7 +40,7 @@ public class CastleCrush extends ApplicationAdapter {
 		music.play();
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		gsm.push(new Splashscreen(gsm));
-		//world = new MockGameWorld();
+		//world = new GameWorld();
 		//drawer = new GameWorldDrawer(batch, world);
 	//	img = new Texture("badlogic.jpg");
 	}

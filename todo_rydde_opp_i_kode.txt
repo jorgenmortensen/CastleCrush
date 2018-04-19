@@ -15,4 +15,4 @@ lage en egen klasse om kun har ansvar for å lage objekter
 
 lar ting som skal fikses/deles opp senere stå foreløpig
 
-j
+projectile.setUserdata, fikse dette, hvor brukes det
