@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.castlecrush.game.CastleCrush;
 
 import java.nio.ByteBuffer;
@@ -30,6 +31,7 @@ public class OnlineMultiplayerState extends State implements PlayServices.Networ
     int count, opponent;
     BitmapFont font;
     List players;
+    Vector2 shotVelocity;
 
     MockGameWorld world;
     GameWorldDrawer drawer;
@@ -68,8 +70,9 @@ public class OnlineMultiplayerState extends State implements PlayServices.Networ
     public void broadcastShotData(){
         ByteBuffer buffer = ByteBuffer.allocate(2*4+1); //capacity = 9, why?
         buffer.put(MessageCodes.CANNON);
-        //buffer.putFloat(shotvelocity.x);
-        //buffer.putFloat(shotvelocity.y);
+        buffer.putFloat(shotVelocity.x);
+        buffer.putFloat(shotVelocity.y);
+
         CastleCrush.playServices.sendUnreliableMessageToOthers(buffer.array());
 
     }

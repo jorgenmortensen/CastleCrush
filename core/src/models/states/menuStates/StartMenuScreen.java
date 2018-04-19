@@ -105,11 +105,11 @@ public class StartMenuScreen extends State {
                 CastleCrush.HEIGHT / 10,
                 new Sprite(t));
 
-        btnInvitationInbox = new Button(CastleCrush.WIDTH/7 ,
-                CastleCrush.HEIGHT *2/9,
-                CastleCrush.WIDTH / 8,
-                CastleCrush.HEIGHT * 2 / 10,
-                new Sprite(new Texture("test_play.png")));
+        btnInvitationInbox = new Button( CastleCrush.WIDTH - CastleCrush.WIDTH / 15,
+                0,
+                CastleCrush.WIDTH / 15,
+                CastleCrush.WIDTH / 15,
+                new Sprite(new Texture("invitationBtn.png")));
 
     }
 

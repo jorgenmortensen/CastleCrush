@@ -69,19 +69,20 @@ public class PlayMenu extends State {
                 5*CastleCrush.HEIGHT / 10,
                 CastleCrush.WIDTH / 3,
                 CastleCrush.HEIGHT / 10,
-                new Sprite(new Texture("single.png")), CastleCrush.HEIGHT);
+                new Sprite(new Texture("multi_local.png")), CastleCrush.HEIGHT);
 
-        btnLocal = new GravityButton(CastleCrush.WIDTH / 3,
+
+        btnMulti = new GravityButton(CastleCrush.WIDTH / 3,
                 3*CastleCrush.HEIGHT / 10,
                 CastleCrush.WIDTH / 3,
                 CastleCrush.HEIGHT / 10,
-                new Sprite(new Texture("multi_local.png")), CastleCrush.HEIGHT);
+                new Sprite(new Texture("invite_friends.png")), CastleCrush.HEIGHT);
 
-        btnMulti = new GravityButton(CastleCrush.WIDTH / 3,
+        btnLocal = new GravityButton(CastleCrush.WIDTH / 3,
                 1*CastleCrush.HEIGHT / 10,
                 CastleCrush.WIDTH / 3,
                 CastleCrush.HEIGHT / 10,
-                new Sprite(new Texture("invite_friends.png")), CastleCrush.HEIGHT);
+                new Sprite(new Texture("return_menu.png")), CastleCrush.HEIGHT);
 
         btnSound = new Button(0, 0, CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
                 CastleCrush.soundOn ? new Sprite(new Texture("sound_on.png")) : new Sprite(new Texture("sound_off.png")));
