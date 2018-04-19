@@ -113,7 +113,7 @@ public class MockGameWorld {
             int number = ran.nextInt(numVerticalBoxes) + extraBoxes;
             for (int j = 0; j < number; j++) {
                 if (startPosX + i * boxWidth < screenWidth) {
-                    if (j == 0 && i == numHorizontalBoxes-1){
+                    if (j == 0 && i == 0){
                         GameWinningObject gameWinningObject = createGameWinningObject(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight / 3, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, new Sprite(new Texture("gwo3.png")));
                         player.setGameWinningObject(gameWinningObject);
                     } else if (j == number - 1) {
