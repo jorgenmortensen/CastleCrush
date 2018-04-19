@@ -84,11 +84,6 @@ public abstract class State {
         gsm.push(new SettingsMenu(gsm));
     }
 
-    //Pops off the settingsState and goes to the previos state
-    protected void goBack() {
-        gsm.pop();
-    }
-
     //Sets the startMenuScreen to the active state in the stack
     protected void goToMainMenu() {
         gsm.push(new StartMenuScreen(gsm));

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.castlecrush.game.CastleCrush;
 
+import controllers.menuStatesControllers.PlayMenuController;
 import models.states.GameStateManager;
 import models.states.menuStates.MultiplayerMenu;
 import models.states.menuStates.PlayMenu;
@@ -21,43 +22,14 @@ import static models.states.menuStates.StartMenuScreen.logo;
 
 public class PlayMenuDrawer extends PlayMenu {
 
-    GameStateManager gsm;
-
-    public PlayMenuDrawer(GameStateManager gsm) {
+    public PlayMenuDrawer() {
         super();
-        this.gsm = gsm;
-    }
-
-    public void handleInput() {
-        if (Gdx.input.justTouched() && isOnButton(btnSingle)) {
-            gsm.set(new SinglePlayerState(super.gsm));
-            System.out.println("Single pressed");
-            dispose();
-        }
-        else if (Gdx.input.justTouched() && isOnButton(btnMulti)) {
-            gsm.set(new MultiplayerMenu(super.gsm));
-            System.out.println("Multi pressed");
-            dispose();
-        }
-        else if (Gdx.input.justTouched() && isOnButton(btnLocal)) {
-            System.out.println(super.gsm + "     44444");
-            gsm.set(new StartMenuScreen(super.gsm));
-            System.out.println("Local pressed");
-            dispose();
-        } else if (Gdx.input.justTouched() && isOnButton(btnSound)) {
-            //Turn off sound if already on and vice versa
-            soundSwitch();
-        } else if (Gdx.input.justTouched() && isOnButton(btnSettings)) {
-            toSettingsState(gsm);
-        }
     }
 
     public void update(float dt) {
         btnSingle.update(dt);
         btnMulti.update(dt);
         btnLocal.update(dt);
-
-        handleInput();
 
         moveBackground();
         logoCrush();
@@ -87,5 +59,10 @@ public class PlayMenuDrawer extends PlayMenu {
         batch.draw(btnSound.getBtn(), btnSound.getXpos(), btnSound.getYpos(),btnSound.getBtnWidth(), btnSound.getBtnHeight());
 
         batch.end();
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
     }
 }

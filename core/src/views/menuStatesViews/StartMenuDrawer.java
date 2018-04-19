@@ -19,41 +19,8 @@ import static com.castlecrush.game.CastleCrush.xCoordBg2;
 
 public class StartMenuDrawer extends StartMenuScreen {
 
-    GameStateManager gsm;
-
-    public StartMenuDrawer(GameStateManager gsm) {
+    public StartMenuDrawer() {
         super();
-        this.gsm = gsm;
-    }
-
-    public void handleInput() {
-        if (Gdx.input.justTouched() && isOnButton(btnPlay)) {
-            gsm.set(new PlayMenu(gsm));
-        }
-        else if (Gdx.input.justTouched() && isOnButton(btnHelp)) {
-            gsm.set(new TutorialState(gsm));
-            dispose();
-        }
-        else if (Gdx.input.justTouched() && isOnButton(btnSound)) {
-            //Turn off sound if already on and vice versa
-            soundSwitch();
-        }
-        else if (Gdx.input.justTouched() && isOnButton(btnSettings)) {
-            super.toSettingsState(gsm);
-        }
-    }
-
-    public void update(float dt) {
-        handleInput();
-
-        //makes the background move to the left
-        xCoordBg1 += CastleCrush.BACKGROUND_MOVE_SPEED * Gdx.graphics.getDeltaTime();
-        xCoordBg2 = xCoordBg1 - xMax;  // We move the background, not the camera
-        if (CastleCrush.xCoordBg1 <= 0) {
-            CastleCrush.xCoordBg1 = xMax;
-            xCoordBg2 = 0;
-        }
-        logoCrush();
     }
 
     public void render(SpriteBatch batch) {

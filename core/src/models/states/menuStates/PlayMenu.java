@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.castlecrush.game.CastleCrush;
 
+import controllers.menuStatesControllers.PlayMenuController;
 import models.components.Button;
 import models.components.GravityButton;
 import models.states.GameStateManager;
@@ -29,6 +30,7 @@ public class  PlayMenu extends State {
     protected GravityButton btnLocal;
 
     protected PlayMenuDrawer playMenuDrawer;
+    protected PlayMenuController playMenuController;
 
     // remember to change every .PNG to .png.
 
@@ -40,7 +42,8 @@ public class  PlayMenu extends State {
     public PlayMenu(GameStateManager gsm) {
         super(gsm);
         initFields();
-        playMenuDrawer = new PlayMenuDrawer(gsm);
+        playMenuController = new PlayMenuController(gsm);
+        playMenuDrawer = new PlayMenuDrawer();
     }
 
     private void initFields() {
@@ -72,13 +75,12 @@ public class  PlayMenu extends State {
     }
 
     @Override
-    protected void handleInput() {
-        playMenuDrawer.handleInput();
-    }
+    protected void handleInput() {}
 
     @Override
     public void update(float dt) {
         playMenuDrawer.update(dt);
+        playMenuController.update(dt);
     }
 
     @Override
@@ -89,8 +91,14 @@ public class  PlayMenu extends State {
     //dispose textures / buttons
     @Override
     public void dispose() {
-        background1.dispose();
-        background2.dispose();
+        try {
+            background1.dispose();
+            background2.dispose();
+            playMenuController.dispose();
+            playMenuDrawer.dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //Makes the background move to the left

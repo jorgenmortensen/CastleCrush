@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.castlecrush.game.CastleCrush;
 
+import controllers.menuStatesControllers.StartMenuController;
 import models.components.Button;
 import models.states.GameStateManager;
 import models.states.State;
@@ -37,6 +38,7 @@ public class StartMenuScreen extends State {
     public static boolean changed_logo;
 
     protected StartMenuDrawer startMenuDrawer;
+    protected StartMenuController startMenuController;
 
     public StartMenuScreen() {
         super();
@@ -46,7 +48,8 @@ public class StartMenuScreen extends State {
     public StartMenuScreen(GameStateManager gsm) {
         super(gsm);
         initFields();
-        startMenuDrawer = new StartMenuDrawer(gsm);
+        startMenuDrawer = new StartMenuDrawer();
+        startMenuController = new StartMenuController(gsm);
     }
 
     private void initFields() {
@@ -81,13 +84,22 @@ public class StartMenuScreen extends State {
     //Send to controller
     @Override
     protected void handleInput() {
-        startMenuDrawer.handleInput();
+        startMenuController.handleInput();
     }
 
     //Send to drawer
     @Override
     public void update(float dt) {
-        startMenuDrawer.update(dt);
+        handleInput();
+
+        //makes the background move to the left
+        xCoordBg1 += CastleCrush.BACKGROUND_MOVE_SPEED * Gdx.graphics.getDeltaTime();
+        xCoordBg2 = xCoordBg1 - xMax;  // We move the background, not the camera
+        if (CastleCrush.xCoordBg1 <= 0) {
+            CastleCrush.xCoordBg1 = xMax;
+            xCoordBg2 = 0;
+        }
+        logoCrush();
     }
 
     //Send to drawer
@@ -102,5 +114,11 @@ public class StartMenuScreen extends State {
 
     @Override
     public void dispose() {
+        try {
+            startMenuController.dispose();
+            startMenuDrawer.dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
