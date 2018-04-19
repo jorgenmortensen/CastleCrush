@@ -124,15 +124,17 @@ public class GameWorldDrawer extends Drawer {
                     cannonLeft.getHeight() / 4,cannonLeft.getHeight() / 4);
 
         }
+        System.out.println("LeftCannonHeight: " + cannonLeft.getY() + cannonLeft.getHeight());
         if (cannonRight.getPower() > 0) {
             batch.draw(new Texture("powerBar.png"), cannonRight.getX() - cannonRight.getWidth(),
-                    cannonRight.getY() / 2 + cannonRight.getHeight(),
+                    cannonRight.getY() + cannonRight.getHeight(),
                     (100 * cannonRight.getWidth() * 4 / 5) / 100,
                     cannonRight.getHeight() / 2);
             batch.draw(new Texture("marker.png"),cannonRight.getX() - cannonRight.getWidth() + (cannonRight.getPower() * cannonRight.getWidth() * 4 / 5) / 100 - cannonRight.getHeight() / 8,
                     cannonRight.getY()+cannonRight.getHeight() + cannonRight.getHeight() / 2,
                     cannonRight.getHeight() / 4,cannonRight.getHeight() / 4);
         }
+        System.out.println("RightCannonHeight: " + cannonRight.getY() / 2 + cannonRight.getHeight());
 
 
 
