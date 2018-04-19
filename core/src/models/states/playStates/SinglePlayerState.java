@@ -52,30 +52,31 @@ public class SinglePlayerState extends State {
         controller = new GameWorldController(world);
 
     }
-        public void gameOver () {
+    public void gameOver () {
             gsm.set(new GameOverMenu(gsm, false));
         }
 
-        Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
-        @Override
-        public void render (SpriteBatch sb){
-            gameWorldDrawer.render();
-            debugRenderer.render(world.getPhysicsWorld(), cam.combined);
-        }
-
-        @Override
-        public void dispose () {
-            gameWorldDrawer.dispose();
-            world.dispose(); // legges til i world?
-            debugRenderer.dispose();
-        }
-
-        @Override
-        public void update ( float dt){
-            world.update(dt);
-            controller.handleInput();
-        }
+    Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
+    @Override
+    public void render (SpriteBatch sb){
+        gameWorldDrawer.render();
+        debugRenderer.render(world.getPhysicsWorld(), cam.combined);
     }
+
+        @Override
+    public void dispose () {
+        gameWorldDrawer.dispose();
+        world.dispose(); // legges til i world?
+        debugRenderer.dispose();
+    }
+
+    @Override
+    public void update ( float dt){
+        world.update(dt);
+        controller.handleInput();
+    }
+
+}
 
 
 //        angleUp = true;
@@ -201,4 +202,3 @@ public class SinglePlayerState extends State {
 //                (float)Math.sin(activeCannon.getShootingAngle()*Math.PI/180) * activeCannon.getPower()/3));
 //        world.getOldProjectile().setFired(true);
 //    }
-}
