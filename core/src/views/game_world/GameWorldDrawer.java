@@ -126,12 +126,12 @@ public class GameWorldDrawer extends Drawer {
         }
         if (cannonRight.getPower() > 0) {
             batch.draw(new Texture("powerBar.png"), cannonRight.getX() - cannonRight.getWidth(),
-                    cannonRight.getY() / 2 + cannonLeft.getHeight(),
+                    cannonRight.getY() / 2 + cannonRight.getHeight(),
                     (100 * cannonRight.getWidth() * 4 / 5) / 100,
                     cannonRight.getHeight() / 2);
             batch.draw(new Texture("marker.png"),cannonRight.getX() - cannonRight.getWidth() + (cannonRight.getPower() * cannonRight.getWidth() * 4 / 5) / 100 - cannonRight.getHeight() / 8,
-                    cannonLeft.getY()+cannonLeft.getHeight() + cannonLeft.getHeight() / 2,
-                    cannonLeft.getHeight() / 4,cannonLeft.getHeight() / 4);
+                    cannonRight.getY()+cannonRight.getHeight() + cannonRight.getHeight() / 2,
+                    cannonRight.getHeight() / 4,cannonRight.getHeight() / 4);
         }
 
 
@@ -152,7 +152,7 @@ public class GameWorldDrawer extends Drawer {
 
         }
         mockWorld.getPhysicsWorld().step(1/60f, 6, 2);
-        debugRenderer.render(mockWorld.getPhysicsWorld(), camera.combined);
+        //debugRenderer.render(mockWorld.getPhysicsWorld(), camera.combined);
     }
 
     private void drawObject(Drawable object) {
@@ -175,7 +175,7 @@ public class GameWorldDrawer extends Drawer {
     @Override
     public void dispose() {
         background.dispose();
-        debugRenderer.dispose();
+        //debugRenderer.dispose();
         physicsWorld.dispose();
         batch.dispose();
     }

@@ -10,7 +10,6 @@ import com.castlecrush.game.CastleCrush;
 import models.components.Button;
 import models.components.GravityButton;
 import models.states.GameStateManager;
-import models.states.State;
 import models.states.playStates.SinglePlayerState;
 
 import static models.states.menuStates.StartMenuScreen.changed_logo;
@@ -59,19 +58,19 @@ public class PlayMenu extends models.states.State {
                 5*CastleCrush.HEIGHT / 10,
                 CastleCrush.WIDTH / 3,
                 CastleCrush.HEIGHT / 10,
-                new Sprite(new Texture("single.png")), CastleCrush.HEIGHT);
+                new Sprite(new Texture("multi_local.png")), CastleCrush.HEIGHT);
 
         btnLocal = new GravityButton(CastleCrush.WIDTH / 3,
                 3*CastleCrush.HEIGHT / 10,
                 CastleCrush.WIDTH / 3,
                 CastleCrush.HEIGHT / 10,
-                new Sprite(new Texture("multi_local.png")), CastleCrush.HEIGHT);
+                new Sprite(new Texture("multi_online.png")), CastleCrush.HEIGHT);
 
         btnMulti = new GravityButton(CastleCrush.WIDTH / 3,
                 1*CastleCrush.HEIGHT / 10,
                 CastleCrush.WIDTH / 3,
                 CastleCrush.HEIGHT / 10,
-                new Sprite(new Texture("invite_friends.png")), CastleCrush.HEIGHT);
+                new Sprite(new Texture("return_menu.png")), CastleCrush.HEIGHT);
 
         btnSound = new Button(0, 0, CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
                 CastleCrush.soundOn ? new Sprite(new Texture("sound_on.png")) : new Sprite(new Texture("sound_off.png")));

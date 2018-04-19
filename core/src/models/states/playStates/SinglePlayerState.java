@@ -11,7 +11,6 @@ import controllers.game_world.GameWorldController;
 import models.MockGameWorld;
 import models.entities.Cannon;
 import models.entities.Player;
-import models.entities.Projectile;
 import models.states.GameStateManager;
 import models.states.State;
 import views.game_world.GameWorldDrawer;
@@ -40,7 +39,7 @@ public class SinglePlayerState extends State {
     private Texture background2;
     final int BACKGROUND_MOVE_SPEED = -30;
     boolean fired = false;
-    private int time, oldTime, turnLimit = 15, shootingTimeLimit = 5;
+    private int time, oldTime, turnLimit = 5, shootingTimeLimit = 5;
     long start, end;
 
     MockGameWorld world;

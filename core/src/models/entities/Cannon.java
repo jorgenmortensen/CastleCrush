@@ -42,7 +42,6 @@ public class Cannon implements Drawable{
         cannonSprite.setOriginCenter();
         wheelSprite.setPosition(x,y);
         wheelSprite.setSize(width/2, height/2);
-
         if (facingRight){
             factor = 1;
         } else if (!facingRight){
@@ -154,6 +153,8 @@ public class Cannon implements Drawable{
 
     public void setShotsFired(boolean shotsFired) {
         this.shotsFired = shotsFired;
+
+
     }
 
     //Fires the shot, with a given angle and power

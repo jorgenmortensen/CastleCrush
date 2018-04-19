@@ -1,5 +1,7 @@
 package models.entities;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -27,6 +29,7 @@ public class Projectile implements Drawable {
     private boolean hasHit = false;
     private MockGameWorld gameWorld;
     private boolean scheduleActive = false;
+    private Sound projectileFired;
 
 
 
@@ -44,6 +47,8 @@ public class Projectile implements Drawable {
         this.velocity = velocity;
         this.gameWorld = world;
         this.isFired = false;
+        this.projectileFired = Gdx.audio.newSound(Gdx.files.internal("cannon_sound.ogg"));
+
     }
 
     public void setHasHit(boolean hasHit){this.hasHit = hasHit;}
@@ -158,6 +163,9 @@ public class Projectile implements Drawable {
     }
 
     public void setFired(boolean fired) {
+        if (fired){
+            this.projectileFired.play(0.5f);
+        }
         isFired = fired;
     }
 
