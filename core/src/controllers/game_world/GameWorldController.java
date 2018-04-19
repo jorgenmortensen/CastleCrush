@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import controllers.Controller;
+import models.GameWorld;
 import models.entities.Box;
 import models.entities.Castle;
 import views.game_world.GameWorldDrawer;
@@ -16,29 +17,36 @@ import views.game_world.GameWorldDrawer;
 
 public class GameWorldController extends Controller {
 
+private GameWorld world;
 
-@Override
+    public GameWorldController(GameWorld world) {
+        this.world = world;
+    }
+
+    @Override
     public void handleInput() {
         if (Gdx.input.justTouched()) {
-            if (activePlayer.isAngleActive()) {
-                float angle = activeCannon.getAngle();
+            world.input();
 
-                activePlayer.switchAngleActive();
-                activePlayer.switchPowerActive();
-
-            } else if (activePlayer.isPowerActive()) {
-                float power = activeCannon.getPower();
-
-                activePlayer.switchPowerActive();
-
-            }
-        }
-
-
-        if (!activePlayer.isAngleActive() && !activePlayer.isPowerActive()) {
-            if (!world.getProjectile().isFired()) {
-                fire();
-            }
+//            if (activePlayer.isAngleActive()) {
+//                float angle = activeCannon.getAngle();
+//
+//                activePlayer.switchAngleActive();
+//                activePlayer.switchPowerActive();
+//
+//            } else if (activePlayer.isPowerActive()) {
+//                float power = activeCannon.getPower();
+//
+//                activePlayer.switchPowerActive();
+//
+//            }
+//        }
+//
+//
+//        if (!activePlayer.isAngleActive() && !activePlayer.isPowerActive()) {
+//            if (!world.getProjectile().isFired()) {
+//                fire();
+//            }
         }
     }
 

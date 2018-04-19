@@ -26,12 +26,11 @@ public class Cannon {
     private float angle;
     private float power;
 
-    public Cannon(float x, float y, float width, float height, Sprite cannon, Sprite wheel, boolean facingRight) {
+    public Cannon(float x, float y, float width, float height, Sprite cannon, boolean facingRight) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.wheelSprite = wheel;
         this.cannonSprite = cannon;
         this.shotsFired = true;
         this.angleUp = true;

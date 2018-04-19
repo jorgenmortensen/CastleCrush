@@ -12,3 +12,7 @@ projectile entity må fikses
 world bør ta inn SinglePlayer state og via den kalle GMS for å bytte state, i stedet for å ta inn GMS.
 
 lage en egen klasse om kun har ansvar for å lage objekter
+
+lar ting som skal fikses/deles opp senere stå foreløpig
+
+j

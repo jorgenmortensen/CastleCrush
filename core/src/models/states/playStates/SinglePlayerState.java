@@ -43,7 +43,7 @@ public class SinglePlayerState extends State {
 
     public SinglePlayerState(GameStateManager gsm) {
         super(gsm);
-        controller = new GameWorldController();
+        controller = new GameWorldController(world);
         world = new GameWorld(gsm);
         gameWorldDrawer = new GameWorldDrawer(new SpriteBatch());
 

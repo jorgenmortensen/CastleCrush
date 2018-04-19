@@ -69,6 +69,8 @@ public class GameWorld {
     private String gameWinningObjectString= "gwo3.png";
     private String powerBarString= "powerBar.png";
 
+    private Sprite powerBar = new Sprite(new Texture(powerBarString));
+
 
     private int time, oldTime, turnLimit = 15, shootingTimeLimit = 5;
     long start, end;
@@ -95,24 +97,27 @@ public class GameWorld {
 
 
     private void generateBodies() {
+//        **********la stå intil videre*********
         createGround();
         makeCastle(screenWidth*0.8f, screenWidth*0.2f, screenHeight*0.6f, player2);
         makeMirroredCastle(player1);
 
+        Sprite cannonSprite1 = new Sprite(new Texture(cannonString));
+        Sprite cannonSprite2 = new Sprite(new Texture(cannonString));
         Cannon cannon1 = new Cannon(screenWidth*1/3,
                 groundLevel, screenWidth/30, screenHeight/30,
-                cannonSprite, wheelSprite,  true);
+                cannonSprite1,  true);
 
         Cannon cannon2 = new Cannon(screenWidth*2/3,
                 groundLevel, screenWidth/30, screenHeight/30,
-                cannonSprite, wheelSprite,  false);
+                cannonSprite2, false);
 
-
+//      lage det første prosjektilet, før changeplayer
         projectile = createProjectile(cannon1.getX(), groundLevel, screenHeight/40);
 
         createOneWayWalls(cannon1.getX() - projectile.getDrawable().getWidth()/2);
         createOneWayWalls(cannon2.getX() + projectile.getDrawable().getWidth()/2);
-
+//*****************************************************
     }
 
     public void makeCastle(float startPosX, float castleWidth, float castleHeight, Player player) {
@@ -126,7 +131,8 @@ public class GameWorld {
             for (int j = 0; j < number; j++) {
                 if (startPosX + i * boxWidth < screenWidth) {
                     if (j == 0 && i == numHorizontalBoxes-1){
-                        GameWinningObject gameWinningObject = createGameWinningObject(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight / 3, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, gameWinningObjectSprite);
+                        Sprite sprite = new Sprite(new Texture(gameWinningObjectString));
+                        GameWinningObject gameWinningObject = createGameWinningObject(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight / 3, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, sprite);
                         player.setGameWinningObject(gameWinningObject);
                     } else if (j == number - 1) {
                         Box box = createBox(startPosX + i * boxWidth, groundLevel + j * boxHeight + boxHeight / 3, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, new Sprite(new Texture("roof_box.png")));
@@ -185,7 +191,7 @@ public class GameWorld {
 
         shape.dispose();
 
-
+        Sprite groundSprite = new Sprite(new Texture(bottomGroundString));
         groundSprite.setSize(Gdx.graphics.getWidth(), groundHeight/2);
         ground = new Box(body, groundSprite, 0, 0, 0);
         body.setUserData(ground);
@@ -210,13 +216,15 @@ public class GameWorld {
         body.createFixture(fixtureDef);
         body.setTransform(xPos, yPos, 0);
         shape.dispose();
+
+
         Random ran = new Random();
         int number = ran.nextInt(15);
         if (sprite != null){
         } else if(number == 10){
-            sprite = windowSprite;
+            sprite = new Sprite(new Texture(windowBoxString));
         } else {
-            sprite = boxSprite;
+            sprite = sprite = new Sprite(new Texture(normalBoxString));
         }
         sprite.setSize(boxWidth, boxHeight);
         sprite.setOriginCenter();
@@ -250,9 +258,8 @@ public class GameWorld {
         shape.dispose();
 
         //setting the sprite of the ball and positioning it correctly
-        Sprite sprite = cannonBallSprite;
+        Sprite sprite = new Sprite(new Texture(cannonBallString));
         sprite.setSize(radius*2, radius*2);
-        sprite.setOrigin(0, 0);
         sprite.setOriginCenter();
 
         Projectile tempProjectile = new Projectile(body, new Vector2(xPos, yPos), sprite, radius*2, radius*2, this);
@@ -463,6 +470,7 @@ public class GameWorld {
 
 
     public void updatePowerBar() {
+
         powerBar.setPosition(activePlayer.getCannon().getX(), activePlayer.getCannon().getY());
         powerBar.setSize(screenWidth/50, powerBar.getHeight());
         //fiks marker
@@ -485,6 +493,29 @@ public class GameWorld {
 //                (cannonRight.getPower() * cannonRight.getWidth() * 4 / 5) / 100,
 //                cannonRight.getHeight() / 2);
 //    }
+
+    public void input() {
+        if (activeCannon.isAngleActive()) {
+            float angle = activeCannon.getAngle();
+
+            activeCannon.switchAngleActive();
+            activeCannon.switchPowerActive();
+
+        } else if (activeCannon.isPowerActive()) {
+            float power = activeCannon.getPower();
+
+            activeCannon.isPowerActive();
+
+        }
+
+
+        if (!activeCannon.isAngleActive() && !activeCannon.isPowerActive()) {
+        if (!getProjectile().isFired()) {
+            fire();
+        }
+    }
+}
+
 
 
     public void fire() {
