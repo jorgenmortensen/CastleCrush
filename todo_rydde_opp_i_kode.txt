@@ -16,3 +16,5 @@ lage en egen klasse om kun har ansvar for å lage objekter
 lar ting som skal fikses/deles opp senere stå foreløpig
 
 projectile.setUserdata, fikse dette, hvor brukes det
+
+Hvilke objekter/entiter skal være Singletons?? Projectile, GameWorld(?), Drawer(?), Controller(?), evt. andre
