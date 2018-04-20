@@ -1,8 +1,5 @@
 package models.entities;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,59 +13,44 @@ public class Level {
     private int width;
     private int height;
 
-    private List<PowerUp> powerUps;
     private Castle castleLeft, castleRight;
     private Cannon cannonLeft, cannonRight;
-    private Projectile projectile;
+    private OldProjectile oldProjectile;
 
-    public Level(/*List<PowerUp> powerUps,*/ List<Castle> castles/*, List<Cannon> cannons Projectile projectile */ ) {
+    public Level(List<Castle> castles/*, List<Cannon> cannons OldProjectile oldProjectile */ ) {
         //this.powerUps = powerUps;
         //this.castles = castles;
         //this.cannons = cannons;
-        //this.projectile = projectile;
+        //this.oldProjectile = oldProjectile;
     }
-
-
-    public void Draw(SpriteBatch batch) {
-
-    }
-
-
 
     public void setX(int x) {
         this.x = x;
     }
 
-
     public int getX() {
         return this.x;
     }
-
 
     public void setY(int y) {
         this.y = y;
     }
 
-
     public int getY() {
         return y;
     }
-
 
     public void setWidth(int width) {
         this.width = width;
     }
 
-
     public int getWidth() {
         return width;
     }
 
-
     public void setHeight(int height) {
         this.height = height;
     }
-
 
     public int getHeight() {
         return this.height;

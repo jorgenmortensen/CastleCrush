@@ -6,8 +6,7 @@ package models.components;
 
 public class MessageCodes {
 
-    public static final byte CANNON = 1;
-
-    public static final byte PLAY_AGAIN = 3;
-    public static final byte GAME_OVER = 4;
+    public static final byte PLAY_AGAIN = 1;
+    public static final byte GAME_OVER = 2;
+    public static final byte CANNON = 3;
 }

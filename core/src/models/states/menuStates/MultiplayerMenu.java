@@ -12,11 +12,11 @@ import models.states.State;
  * Created by Jørgen on 12.03.2018.
  */
 
-public class MultiplayerMenu extends State {
+public class MultiplayerMenu extends models.states.State {
 
     Sprite btnMulti;
 
-    public MultiplayerMenu(GameStateManager gsm) {
+    public MultiplayerMenu(models.states.GameStateManager gsm) {
         super(gsm);
         btnMulti = new Sprite(new Texture("game.png"));
     }
@@ -43,5 +43,6 @@ public class MultiplayerMenu extends State {
 
     @Override
     public void dispose() {
+
     }
 }

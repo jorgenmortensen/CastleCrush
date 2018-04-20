@@ -29,14 +29,12 @@ public abstract class Drawer extends ApplicationAdapter {
         }
     }
 
-    //vi tenker at:
-    //en slags while-løkke i render funksjonen der det er en
-    // definert rekkefølge på hva som skal tegnes først
 
     public void render() {
-    //   Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-    //    batch.begin();
-    //    batch.end();
+    }
+
+    public OrthographicCamera getCam() {
+        return cam;
     }
 
     public void dispose() {

@@ -1,7 +1,6 @@
 package models.states.playStates;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.castlecrush.game.CastleCrush;
@@ -9,42 +8,53 @@ import com.castlecrush.game.CastleCrush;
 import java.nio.ByteBuffer;
 import java.util.List;
 
-import models.components.Button;
 import models.components.MessageCodes;
 import googleServices.PlayServices;
-import googleServices.PlayerData;
-import models.MockGameWorld;
-import models.states.State;
+import models.entities.OnlinePlayer;
 import models.states.GameStateManager;
 import views.game_world.GameWorldDrawer;
+
+import controllers.game_world.GameWorldController;
+import models.GameWorld;
+import models.OnlineMultiplayerWorld;
+import models.states.menuStates.OnlineGameOverMenu;
 
 /**
  * Created by Jørgen on 12.03.2018.
  */
 
-public class OnlineMultiplayerState extends State implements PlayServices.NetworkListener{
+public class OnlineMultiplayerState extends SuperPlayState implements PlayServices.NetworkListener{
 
     private static final String TAG = OnlineMultiplayerState.class.getSimpleName();
-    Button clickBtn;
-    int count, opponent;
-    BitmapFont font;
-    List players;
-    Vector2 shotVelocity;
+    List<OnlinePlayer> players;
 
-    MockGameWorld world;
+    GameWorld world;
     GameWorldDrawer drawer;
     SpriteBatch batch;
-
+    static float SCALE = 0.05f;
+    private float screenWidth;
+    private float screenHeight;
+    private GameWorldController controller;
 
     public OnlineMultiplayerState(GameStateManager gsm, SpriteBatch batch) {
         super(gsm);
         System.out.println("OnlineMultiPlayerState started");
 
+        screenHeight = CastleCrush.HEIGHT * SCALE;
+        screenWidth = CastleCrush.WIDTH * SCALE;
         this.batch=batch;
-        world = new MockGameWorld(gsm);
-        drawer = new GameWorldDrawer(batch, world,gsm);
+        drawer = new GameWorldDrawer(batch, screenWidth, screenHeight);
+        world = new OnlineMultiplayerWorld(this, drawer, screenWidth, screenHeight, players);
+        controller = new GameWorldController(world);
+
         CastleCrush.playServices.setNetworkListener(this);
 
+
+    }
+
+
+    public void gameOver(boolean win){
+        gsm.set(new OnlineGameOverMenu(gsm, win));
     }
 
 
@@ -53,7 +63,8 @@ public class OnlineMultiplayerState extends State implements PlayServices.Networ
 
     @Override
     public void update(float dt) {
-        handleInput();
+        world.update(dt);
+        controller.handleInput();
     }
 
 
@@ -63,16 +74,24 @@ public class OnlineMultiplayerState extends State implements PlayServices.Networ
     }
 
     @Override
-    public void dispose() {}
+    public void dispose() {
+        drawer.dispose();
+    }
 
-    public void broadcastShotData(){
+    public void broadcastShotData(Vector2 shotVelocity){
         ByteBuffer buffer = ByteBuffer.allocate(2*4+1); //capacity = 9, why?
         buffer.put(MessageCodes.CANNON);
         buffer.putFloat(shotVelocity.x);
         buffer.putFloat(shotVelocity.y);
 
         CastleCrush.playServices.sendUnreliableMessageToOthers(buffer.array());
+    }
 
+
+    public void broadcastRematch(){
+        ByteBuffer buffer = ByteBuffer.allocate(2*4+1);
+        buffer.put(MessageCodes.PLAY_AGAIN);
+        CastleCrush.playServices.sendReliableMessage(buffer.array());
     }
 
     @Override
@@ -83,15 +102,11 @@ public class OnlineMultiplayerState extends State implements PlayServices.Networ
         byte messageType = buffer.get();
 
         switch (messageType) {
-            case MessageCodes.GAME_OVER:
-                System.out.println("GAME OVER MESSAGE RECEIVED");
-                //pop-up window????
-                //gsm.set(new GameOverState(gsm));
-                //evnt. draw GameOver text, og to knapper: end og rematch (aka Flappy)
-
+            case MessageCodes.PLAY_AGAIN:
+                System.out.println("PLAY AGAIN MESSAGE RECEIVED");
+                CastleCrush.playServices.sendOutRematch();
                 break;
         }
-
     }
 
     @Override
@@ -105,15 +120,14 @@ public class OnlineMultiplayerState extends State implements PlayServices.Networ
             case MessageCodes.CANNON:
                 System.out.println("CANNON MESSAGE RECEIVED");
 
-                break;
 
+                break;
         }
     }
 
     @Override
-    public void onRoomReady(List<PlayerData> players) {
+    public void onRoomReady(List<OnlinePlayer> players) {
         System.out.println("onRoomReady");
         this.players = players;
-        System.out.println(players);
     }
 }

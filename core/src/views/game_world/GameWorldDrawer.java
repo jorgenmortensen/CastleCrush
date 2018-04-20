@@ -4,26 +4,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.castlecrush.game.CastleCrush;
 import com.sun.org.apache.xpath.internal.SourceTree;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import models.MockGameWorld;
-import models.entities.Box;
+import models.GameWorld;
 import models.entities.Cannon;
-import models.entities.Castle;
 import models.entities.Drawable;
-import models.entities.GameWinningObject;
 import models.states.GameStateManager;
-import models.states.State;
-import models.states.menuStates.GameOverMenu;
 import views.Drawer;
 
 /**
@@ -31,112 +26,48 @@ import views.Drawer;
  */
 
 public class GameWorldDrawer extends Drawer {
+
     private Texture background = new Texture("background_without_ground.png");
-    //private Sprite background;
-    private Castle castleLeft, castleRight;
-    private Cannon cannonLeft, cannonRight;
-    private GameWinningObject heartLeft, heartRight;
-    private MockGameWorld mockWorld;
-    private World physicsWorld;
-    private OrthographicCamera camera;
-    private ExtendViewport viewport;
-    private float SCALE;
     private float screenWidth;
     private float screenHeight;
-    GameStateManager gsm;
+    private ExtendViewport viewport;
+    private List<Sprite> spriteList;
 
 
-    private int PTM_ratio;
-
-    Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
-
-
-    public GameWorldDrawer(SpriteBatch batch, MockGameWorld world, GameStateManager gsm){
+    public GameWorldDrawer(SpriteBatch batch, float screenWidth, float screenHeight) {
         super(batch);
-        this.gsm = gsm;
-        this.mockWorld = world;
-        this.physicsWorld = mockWorld.getPhysicsWorld();
-        SCALE = world.getSCALE();
-        screenWidth = CastleCrush.WIDTH*SCALE;
-        screenHeight = CastleCrush.HEIGHT*SCALE;
-
-        camera = new OrthographicCamera();
-        viewport = new ExtendViewport(CastleCrush.WIDTH*SCALE, CastleCrush.HEIGHT*SCALE, camera);
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+        viewport = new ExtendViewport(screenWidth, screenHeight, cam);
         viewport.update(CastleCrush.WIDTH, CastleCrush.HEIGHT, true);
+        spriteList = new ArrayList<Sprite>();
     }
 
     @Override
     public void render() {
-        batch.setProjectionMatrix(camera.combined);
+        batch.setProjectionMatrix(cam.combined);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         batch.begin();
-        batch.draw(background, 0,0, screenWidth, screenHeight);
-        drawGround();
-
-
-        //Check if game is over, if so, the gameOverMenu becomes active
-        if (mockWorld.getPlayer1().getGameWinningObject().getHit()){
-            final State gameOverMenu = new GameOverMenu(gsm, false, true);
-            //TODO, Opponent wins, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
-            Gdx.app.postRunnable(new Runnable() {
-                @Override
-                public void run() {
-                    gsm.set(gameOverMenu);
-
-                }
-            });
-
-        } else if (mockWorld.getPlayer2().getGameWinningObject().getHit()){
-            final State gameOverMenu = new GameOverMenu(gsm, false, true);
-            //TODO, You win, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
-            Gdx.app.postRunnable(new Runnable() {
-                @Override
-                public void run() {
-                    gsm.set(gameOverMenu);
-                }
-            });
-
-        } else {
-            for (Drawable obj : mockWorld.getBoxes()) {
-                if (obj instanceof Box) {
-                    if (!(((Box) obj).getHit())) {
-                        drawObject(obj);
-                    }
-                }
-            }
-            for (Drawable obj : mockWorld.getCannons()) {
-                drawObject(obj);
-            }
-
-            if (mockWorld.getProjectile().getHasHit()) {
-            } else {
-                drawObject(mockWorld.getProjectile());
-            }
+        //Draw the background
+        batch.draw(background, 0, 0, screenWidth, screenHeight);
+//        draw every sprite on screen
+        for (Sprite sprite : spriteList) {
+            sprite.draw(batch);
         }
 
         batch.end();
-        // debugRenderer.render(physicsWorld,camera.combined);
-
-        mockWorld.getPhysicsWorld().step(1/60f, 6, 2);
-        //mock DELETE BODIES
-        if (!physicsWorld.isLocked()){
-            mockWorld.destroy((ArrayList<Fixture>) mockWorld.getBodiesToDestroy());
-
-        }
-
     }
 
-    private void drawObject(Drawable object) {
-        float xPos = object.getBody().getPosition().x - object.getDrawable().getWidth()/2;
-        float yPos = object.getBody().getPosition().y - object.getDrawable().getHeight()/2;
-        float degrees = (float) Math.toDegrees(object.getBody().getAngle());
-        object.getDrawable().setPosition(xPos, yPos);
-        object.getDrawable().setRotation(degrees);
-        object.getDrawable().draw(batch);
+
+    public void addSprite(Sprite sprite) {
+        if (!spriteList.contains(sprite))
+            spriteList.add(sprite);
     }
 
-    private void drawGround() {
-        mockWorld.getGround().getDrawable().draw(batch);
+    public void removeSprite(Sprite sprite) {
+        if (spriteList.contains(sprite))
+            spriteList.remove(sprite);
     }
 
 
@@ -144,20 +75,16 @@ public class GameWorldDrawer extends Drawer {
     @Override
     public void dispose() {
         background.dispose();
-        debugRenderer.dispose();
-        physicsWorld.dispose();
-    }
-
-    public int getCameraWidth() {
-        return (int) (camera.viewportWidth *camera.zoom);
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height, true);
-
-        batch.setProjectionMatrix(camera.combined);
+        batch.dispose();
     }
 
 
+    //  moved to update() in  world
+    //        if (mockWorld.getPlayer1().getGameWinningObject().getHit()){
+    //        //Check if game is over, if so, the gameOverMenu becomes active
+    public void addSprite(Sprite sprite, float xPos, float yPos, float width, float height, float rotation) {
+        sprite.setBounds(xPos, yPos, width, height);
+        sprite.setRotation(rotation);
+        spriteList.add(sprite);
+    }
 }

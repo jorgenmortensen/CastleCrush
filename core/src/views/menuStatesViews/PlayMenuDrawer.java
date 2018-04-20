@@ -13,7 +13,6 @@ import models.states.GameStateManager;
 import models.states.menuStates.MultiplayerMenu;
 import models.states.menuStates.PlayMenu;
 import models.states.menuStates.StartMenuScreen;
-import models.states.playStates.SinglePlayerState;
 import views.Drawer;
 
 import static models.states.menuStates.StartMenuScreen.changed_logo;

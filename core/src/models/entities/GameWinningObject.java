@@ -2,6 +2,8 @@ package models.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.castlecrush.game.CastleCrush;
 
@@ -28,21 +30,7 @@ public class GameWinningObject extends Box {
     public void isHit(boolean isHit){
         super.isHit(isHit);
         CastleCrush.music.play();
-    }
-    //Function to make the sprite change when the GWO is hit
-    /*
-    public int getCounter() {
-        return counter;
-    }
-    */
-    /* public void isHit(){
-        counter += 1;
-        if(counter == 1){
-            this.sprite = sprite1;
-        } else if (counter == 2){
-            this.sprite = sprite2;
-        }
 
     }
-    */
+
 }

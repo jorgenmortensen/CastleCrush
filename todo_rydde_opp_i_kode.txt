@@ -1,0 +1,23 @@
+todo rydde opp i kode
+
+
+DONE angle og power må flyttes fra Player til Cannon
+DONE flytte input til controller
+
+
+alle spriter må addes til GameWorldDrawer sin SpriteList, via addSprite. Dvs alle ting som skal rendres må legges til via denne metoden.
+
+DONE projectile entity må fikses
+
+DONE world bør ta inn SinglePlayer state og via den kalle GMS for å bytte state, i stedet for å ta inn GMS.
+
+lage en egen klasse om kun har ansvar for å lage objekter
+
+
+projectile.setUserdata, fikse dette, hvor brukes det
+
+Hvilke objekter/entiter skal være Singletons?? Projectile, GameWorld(?), Drawer(?), Controller(?), evt. andre
+
+
+
+slette oldProjetile

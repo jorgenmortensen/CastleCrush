@@ -13,7 +13,6 @@ import models.states.menuStates.MultiplayerMenu;
 import models.states.menuStates.PlayMenu;
 import models.states.menuStates.StartMenuScreen;
 import models.states.playStates.OnlineMultiplayerState;
-import models.states.playStates.SinglePlayerState;
 
 import static com.castlecrush.game.CastleCrush.playServices;
 import static com.castlecrush.game.CastleCrush.xCoordBg1;

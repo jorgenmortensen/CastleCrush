@@ -3,19 +3,19 @@ package models.entities;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.Fixture;
 
 import java.util.Timer;
 
 import models.GameWorld;
 
-public class Projectile implements Drawable {
-    private static final Projectile ourInstance = new Projectile();
+/**
+ * Created by Jørgen on 09.03.2018.
+ */
 
-    public static Projectile getInstance() {
-        return ourInstance;
-    }
+public class OldProjectile implements Drawable {
 
+    private int x, y;
     private float width;
     private float height;
     private Vector2 position;
@@ -25,11 +25,15 @@ public class Projectile implements Drawable {
     private Sprite sprite;
     private boolean isFired;
     private boolean hasHit = false;
-    private World physicsWorld;
+    private GameWorld gameWorld;
     private boolean scheduleActive = false;
+
+
+
     private Vector2 velocity;
 
-    public void init(Body body,  Sprite sprite, GameWorld world) {
+    public OldProjectile(Body body, Vector2 position, Sprite sprite,
+                         float width, float height, GameWorld world) {
         this.body = body;
         this.position = position;
         this.sprite = sprite;
@@ -38,42 +42,40 @@ public class Projectile implements Drawable {
         this.body = body;
         this.sprite = sprite;
         this.velocity = velocity;
-        this.physicsWorld = physicsWorld;
+        this.gameWorld = world;
         this.isFired = false;
     }
 
     public void setHasHit(boolean hasHit){this.hasHit = hasHit;}
 
+    public void scheduleSelfDestruct (final Fixture fixture){
+        if (!scheduleActive){
+            if (getSpeed(getBody().getLinearVelocity()) < 3) {
+                setHasHit(true);
+                gameWorld.addBodyToDestroy(fixture);
+            }
+            /*timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    // Delete ball
 
-//    flytte til world
-//    public void scheduleSelfDestruct (final Fixture fixture){
-//        if (!scheduleActive){
-//            if (getSpeed(getBody().getLinearVelocity()) < 3) {
-//                setHasHit(true);
-//                gameWorld.addBodyToDestroy(fixture);
-//            }
-//            /*timer = new Timer();
-//            timer.schedule(new TimerTask() {
-//                @Override
-//                public void run() {
-//                    // Delete ball
-//
-//                    if (getSpeed(getBody().getLinearVelocity()) < 3){
-//                        setHasHit(true);
-//                        gameWorld.addBodyToDestroy(fixture);
-//                        timer.cancel();
-//                        stat.switchPlayer();
-//                        Cannon cannon = gameWorld.getCannons().get(0);
-//                        gameWorld.createProjectile(cannon.getX(),cannon.getY(), gameWorld.getScreenWidth()/40, stat);
-//
-//                    }
-//
-//                }
-//            }, 3000,500);*/
-//            this.scheduleActive = true;
-//        }
+                    if (getSpeed(getBody().getLinearVelocity()) < 3){
+                        setHasHit(true);
+                        gameWorld.addBodyToDestroy(fixture);
+                        timer.cancel();
+                        stat.switchPlayer();
+                        Cannon cannon = gameWorld.getCannons().get(0);
+                        gameWorld.createProjectile(cannon.getX(),cannon.getY(), gameWorld.getScreenWidth()/40, stat);
 
+                    }
 
+                }
+            }, 3000,500);*/
+            this.scheduleActive = true;
+        }
+
+    }
 
     public Body getBody() {
         return body;
@@ -96,6 +98,14 @@ public class Projectile implements Drawable {
     }
 
 
+    public Vector2 getPosition() {
+        return position;
+    }
+
+    public void setPosition(Vector2 position) {
+        this.position = position;
+    }
+
     public void setWidth(int width) {
         this.width = width;
     }
@@ -116,12 +126,28 @@ public class Projectile implements Drawable {
         return velocity;
     }
 
+    public void setVelocity(Vector2 velocity) {
+        this.velocity = velocity;
+    }
+
     public Sprite getSprite() {
         return sprite;
     }
 
     public void setSprite(Sprite sprite) {
         this.sprite = sprite;
+    }
+
+    @Override
+    public String toString() {
+        return "OldProjectile{" +
+                "position=" + position +
+                ", width=" + width +
+                ", height=" + height +
+                ", body=" + body +
+                ", sprite=" + sprite +
+                ", velocity=" + velocity +
+                '}';
     }
 
 
@@ -134,11 +160,8 @@ public class Projectile implements Drawable {
     }
 
     //Fires the shot, with a given angle and power
-
-    public void fire(Vector2 velocity) {
-        body.setLinearVelocity(velocity);
-        body.setAngularVelocity(0);
-        System.out.println(velocity.x + "velocity");
+    public void fire(float angle, float power) {
+        setVelocity(new Vector2((float)Math.cos(angle*Math.PI/180) * power, (float)Math.sin(angle*Math.PI/180) * power));
     }
 
     public void update(float dt) {
@@ -153,16 +176,4 @@ public class Projectile implements Drawable {
         return Math.sqrt(x*x+y*y);
     }
 
-
-    @Override
-    public String toString() {
-        return "OldProjectile{" +
-                "position=" + position +
-                ", width=" + width +
-                ", height=" + height +
-                ", body=" + body +
-                ", sprite=" + sprite +
-                ", velocity=" + velocity +
-                '}';
-    }
 }

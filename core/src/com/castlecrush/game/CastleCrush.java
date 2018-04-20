@@ -9,8 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import models.states.GameStateManager;
 
 import models.states.Splashscreen;
-
-
+import models.states.menuStates.PlayMenu;
 import googleServices.PlayServices;
 import models.states.menuStates.StartMenuScreen;
 import models.states.playStates.OnlineMultiplayerState;
@@ -25,6 +24,7 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 	public static int WIDTH;
 	public static int HEIGHT;
 	OnlineMultiplayerState onlinemultiplayerstate;
+	StartMenuScreen startmenuscreen;
 
 	public static PlayServices playServices;
 
@@ -59,6 +59,7 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 		music.play();
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		onlinemultiplayerstate = new OnlineMultiplayerState(gsm, batch);
+		startmenuscreen = new StartMenuScreen(gsm);
 		try {
 			gsm.push(new Splashscreen(gsm));
 		} catch(Exception e) {
@@ -98,7 +99,7 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 	@Override
 	public void goToMain() {
 		System.out.println("goToMainScreen");
-		gsm.set(new StartMenuScreen(gsm));
+		gsm.set(startmenuscreen);
 	}
 
 

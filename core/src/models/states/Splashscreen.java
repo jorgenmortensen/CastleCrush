@@ -25,7 +25,6 @@ public class Splashscreen extends State {
     private long startTime;
     private Texture t;
 
-
     public Splashscreen(GameStateManager gsm) {
         super(gsm);
         this.am = new AssetManager();
@@ -47,6 +46,7 @@ public class Splashscreen extends State {
                 e.printStackTrace();
             }
         }
+
     }
 
     @Override

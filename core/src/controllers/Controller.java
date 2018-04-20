@@ -10,6 +10,8 @@ public abstract class Controller {
 
     }
 
+    public void handleInput(){}
+
     public void update() {
 
     }

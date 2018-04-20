@@ -12,7 +12,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 import googleServices.PlayServices;
-import googleServices.PlayerData;
+import models.entities.OnlinePlayer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -262,6 +262,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 		Log.d(TAG, "handleSelectPlayersResult: ");
 		if (response != Activity.RESULT_OK) {
 			Log.w(TAG, "*** select players UI cancelled, " + response);
+			gameListener.goToMain();
 			return;
 		}
 
@@ -298,12 +299,12 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 			// Start the game!
 			System.out.println("handleWaitingRoomResult: OK");
 			gameListener.onMultiplayerGameStarting();
-			List<PlayerData> playerList = new ArrayList<>();
+			List<OnlinePlayer> playerList = new ArrayList<>();
 			currentPlayerID = Games.Players.getCurrentPlayerId(gameHelper.getApiClient());
 			for (Participant participant : room.getParticipants()) {
 				String playerId = participant.getPlayer().getPlayerId();
-				PlayerData playerData = new PlayerData(playerId, participant.getParticipantId(), participant.getDisplayName());
-				if (PlayerData.equals(currentPlayerID, playerId)) {
+				OnlinePlayer playerData = new OnlinePlayer(playerId, participant.getParticipantId(), participant.getDisplayName());
+				if (OnlinePlayer.equals(currentPlayerID, playerId)) {
 					playerData.isSelf = true;
 				}else{
 					currentOpponentID = playerId;
@@ -319,6 +320,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 			// continue to connect in the background.
 			Log.d(TAG, "handleWaitingRoomResult: CANCEL");
 			System.out.println("handleWaitingRoomResult: CANCEL");
+			leaveRoom();
 		} else if (resultCode == RESULT_LEFT_ROOM) {
 			// player wants to leave the room.
 			Log.d(TAG, "handleWaitingRoomResult: LEFT_ROOM");
@@ -358,6 +360,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 		Log.d(TAG, "handleInvitationInboxResult: ");
 		if (resultCode != Activity.RESULT_OK) {
 			// Canceled or some error.
+			gameListener.goToMain();
 			return;
 		}
 		Invitation invitation = data.getExtras().getParcelable(Multiplayer.EXTRA_INVITATION);
@@ -527,10 +530,10 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 
 	ArrayList<String> playerIDS = new ArrayList<>();
 	@Override
-	public void rematch(List<PlayerData> players){
+	public void rematch(List<OnlinePlayer> players){
 		String currentPlayerId = Games.Players.getCurrentPlayerId(gameHelper.getApiClient());
-		for (PlayerData p : players){
-			if (!PlayerData.equals(currentPlayerId, p.getPlayerID())) {
+		for (OnlinePlayer p : players){
+			if (!OnlinePlayer.equals(currentPlayerId, p.getPlayerID())) {
 				playerIDS.add(p.getPlayerID());
 			}
 		}

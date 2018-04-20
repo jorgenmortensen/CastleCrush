@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.castlecrush.game.CastleCrush;
-
 import controllers.menuStatesControllers.PlayMenuController;
 import models.components.Button;
 import models.components.GravityButton;
@@ -15,6 +14,7 @@ import models.states.GameStateManager;
 import models.states.State;
 import models.states.playStates.OnlineMultiplayerState;
 import views.menuStatesViews.PlayMenuDrawer;
+import models.states.playStates.LocalMulitplayerState;
 
 import static models.states.menuStates.StartMenuScreen.changed_logo;
 import static models.states.menuStates.StartMenuScreen.crushed;
@@ -98,7 +98,8 @@ public class PlayMenu extends State {
     }
 
     @Override
-    protected void handleInput() {}
+    protected void handleInput() {
+    }
 
     @Override
     public void update(float dt) {

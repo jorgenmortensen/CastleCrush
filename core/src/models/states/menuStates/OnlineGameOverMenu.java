@@ -9,13 +9,13 @@ import com.castlecrush.game.CastleCrush;
 import models.components.Button;
 import models.states.GameStateManager;
 import models.states.State;
-import models.states.playStates.SinglePlayerState;
+import models.states.playStates.LocalMulitplayerState;
 
 /**
  * Created by Jørgen on 17.04.2018.
  */
 
-public class GameOverMenu extends State {
+public class OnlineGameOverMenu extends State {
 
     private Texture background;
     private Texture winner;
@@ -24,15 +24,18 @@ public class GameOverMenu extends State {
     private boolean winnerScreen;
     private boolean isHost;
 
-    public GameOverMenu(GameStateManager gsm, boolean winnerScreen, boolean isHost) {
+    public OnlineGameOverMenu(GameStateManager gsm, boolean winner) {
         super(gsm);
         background = new Texture(Gdx.files.internal("loop_background_castles.png"));
-        this.winnerScreen = winnerScreen;
+        this.winnerScreen = winner;
         this.winner = new Texture("winner.png");
         this.loser = new Texture("loser.png");
         this.isHost = isHost;
         //Initialize buttons
         initButtons();
+
+        //temp, must fix
+        isHost = true;
     }
 
     private void initButtons() {
@@ -41,14 +44,14 @@ public class GameOverMenu extends State {
                 new Sprite(new Texture("rematchBtn.png")));
     }
 
-    @Override
+//    @Override
     protected void handleInput() {
         if (Gdx.input.justTouched()) {
             if (isOnButton(btnHome)) {
                 goToMainMenu();
             }
             else if (isOnButton(rematchBtn) && isHost) {
-                gsm.set(new SinglePlayerState(gsm));
+                gsm.set(new LocalMulitplayerState(gsm));
             }
         }
     }

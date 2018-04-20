@@ -52,6 +52,7 @@ public class StartMenuScreen extends State {
         startMenuDrawer = new StartMenuDrawer();
         startMenuController = new StartMenuController(gsm);
     }
+
     public StartMenuScreen(GameStateManager gsm, boolean v) {
         super(gsm);
         initFields();
@@ -133,6 +134,7 @@ public class StartMenuScreen extends State {
     }
 
     public long getStartTime(){
+
         return this.startTime;
     }
 

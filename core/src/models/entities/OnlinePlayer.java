@@ -1,28 +1,32 @@
-package googleServices;
+package models.entities;
 
-/**
- * Created by Bruker on 10.04.2018.
- */
+import models.GameWorld;
 
-public class PlayerData {
 
+public class OnlinePlayer extends Player {
     public String participantId = "";
     public String playerId = "";
     public String displayName = "";
     public boolean isSelf = false;
+    GameWorld world;
 
+  /*  public OnlinePlayer(String id, GameWorld world *//**//*, boolean isYou*//**//*) {
+        super(id, world);
+    }
+*/
 
-    public PlayerData(String participantId, String displayName) {
+    public OnlinePlayer(String participantId, String displayName) {
+        super();
         this.participantId = participantId;
         this.displayName = displayName;
     }
 
-    public PlayerData(String participantId, String displayName, boolean isSelf) {
+    public OnlinePlayer(String participantId, String displayName, boolean isSelf) {
         this(participantId, displayName);
         this.isSelf = isSelf;
     }
 
-    public PlayerData(String playerId, String participantId, String displayName) {
+    public OnlinePlayer(String playerId, String participantId, String displayName) {
         this(participantId, displayName);
         this.playerId = playerId;
     }
@@ -38,5 +42,9 @@ public class PlayerData {
     public String getPlayerID(){
         return playerId;
     }
-}
 
+    public void setWorld(GameWorld w) {
+        super.setWorld(w);
+    }
+
+}
