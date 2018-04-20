@@ -6,15 +6,12 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import models.MockGameWorld;
-import models.states.menuStates.PlayMenu;
-import views.Drawer;
 import models.states.GameStateManager;
 
 import models.states.Splashscreen;
 
 
-import googleplayservice.PlayServices;
+import googleServices.PlayServices;
 import models.states.menuStates.StartMenuScreen;
 import models.states.playStates.OnlineMultiplayerState;
 

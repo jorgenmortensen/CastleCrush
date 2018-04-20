@@ -1,4 +1,4 @@
-package googleplayservice;
+package googleServices;
 
 import java.util.List;
 

@@ -11,8 +11,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
-import googleplayservice.PlayServices;
-import googleplayservice.PlayerData;
+import googleServices.PlayServices;
+import googleServices.PlayerData;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -31,7 +31,6 @@ import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListener;
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 import com.google.example.games.basegameutils.GameHelper;
-import com.castlecrush.game.CastleCrush;
 
 import static com.google.android.gms.games.GamesActivityResultCodes.RESULT_LEFT_ROOM;
 

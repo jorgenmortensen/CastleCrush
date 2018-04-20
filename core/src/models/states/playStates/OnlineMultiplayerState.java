@@ -1,20 +1,18 @@
 package models.states.playStates;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.castlecrush.game.CastleCrush;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.List;
 
 import models.components.Button;
 import models.components.MessageCodes;
-import googleplayservice.PlayServices;
-import googleplayservice.PlayerData;
+import googleServices.PlayServices;
+import googleServices.PlayerData;
 import models.MockGameWorld;
 import models.states.State;
 import models.states.GameStateManager;

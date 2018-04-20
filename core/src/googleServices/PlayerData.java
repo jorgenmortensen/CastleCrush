@@ -1,4 +1,4 @@
-package googleplayservice;
+package googleServices;
 
 /**
  * Created by Bruker on 10.04.2018.
