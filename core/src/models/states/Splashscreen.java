@@ -5,7 +5,10 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.castlecrush.game.CastleCrush;
 
+import models.states.menuStates.StartMenuScreen;
+import models.states.menuStates.PlayMenu;
 import models.states.menuStates.StartMenuScreen;
 
 /**
@@ -31,17 +34,19 @@ public class Splashscreen extends State {
     }
 
     @Override
-    protected void handleInput() {
-
-    }
+    protected void handleInput() {}
 
     @Override
     public void update(float dt) {
         handleInput();
         if(am.update() && TimeUtils.timeSinceMillis(startTime) > 4000){
-            gsm.set(new StartMenuScreen(gsm));
+            try {
+                gsm.set(new StartMenuScreen(gsm, true));
+            } catch (Exception e) {
+                CastleCrush.playServices.toast("Something went wrong, unable to start the app");
+                e.printStackTrace();
+            }
         }
-
     }
 
     @Override

@@ -43,7 +43,6 @@ public class TutorialState extends State {
                 CastleCrush.WIDTH / 10,
                 CastleCrush.HEIGHT / 10,
                 new Sprite(new Texture("return_menu.png")));
-        
         sf = new SlidingObjectXdirection(-CastleCrush.HEIGHT/4, 3*CastleCrush.HEIGHT/4, CastleCrush.HEIGHT/4, CastleCrush.HEIGHT/4, new Sprite(new Texture("sliding_finger.png")),5*CastleCrush.WIDTH/4, -900);
         screenTouched = false;
     }
@@ -57,7 +56,6 @@ public class TutorialState extends State {
                 && !(cam.position.x - Gdx.input.getDeltaX() <= CastleCrush.WIDTH / 8)) {
             cam.translate(-Gdx.input.getDeltaX() / 3, 0);
 
-
             // sliding backward
             if (cam.position.x < CastleCrush.WIDTH/4 && !Gdx.input.isTouched()){
                 cam.translate(CastleCrush.WIDTH/8-cam.position.x,0);
@@ -69,26 +67,27 @@ public class TutorialState extends State {
                 cam.translate(5*CastleCrush.WIDTH/8-cam.position.x,0);
             }
 
-
             // sliding forward
             if(cam.position.x > CastleCrush.WIDTH/4 && !Gdx.input.isTouched() && cam.position.x < CastleCrush.WIDTH * 3/8){
                cam.translate((3*CastleCrush.WIDTH/8 - cam.position.x),0);
             }
-
             if(cam.position.x > 2*CastleCrush.WIDTH/4 && !Gdx.input.isTouched() && cam.position.x < CastleCrush.WIDTH * 5/8){
                 cam.translate(5*CastleCrush.WIDTH/8 - cam.position.x,0);
             }
             if(cam.position.x > 3*CastleCrush.WIDTH/4 && !Gdx.input.isTouched() && cam.position.x < CastleCrush.WIDTH * 7/8){
                 cam.translate(7*CastleCrush.WIDTH/8 - cam.position.x,0);
             }
-
             cam.update();
         }
         if ((cam.position.x > CastleCrush.WIDTH * 3 / 4) && isOnBackBtn()) {
-            gsm.set(new StartMenuScreen(gsm));
+            try {
+                gsm.set(new StartMenuScreen(gsm));
+            } catch (Exception e) {
+                CastleCrush.playServices.toast("Unable to get to main menu, please restart the app");
+                e.printStackTrace();
+            }
             dispose();
         }
-
     }
 
     private boolean isOnBackBtn() {
@@ -104,15 +103,8 @@ public class TutorialState extends State {
     @Override
     public void update(float dt) {
         handleInput();
-        if (Gdx.input.isKeyPressed(Input.Keys.BACK)){
-            System.out.println("PRESSED");
-            gsm.set(new StartMenuScreen(gsm));
-        }
         sf.update(dt);
-
     }
-
-
 
     @Override
     public void render(SpriteBatch sb) {
@@ -128,10 +120,13 @@ public class TutorialState extends State {
             sb.draw(sf.getBtn(), sf.getXpos(), sf.getYpos(), sf.getBtnWidth(), sf.getBtnHeight());
         }
         sb.end();
-
     }
 
     @Override
     public void dispose() {
+        texture1.dispose();
+        texture2.dispose();
+        texture3.dispose();
+        texture4.dispose();
     }
 }

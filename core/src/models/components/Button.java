@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Button {
 
-
     protected Vector3 position;
     private int btnWidth;
     private int btnHeight;

@@ -33,7 +33,6 @@ public class GameStateManager {
         states.peek().update(dt);
     }
 
-    // SpriteBatches are really heavy files, so we are only using one spritebatch and passing it around to different states
     public void render(SpriteBatch sb) {
         states.peek().render(sb);
     }

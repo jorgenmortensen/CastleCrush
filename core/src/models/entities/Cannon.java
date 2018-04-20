@@ -47,7 +47,6 @@ public class Cannon implements Drawable{
 
     }
 
-
     //Updates the game with the interval dt
     public void update(float dt) {
 

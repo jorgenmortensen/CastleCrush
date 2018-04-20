@@ -43,8 +43,8 @@ public class OnlineMultiplayerState extends State implements PlayServices.Networ
         System.out.println("OnlineMultiPlayerState started");
 
         this.batch=batch;
-        world = new MockGameWorld();
-        drawer = new GameWorldDrawer(batch, world);
+        world = new MockGameWorld(gsm);
+        drawer = new GameWorldDrawer(batch, world,gsm);
         CastleCrush.playServices.setNetworkListener(this);
 
     }

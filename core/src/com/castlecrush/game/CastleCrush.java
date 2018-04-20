@@ -24,15 +24,10 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 	private static final String TAG = CastleCrush.class.getName();
 	public static Music music;
 	public static boolean soundOn;
+	public static boolean soundEffectsOn;
 	public static int WIDTH;
 	public static int HEIGHT;
-	Drawer tegner;
-	MockGameWorld world;
 	OnlineMultiplayerState onlinemultiplayerstate;
-
-
-	private GameStateManager gsm;
-	private SpriteBatch batch;
 
 	public static PlayServices playServices;
 
@@ -42,25 +37,36 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 		playServices.setGameListener(this);
 	}
 
+	public static float xCoordBg1;
+	public static float xCoordBg2;
+	public static final int BACKGROUND_MOVE_SPEED = -50;
+
+	public static final String TITLE = "Castle Crush";
+
+	private SpriteBatch batch;
+	private GameStateManager gsm;
+
 	@Override
 	public void create () {
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
+		xCoordBg1 = WIDTH;
+		xCoordBg2 = 0;
 		batch = new SpriteBatch();
-		System.out.println("HEI3");
-
 		gsm = new GameStateManager();
-		onlinemultiplayerstate = new OnlineMultiplayerState(gsm, batch);
 		soundOn = true;
+		soundEffectsOn = true;
 		music = Gdx.audio.newMusic(Gdx.files.internal("gameMusic.mp3"));
 		music.setLooping(true);
 		music.setVolume(0.5f);
 		music.play();
 		Gdx.gl.glClearColor(0, 0, 0, 1);
-		gsm.push(new Splashscreen(gsm));
-		System.out.println("HEI4");
-
-
+		onlinemultiplayerstate = new OnlineMultiplayerState(gsm, batch);
+		try {
+			gsm.push(new Splashscreen(gsm));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -74,8 +80,6 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 	@Override
 	public void dispose () {
 		batch.dispose();
-
-		tegner.dispose();
 	}
 
 	@Override

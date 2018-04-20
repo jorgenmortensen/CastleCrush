@@ -31,6 +31,7 @@ import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListener;
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 import com.google.example.games.basegameutils.GameHelper;
+import com.castlecrush.game.CastleCrush;
 
 import static com.google.android.gms.games.GamesActivityResultCodes.RESULT_LEFT_ROOM;
 
@@ -69,8 +70,6 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 		System.out.println("HEI2");
 		context = getApplicationContext();
 
-
-
 		gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
 		gameHelper.enableDebugLog(false);
 
@@ -79,7 +78,6 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 			public void onSignInFailed() {
 				System.out.println("sign in failed");
 			}
-
 			@Override
 			public void onSignInSucceeded() {
 				Log.d(TAG, "onSignInSucceeded: ");
@@ -88,11 +86,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 				}
 			}
 		};
-
 		gameHelper.setup(gameHelperListener);
-
-
-
 	}
 	@Override
 	protected void onStart()
@@ -494,8 +488,11 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 
 	@Override
 	public void onDisconnectedFromRoom(Room room) {
-		Log.d(TAG, "onDisconnectedFromRoom: ");
-		currentRoomId = null;
+		// This usually happens due to a network error, leave the game.
+		// show error message and return to main screen
+		System.out.println("onDisconnectedFromRoom: ");
+		leaveRoom();
+		toast("Network Error");
 	}
 
 	@Override
@@ -506,6 +503,9 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 	@Override
 	public void onPeersDisconnected(Room room, List<String> list) {
 		System.out.println("onPeersDisconnected: ");
+		//Not enough players are left for the game to go on, end the game and leave the room.
+		leaveRoom();
+		toast("Your opponent is disconnected from the room");
 	}
 
 	@Override
