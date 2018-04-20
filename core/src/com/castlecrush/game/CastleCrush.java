@@ -61,7 +61,7 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 		onlinemultiplayerstate = new OnlineMultiplayerState(gsm, batch);
 		startmenuscreen = new StartMenuScreen(gsm);
 		try {
-			gsm.push(new Splashscreen(gsm));
+			gsm.set(new Splashscreen(gsm));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

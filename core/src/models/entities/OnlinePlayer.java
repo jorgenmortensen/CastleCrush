@@ -7,7 +7,10 @@ public class OnlinePlayer extends Player {
     public String participantId = "";
     public String playerId = "";
     public String displayName = "";
-    public boolean isSelf = false;
+    private boolean isSelf = false;
+    private boolean isHost = false;
+
+
     GameWorld world;
 
   /*  public OnlinePlayer(String id, GameWorld world *//**//*, boolean isYou*//**//*) {
@@ -45,6 +48,22 @@ public class OnlinePlayer extends Player {
 
     public void setWorld(GameWorld w) {
         super.setWorld(w);
+    }
+
+    public void setHost(boolean host) {
+        isHost = host;
+    }
+
+    public boolean isHost() {
+        return isHost;
+    }
+
+    public boolean isSelf() {
+        return isSelf;
+    }
+
+    public void setSelf(boolean self) {
+        isSelf = self;
     }
 
 }

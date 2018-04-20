@@ -51,13 +51,14 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 	private static final int MIN_PLAYERS = 1;
 	private static final int MAX_PLAYERS = 2;
 	private String incomingInvitationId;
+	private String currentOpponentID;
 	private GameListener gameListener;
 	private NetworkListener networkListener;
 	private String currentRoomId = null;
 	private Intent previousMatch;
 	private String currentPlayerID;
-	private String currentOpponentID;
 	private static Context context;
+	private boolean host=false;
 
 
 	@Override
@@ -287,6 +288,8 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 
 		//Saves intent with selected players for rematch
 		previousMatch = data;
+		host=true;
+
 	}
 
 
@@ -304,9 +307,12 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 			for (Participant participant : room.getParticipants()) {
 				String playerId = participant.getPlayer().getPlayerId();
 				OnlinePlayer playerData = new OnlinePlayer(playerId, participant.getParticipantId(), participant.getDisplayName());
+				playerData.setHost(host);
 				if (OnlinePlayer.equals(currentPlayerID, playerId)) {
-					playerData.isSelf = true;
+					playerData.setSelf(true);
+					playerData.setHost(host);
 				}else{
+					playerData.setHost(!host);
 					currentOpponentID = playerId;
 				}
 				playerList.add(playerData);

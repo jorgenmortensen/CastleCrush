@@ -39,15 +39,15 @@ public class OnlineMultiplayerState extends SuperPlayState implements PlayServic
     public OnlineMultiplayerState(GameStateManager gsm, SpriteBatch batch) {
         super(gsm);
         System.out.println("OnlineMultiPlayerState started");
+        CastleCrush.playServices.setNetworkListener(this);
 
         screenHeight = CastleCrush.HEIGHT * SCALE;
         screenWidth = CastleCrush.WIDTH * SCALE;
         this.batch=batch;
         drawer = new GameWorldDrawer(batch, screenWidth, screenHeight);
+
         world = new OnlineMultiplayerWorld(this, drawer, screenWidth, screenHeight, players);
         controller = new GameWorldController(world);
-
-        CastleCrush.playServices.setNetworkListener(this);
 
 
     }
@@ -59,12 +59,13 @@ public class OnlineMultiplayerState extends SuperPlayState implements PlayServic
 
 
     @Override
-    protected void handleInput() {}
+    protected void handleInput() {
+        controller.handleInput();
+    }
 
     @Override
     public void update(float dt) {
         world.update(dt);
-        controller.handleInput();
     }
 
 
@@ -94,6 +95,12 @@ public class OnlineMultiplayerState extends SuperPlayState implements PlayServic
         CastleCrush.playServices.sendReliableMessage(buffer.array());
     }
 
+    public void broadcastGameOver(){
+        ByteBuffer buffer = ByteBuffer.allocate(2*4+1);
+        buffer.put(MessageCodes.GAME_OVER);
+        CastleCrush.playServices.sendReliableMessage(buffer.array());
+    }
+
     @Override
     public void onReliableMessageReceived(String senderParticipantId, int describeContents, byte[] messageData) {
         Gdx.app.debug(TAG, "onReliableMessageReceived: " + senderParticipantId + "," + describeContents);
@@ -102,7 +109,7 @@ public class OnlineMultiplayerState extends SuperPlayState implements PlayServic
         byte messageType = buffer.get();
 
         switch (messageType) {
-            case MessageCodes.PLAY_AGAIN:
+            case MessageCodes.GAME_OVER:
                 System.out.println("PLAY AGAIN MESSAGE RECEIVED");
                 CastleCrush.playServices.sendOutRematch();
                 break;
@@ -119,8 +126,8 @@ public class OnlineMultiplayerState extends SuperPlayState implements PlayServic
         switch (messageType) {
             case MessageCodes.CANNON:
                 System.out.println("CANNON MESSAGE RECEIVED");
-
-
+                //XXXX HENT UT FRA BUFFER
+                //world.fireProjectile(velocity);
                 break;
         }
     }

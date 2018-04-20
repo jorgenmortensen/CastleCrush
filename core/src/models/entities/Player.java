@@ -84,7 +84,7 @@ public class Player {
     }
 
     public void setWorld (GameWorld w){
-        world =w;
+        world = w;
 
     }
 

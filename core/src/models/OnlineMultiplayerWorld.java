@@ -31,10 +31,7 @@ public class OnlineMultiplayerWorld extends GameWorld {
         projectile.fire(velocity);
         projectile.setFired(true);
         addToRenderList(projectile.getDrawable());
-        ((OnlineMultiplayerState) state).broadcastShotData(velocity);
-
-//        ******************************************
-//        SEND VELOCITY AS MESSAGE HERE
+        //((OnlineMultiplayerState) state).broadcastShotData(velocity);
     }
 
     @Override
@@ -62,7 +59,7 @@ public class OnlineMultiplayerWorld extends GameWorld {
 
         for (OnlinePlayer p : players){
             p.setWorld(this);
-            if (p.isSelf){
+            if (p.isHost()){
                 player1=p;
             }else{
                 player2=p;
