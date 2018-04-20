@@ -1,5 +1,7 @@
 package models.entities;
 
+import com.badlogic.gdx.math.Vector2;
+
 import models.GameWorld;
 
 /**
@@ -69,7 +71,12 @@ public class Player {
         world.fireProjectile();
     }
 
+    public void fireCannon(Vector2 velocity) {
+        world.fireProjectile(velocity);
+    }
+
     public void setCannon(Cannon cannon) {
         this.cannon = cannon;
     }
+
 }

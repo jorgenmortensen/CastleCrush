@@ -9,13 +9,13 @@ import com.castlecrush.game.CastleCrush;
 import models.components.Button;
 import models.states.GameStateManager;
 import models.states.State;
-import models.states.playStates.SinglePlayerState;
+import models.states.playStates.LocalMulitplayerState;
 
 /**
  * Created by Jørgen on 17.04.2018.
  */
 
-public class GameOverMenu extends State {
+public class OnlineGameOverMenu extends State {
 
     private Texture background;
     private Texture winner;
@@ -25,7 +25,7 @@ public class GameOverMenu extends State {
     private boolean winnerScreen;
     private boolean isHost;
 
-    public GameOverMenu(GameStateManager gsm, boolean winnerScreen) {
+    public OnlineGameOverMenu(GameStateManager gsm, boolean winnerScreen) {
         super(gsm);
         background = new Texture(Gdx.files.internal("loop_background_castles.png"));
         this.winnerScreen = winnerScreen;
@@ -55,7 +55,7 @@ public class GameOverMenu extends State {
                 gsm.set(new StartMenuScreen(gsm));
             }
             else if (isOnButton(rematchBtn) && isHost) {
-                gsm.set(new SinglePlayerState(gsm));
+                gsm.set(new LocalMulitplayerState(gsm));
             }
         }
     }

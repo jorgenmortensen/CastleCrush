@@ -6,16 +6,17 @@ import com.castlecrush.game.CastleCrush;
 
 import controllers.game_world.GameWorldController;
 import models.GameWorld;
+import models.entities.Player;
 import models.states.GameStateManager;
-import models.states.State;
-import models.states.menuStates.GameOverMenu;
+import models.states.menuStates.LocalGameOverMenu;
+import models.states.menuStates.OnlineGameOverMenu;
 import views.game_world.GameWorldDrawer;
 
 /**
  * Created by Jørgen on 12.03.2018.
  */
 
-public class SinglePlayerState extends State {
+public class LocalMulitplayerState extends SuperPlayState {
 
     private GameWorldController controller;
     private GameWorld world;
@@ -25,25 +26,7 @@ public class SinglePlayerState extends State {
     private float screenHeight;
 
 
-    //    Cannon cannon1, cannon2, activeCannon;
-//    boolean angleUp;
-//    boolean powerUp;
-//    public BitmapFont font;
-//    boolean angleActive;
-//    boolean powerActive;
-//    boolean shotsFired;
-//    float xMax, xCoordBg1, xCoordBg2;
-//    private Texture background1;
-//    private Texture background2;
-//    final int BACKGROUND_MOVE_SPEED = -30;
-//    boolean fired = false;
-    // private int time, oldTime, turnLimit = 15, shootingTimeLimit = 5;
-    // long start, end;
-
-    // private Player player1, player2,
-//      private activePlayer;
-
-    public SinglePlayerState(GameStateManager gsm) {
+    public LocalMulitplayerState(GameStateManager gsm) {
         super(gsm);
         screenWidth = CastleCrush.WIDTH * SCALE;
         screenHeight = CastleCrush.HEIGHT * SCALE;
@@ -59,9 +42,14 @@ public class SinglePlayerState extends State {
 //        controller.handleInput();
     }
 
+    @Override
     public void gameOver () {
-            gsm.set(new GameOverMenu(gsm, false));
+            gsm.set(new OnlineGameOverMenu(gsm, false));
         }
+
+    public void gameOver(Player winningPlayer, Player loosingPLayer) {
+        gsm.set(new LocalGameOverMenu(gsm, winningPlayer, loosingPLayer));
+    }
 
     Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
     @Override

@@ -14,7 +14,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.castlecrush.game.CastleCrush;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +27,8 @@ import models.entities.OneWayWall;
 import models.entities.Player;
 import models.entities.Projectile;
 import models.states.State;
-import models.states.menuStates.GameOverMenu;
-import models.states.playStates.SinglePlayerState;
+import models.states.playStates.LocalMulitplayerState;
+import models.states.playStates.SuperPlayState;
 import views.game_world.GameWorldDrawer;
 
 
@@ -53,39 +52,39 @@ public class GameWorld {
     private Box ground;
     private float screenWidth;
     private float screenHeight;
-    private float groundLevel;
-    private Player player1;
-    private Player player2;
-    private Player activePlayer;
-    private Cannon activeCannon;
-    private Cannon cannon2;
-    private Cannon cannon1;
+    float groundLevel;
+    Player player1;
+    Player player2;
+    Player activePlayer;
+    Cannon activeCannon;
+    Cannon cannon2;
+    Cannon cannon1;
 
 //    sprites
     private String bottomGroundString= "bottom_ground.png";
     private String windowBoxString= "window_box.png";
     private String normalBoxString= "normal_box.png";
     private String roofBoxString= "roof_box.png";
-    private String cannonString= "cannon.png";
+    String cannonString= "cannon.png";
     private String cannonBallString = "ball_cannon.png";
     private String gameWinningObjectString= "gwo3.png";
-    private String powerBarString= "powerBar.png";
+    String powerBarString= "powerBar.png";
     private List<Drawable> drawableList;
-    private float cannonWidth;
-    private float cannonHeight;
-    private float cannon1position;
-    private float cannon2position;
-    Box[][] castleMatrix, mirroredCastleMatrix;
-    String [][] boxStrings;
-
-    private int time, oldTime, turnLimit = 15, shootingTimeLimit = 5;
+    float cannonWidth;
+    float cannonHeight;
+    float cannon1position;
+    float cannon2position;
+    private Box[][] castleMatrix, mirroredCastleMatrix;
+    private String [][] boxStrings;
+    int time;
+    private int oldTime, turnLimit = 15, shootingTimeLimit = 5;
     long start, end;
 
-    private SinglePlayerState state;
-    private Projectile projectile;
+    private SuperPlayState state;
+    Projectile projectile;
     private GameWorldDrawer drawer;
 
-    public GameWorld(SinglePlayerState state, GameWorldDrawer drawer, float screenWidth, float screenHeight) {
+    public GameWorld(SuperPlayState state, GameWorldDrawer drawer, float screenWidth, float screenHeight) {
         this.drawer = drawer;
         mockBoxes = new ArrayList<Drawable>();
         this.state = state;
@@ -111,7 +110,7 @@ public class GameWorld {
 //        cannonHeight = screenHeight/30;
     }
 
-    private void createPlayerAndCannon(){
+    protected void createPlayerAndCannon(){
         Sprite powerbarSprite1 = new Sprite(new Texture(powerBarString));
         Sprite powerbarSprite2 = new Sprite(new Texture(powerBarString));
         Sprite cannonSprite1 = new Sprite(new Texture(cannonString));
@@ -122,8 +121,6 @@ public class GameWorld {
         addToRenderList(powerbarSprite2);
         player1 = new Player("player1", this);
         player2 = new Player("player2", this);
-
-
         cannon1 = new Cannon(player1, cannon1position,
                 groundLevel, cannonWidth, cannonHeight,
                 cannonSprite1,  powerbarSprite1, true);
@@ -133,9 +130,6 @@ public class GameWorld {
                 cannonSprite2, powerbarSprite2, false);
         player1.setCannon(cannon1);
         player2.setCannon(cannon2);
-
-
-
         activePlayer = player1;
         activeCannon = player1.getCannon();
         activeCannon.activate();
@@ -301,7 +295,7 @@ public class GameWorld {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(boxWidth/2, boxHeight/2);
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.friction = 0.9f;
+        fixtureDef.friction = 0.4f;
         fixtureDef.density = density;
         fixtureDef.restitution = 0.0f;
         fixtureDef.shape = shape;
@@ -469,26 +463,19 @@ public class GameWorld {
         }
 
         //Check if game is over, if so, the gameOverMenu becomes active
-        if (getPlayer1().getGameWinningObject().getHit()) {
-//            //TODO, Opponent wins, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
-////            Gdx.app.postRunnable(new Runnable() {
-//                @Override
-//                public void run() {
-                    state.gameOver();
-
-//                }
-//            });
-
-        } else if (getPlayer2().getGameWinningObject().getHit()) {
-//            //TODO, You win, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
-//            Gdx.app.postRunnable(new Runnable() {
-//                @Override
-//                public void run() {
-                    state.gameOver();
-//                }
-//            });
-
-        }
+        checkIfGameOver();
+//        if (getPlayer1().getGameWinningObject().getHit()) {
+////            //TODO, Opponent wins, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
+//            (LocalMulitplayerState) state.gameOver();
+//
+////                }
+////            });
+//
+//        } else if (getPlayer2().getGameWinningObject().getHit()) {
+////            //TODO, You win, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
+//                    state.gameOver();
+//
+//        }
         physicsWorld.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 
         //set correct position of bodies that have a body
@@ -502,6 +489,18 @@ public class GameWorld {
             }
         }
 
+    }
+
+    protected void checkIfGameOver() {
+        if (getPlayer1().getGameWinningObject().getHit()) {
+//            //TODO, Opponent wins, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
+             state.gameOver();
+
+        } else if (getPlayer2().getGameWinningObject().getHit()) {
+//            //TODO, You win, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
+            state.gameOver();
+
+        }
     }
 
 
@@ -580,10 +579,8 @@ public class GameWorld {
         //Activates variables
         activeCannon = activePlayer.getCannon();
         activeCannon.activate();
-        activeCannon.activatePowerBar();
         drawer.removeSprite(projectile.getDrawable());
         spawnProjectile();
-
     }
 
 
@@ -627,15 +624,17 @@ public class GameWorld {
         projectile.setFired(true);
         addToRenderList(projectile.getDrawable());
     }
-
-
-    public float getBoxHeight(){
-        return this.boxHeight;
+    // ******************************************************
+    //    USE THIS METHOD WHEN PLAYING ONLINE, FOR SETTING PROJECTILE VELOCITY
+    // ******************************************************
+    public void fireProjectile(Vector2 velocity) {
+        start = System.currentTimeMillis();
+        time = 0;
+        projectile.fire(velocity);
+        projectile.setFired(true);
+        addToRenderList(projectile.getDrawable());
     }
-
-    public float getBoxWidth(){
-        return this.boxWidth;
-    }
+    // ******************************************************
 
     public Player getPlayer1() {
         return player1;
@@ -649,7 +648,7 @@ public class GameWorld {
         physicsWorld.dispose();
     }
 
-    private void addToRenderList(Sprite sprite) {
+    protected void addToRenderList(Sprite sprite) {
 //        alle sprites that are shown on screen is added here
         drawer.addSprite(sprite);
     }

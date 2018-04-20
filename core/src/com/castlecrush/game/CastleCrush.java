@@ -7,9 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import models.states.GameStateManager;
-import models.states.Splashscreen;
 import models.states.menuStates.PlayMenu;
-import models.states.playStates.SinglePlayerState;
 
 public class CastleCrush extends ApplicationAdapter {
 

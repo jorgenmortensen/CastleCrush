@@ -1,10 +1,11 @@
 package models.entities;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
 /**
- * Created by Jørgen on 09.03.2018.
+ * Created by Jørgen and Nina on 09.03.2018.
  */
 
 
@@ -58,12 +59,34 @@ public class Cannon {
 
     }
 
+    public void activate() {
+        if (!isAngleActive()){
+            switchAngleActive();
+        }
+        if (isPowerActive()) {
+            switchPowerActive();
+        }
+    }
+
+    public void deactivate() {
+        if (isAngleActive()){
+            switchAngleActive();
+        }
+        if (isPowerActive()){
+            switchPowerActive();
+        }
+        setPower(0);
+        setAngle(0);
+        resetHasFiredThisTurn();
+    }
+
     public void progressShootingSequence() {
         if (isAngleActive()) {
             switchAngleActive();
             switchPowerActive();
             System.out.println("stop cannon move");
         } else if (isPowerActive()) {
+            activatePowerBar();
             switchPowerActive();
             System.out.println("power is active");
         }
@@ -71,7 +94,10 @@ public class Cannon {
         if (!isAngleActive() && !isPowerActive() && !hasFiredThisTurn) {
             hasFiredThisTurn = true;
             System.out.println(player+"     player exists");
-            player.fireCannon();
+
+            Vector2 velocity= new Vector2 ((float)(Math.cos(getShootingAngle()*Math.PI/180) * power/3),
+                    (float)(Math.sin(getShootingAngle()*Math.PI/180) * power/3));
+            player.fireCannon(velocity);
         }
     }
 
@@ -171,17 +197,6 @@ public class Cannon {
         this.power = power;
     }
 
-    public boolean isShotsFired() {
-        return shotsFired;
-    }
-
-    public void setShotsFired(boolean shotsFired) {
-        this.shotsFired = shotsFired;
-    }
-
-    //Fires the shot, with a given angle and power
-    public void Fire() {
-    }
     private boolean isAngleActive(){return angleActive;}
 
     private boolean isPowerActive() {return powerActive;}
@@ -197,33 +212,8 @@ public class Cannon {
         this.hasFiredThisTurn = false;
     }
 
-    public Sprite getPowerBarSprite() {
-        return powerBarSprite;
-    }
-
     public void activatePowerBar() {
         powerBarSprite.setPosition(x, y);
         powerBarSprite.setSize(width, height/3);
-    }
-
-    public void deactivate() {
-        if (isAngleActive()){
-            switchAngleActive();
-        }
-        if (isPowerActive()){
-            switchPowerActive();
-        }
-        setPower(0);
-        setAngle(0);
-        resetHasFiredThisTurn();
-    }
-
-    public void activate() {
-        if (!isAngleActive()){
-            switchAngleActive();
-        }
-        if (isPowerActive()) {
-            switchPowerActive();
-        }
     }
 }

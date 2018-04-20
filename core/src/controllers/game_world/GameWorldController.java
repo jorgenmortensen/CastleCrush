@@ -1,6 +1,7 @@
 package controllers.game_world;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,17 @@ private GameWorld world;
 
     public GameWorldController(GameWorld world) {
         this.world = world;
+    }
+
+    public void handleOnlineMessage(/*PUT MESSAGE HERE*/) {
+//        INSERT MESSAGEHANDELING HERE TO SET VELOCITY
+
+
+//        UNCOMMENT AND INITAITE VELOCITY WITH VALUE FROM OTHER PLAYER
+//        Vector2 velocity;
+//        world.fireProjectile(velocity);
+
+
     }
 
     @Override

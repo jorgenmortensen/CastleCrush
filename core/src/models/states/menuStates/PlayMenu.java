@@ -10,8 +10,7 @@ import com.castlecrush.game.CastleCrush;
 import models.components.Button;
 import models.components.GravityButton;
 import models.states.GameStateManager;
-import models.states.State;
-import models.states.playStates.SinglePlayerState;
+import models.states.playStates.LocalMulitplayerState;
 
 import static models.states.menuStates.StartMenuScreen.changed_logo;
 import static models.states.menuStates.StartMenuScreen.crushed;
@@ -80,7 +79,7 @@ public class PlayMenu extends models.states.State {
 
     protected void handleInput() {
         if (Gdx.input.justTouched() && isOnButton(btnSingle)) {
-            gsm.set(new SinglePlayerState(gsm));
+            gsm.set(new LocalMulitplayerState(gsm));
             System.out.println("Single pressed");
             dispose();
         }

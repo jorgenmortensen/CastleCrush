@@ -18,3 +18,6 @@ projectile.setUserdata, fikse dette, hvor brukes det
 
 Hvilke objekter/entiter skal være Singletons?? Projectile, GameWorld(?), Drawer(?), Controller(?), evt. andre
 
+
+
+slette oldProjetile
