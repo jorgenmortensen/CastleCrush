@@ -85,7 +85,6 @@ public class GameCollision implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
-
     }
 
     @Override

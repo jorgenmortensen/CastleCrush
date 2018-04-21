@@ -1,24 +1,15 @@
 package views.menuStatesViews;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.castlecrush.game.CastleCrush;
 
-import controllers.menuStatesControllers.PlayMenuController;
-import models.states.GameStateManager;
-import models.states.menuStates.MultiplayerMenu;
 import models.states.menuStates.PlayMenu;
-import models.states.menuStates.StartMenuScreen;
-import views.Drawer;
 
-import static models.states.menuStates.StartMenuScreen.changed_logo;
 import static models.states.menuStates.StartMenuScreen.crushed;
 import static models.states.menuStates.StartMenuScreen.little_crushed;
-import static models.states.menuStates.StartMenuScreen.logo;
 import static models.states.menuStates.StartMenuScreen.startTime;
 import static models.states.menuStates.StartMenuScreen.with_u;
 import static models.states.menuStates.StartMenuScreen.without_castle;

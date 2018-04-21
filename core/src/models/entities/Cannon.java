@@ -94,13 +94,11 @@ public class Cannon {
         if (!isAngleActive() && !isPowerActive() && !hasFiredThisTurn) {
             hasFiredThisTurn = true;
             System.out.println(player+"     player exists");
-
             Vector2 velocity= new Vector2 ((float)(Math.cos(getShootingAngle()*Math.PI/180) * power/3),
                     (float)(Math.sin(getShootingAngle()*Math.PI/180) * power/3));
             player.fireCannon(velocity);
         }
     }
-
 
     public void update() {
         if (isAngleActive()) {

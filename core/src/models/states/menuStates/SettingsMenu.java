@@ -22,6 +22,9 @@ public class SettingsMenu extends State{
     protected SettingsMenuDrawer settingsDrawer;
     protected SettingsMenuController settingsController;
 
+    protected Button btnSound;
+    protected Button btnSoundEffects;
+
     public SettingsMenu() {
         super();
         initFields();
@@ -35,9 +38,17 @@ public class SettingsMenu extends State{
     }
 
     public void initFields() {
-        btnSound = new Button(0, 0, CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
+        btnSound = new Button(CastleCrush.WIDTH / 4,
+                CastleCrush.HEIGHT / 2 - CastleCrush.HEIGHT / 10,
+                CastleCrush.WIDTH / 8,CastleCrush.HEIGHT * 2 / 10,
                         CastleCrush.soundOn ? new Sprite(new Texture("sound_on.png")) :
                         new Sprite(new Texture("sound_off.png")));
+
+        btnSoundEffects = new Button(CastleCrush.WIDTH * 3 / 4 - CastleCrush.WIDTH / 8,
+                CastleCrush.HEIGHT / 2 - CastleCrush.HEIGHT / 10,
+                CastleCrush.WIDTH / 8,
+                CastleCrush.HEIGHT * 2 / 10,
+                new Sprite(new Texture("sound_effects.png")));
     }
 
     public void setSound() {

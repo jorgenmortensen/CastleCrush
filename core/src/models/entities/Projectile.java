@@ -1,9 +1,12 @@
 package models.entities;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.castlecrush.game.CastleCrush;
 
 import java.util.Timer;
 
@@ -28,6 +31,7 @@ public class Projectile implements Drawable {
     private World physicsWorld;
     private boolean scheduleActive = false;
     private Vector2 velocity;
+    private Sound projectileFired;
 
     public void init(Body body,  Sprite sprite, GameWorld world) {
         this.body = body;
@@ -40,6 +44,7 @@ public class Projectile implements Drawable {
         this.velocity = velocity;
         this.physicsWorld = physicsWorld;
         this.isFired = false;
+        this.projectileFired = Gdx.audio.newSound(Gdx.files.internal("cannon_sound.ogg"));
     }
 
     public void setHasHit(boolean hasHit){this.hasHit = hasHit;}
@@ -130,6 +135,9 @@ public class Projectile implements Drawable {
     }
 
     public void setFired(boolean fired) {
+        if (fired){
+            this.projectileFired.play(CastleCrush.soundEffectsVolume);
+        }
         isFired = fired;
     }
 

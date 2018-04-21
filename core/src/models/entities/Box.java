@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.castlecrush.game.CastleCrush;
 //import com.sun.xml.internal.ws.client.sei.ResponseBuilder;
 
 /**
@@ -85,7 +86,7 @@ public class Box implements Drawable {
 
     public void isHit(boolean isHit){
         this.isHit = isHit;
-        hitSound.play(0.5f);
+        hitSound.play(CastleCrush.soundEffectsVolume);
     }
 
     public boolean getHit() { return isHit; }

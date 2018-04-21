@@ -33,7 +33,6 @@ public abstract class State {
     protected GameStateManager gsm;
     protected Button btnSettings;
     protected Button btnHome;
-    protected Button btnSound;
     protected Button btnInvitationInbox;
     protected Texture background1;
     protected Texture background2;
@@ -61,8 +60,6 @@ public abstract class State {
         btnHome = new Button(CastleCrush.WIDTH * 14 / 15, 0,
                 CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
                 new Sprite(new Texture(("homeBtn.png"))));
-        btnSound = new Button(0, 0, CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
-                CastleCrush.soundOn ? new Sprite(new Texture("sound_on.png")) : new Sprite(new Texture("sound_off.png")));
 
         btnInvitationInbox = new Button(0, 0,
                 CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
