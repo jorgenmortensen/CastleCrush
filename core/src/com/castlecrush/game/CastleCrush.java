@@ -99,7 +99,17 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 	@Override
 	public void goToMain() {
 		System.out.println("goToMainScreen");
-		gsm.set(startmenuscreen);
+		try {
+			Gdx.app.postRunnable(new Runnable() {
+				@Override
+				public void run() {
+					gsm.set(startmenuscreen);
+				}
+			});
+		}catch (Exception e) {
+			System.out.println("Exception caught");
+			e.printStackTrace();
+		}
 	}
 
 

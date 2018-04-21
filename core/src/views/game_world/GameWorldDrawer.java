@@ -34,6 +34,7 @@ public class GameWorldDrawer extends Drawer {
     private List<Sprite> spriteList;
 
 
+
     public GameWorldDrawer(SpriteBatch batch, float screenWidth, float screenHeight) {
         super(batch);
         this.screenWidth = screenWidth;
@@ -45,6 +46,7 @@ public class GameWorldDrawer extends Drawer {
 
     @Override
     public void render() {
+        System.out.println("Render method in GameWorldDrawer");
         batch.setProjectionMatrix(cam.combined);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -53,6 +55,7 @@ public class GameWorldDrawer extends Drawer {
         batch.draw(background, 0, 0, screenWidth, screenHeight);
 //        draw every sprite on screen
         for (Sprite sprite : spriteList) {
+            System.out.println("Draw sprite on screen");
             sprite.draw(batch);
         }
 

@@ -49,6 +49,7 @@ public class StartMenuScreen extends State {
     public StartMenuScreen(GameStateManager gsm) {
         super(gsm);
         initFields();
+        System.out.println("startmenuscreeen ruun");
         startMenuDrawer = new StartMenuDrawer();
         startMenuController = new StartMenuController(gsm);
     }

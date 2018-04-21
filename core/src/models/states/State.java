@@ -57,7 +57,7 @@ public abstract class State {
     private void initButtons() {
         btnSettings = new Button(CastleCrush.WIDTH * 14 / 15, 0,
                 CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
-                new Sprite(new Texture("settingsBtn.png")));
+                new Sprite(new Texture("settings_btn.png")));
         btnHome = new Button(CastleCrush.WIDTH * 14 / 15, 0,
                 CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
                 new Sprite(new Texture(("homeBtn.png"))));

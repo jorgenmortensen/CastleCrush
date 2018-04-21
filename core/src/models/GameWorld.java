@@ -24,6 +24,7 @@ import models.entities.Cannon;
 import models.entities.Drawable;
 import models.entities.GameWinningObject;
 import models.entities.OneWayWall;
+import models.entities.OnlinePlayer;
 import models.entities.Player;
 import models.entities.Projectile;
 import models.states.State;
@@ -83,9 +84,14 @@ public class GameWorld {
     protected SuperPlayState state;
     Projectile projectile;
     protected GameWorldDrawer drawer;
+    protected List<OnlinePlayer> players = null;
 
-    public GameWorld(SuperPlayState state, GameWorldDrawer drawer, float screenWidth, float screenHeight) {
+    public GameWorld(){
+    }
+
+    public GameWorld(SuperPlayState state, GameWorldDrawer drawer, float screenWidth, float screenHeight, List<OnlinePlayer> players) {
         this.drawer = drawer;
+        this.players = players;
         mockBoxes = new ArrayList<Drawable>();
         this.state = state;
         groundLevel = screenHeight/25;
@@ -103,7 +109,9 @@ public class GameWorld {
         cannonHeight = screenHeight/30;
         cannon1position = screenWidth/3;
         cannon2position = screenWidth*2/3 - cannonWidth;
+        System.out.println("GG1");
         createPlayerAndCannon();
+        System.out.println("GG2");
         generateBodies();
         System.out.println("HAHA " + screenWidth + "divided by 3:" + screenWidth/3);
 //        cannonWidth = screenWidth/30;
@@ -119,8 +127,19 @@ public class GameWorld {
         addToRenderList(cannonSprite2);
         addToRenderList(powerbarSprite1);
         addToRenderList(powerbarSprite2);
-        player1 = new Player("player1", this);
-        player2 = new Player("player2", this);
+        if (players == null) {
+            player1 = new Player("player1", this);
+            player2 = new Player("player2", this);
+        }else{
+            System.out.println("Setting online players");
+            for (OnlinePlayer p : players){
+                if (p.isHost()){
+                    player1=p;
+                }else{
+                    player2=p;
+                }
+            }
+        }
         cannon1 = new Cannon(player1, cannon1position,
                 groundLevel, cannonWidth, cannonHeight,
                 cannonSprite1,  powerbarSprite1, true);
@@ -348,7 +367,6 @@ public class GameWorld {
         Sprite sprite = new Sprite(new Texture(cannonBallString));
         sprite.setSize(radius * 2, radius * 2);
         sprite.setOriginCenter();
-        //OldProjectile tempProjectile = new OldProjectile(body, new Vector2(xPos, yPos), sprite, radius * 2, radius * 2, this);
         return sprite;
     }
 
@@ -429,8 +447,6 @@ public class GameWorld {
         activeCannon = activePlayer.getCannon();
         activeCannon.updatePowerBar();
 //        projectile.getBody().setAngularVelocity(0);
-        System.out.println(activeCannon.getX()+"      xcannon");
-        System.out.println(cannon1.getX()+"        cannon1");
         activeCannon.update();
 
 
@@ -443,12 +459,11 @@ public class GameWorld {
         if (time > oldTime) {
 //            System.out.println(time);
         }
-        if (time >= turnLimit && getProjectile().isFired()) {
-//            System.out.println("Switching player turns! You waited too long 😞");
-//            System.out.println("Current active player: " + activePlayer.getId());
-            switchPlayer();
+
+        //if (time >= turnLimit && !getProjectile().isFired()) {
+            //switchPlayer();
 //            System.out.println("New active player " + activePlayer.getId());
-        }
+
         // Time limit after shooting
         if ((projectile.isFired() && time > shootingTimeLimit && projectile.getAbsoluteSpeed() < 5) || time > turnLimit) {
 //            System.out.println("Switching player turns! Cannon ball has lived for 5 seconds");
@@ -456,7 +471,6 @@ public class GameWorld {
             switchPlayer();
           //  System.out.println("New active player " + activePlayer.getId());
         }
-
 
         if (!physicsWorld.isLocked()){
             destroy((ArrayList<Fixture>) getBodiesToDestroy());
@@ -477,7 +491,6 @@ public class GameWorld {
 //
 //        }
         physicsWorld.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-
         //set correct position of bodies that have a body
         for (Drawable drawable: drawableList) {
             if (drawable.getBody() != null){
@@ -607,13 +620,14 @@ public class GameWorld {
 //    }
 
     public void input() {
-        activeCannon.progressShootingSequence();
-// må legge til input for knapp
+        if (((OnlinePlayer) activePlayer).isSelf()) {
+            activeCannon.progressShootingSequence();
+        }
     }
 
 
 
-    public void fireProjectile() {
+    /*public void fireProjectile() {
         start = System.currentTimeMillis();
         time = 0;
         Vector2 fireVelocity = new Vector2(
@@ -623,7 +637,7 @@ public class GameWorld {
         projectile.fire(fireVelocity);
         projectile.setFired(true);
         addToRenderList(projectile.getDrawable());
-    }
+    }*/
     // ******************************************************
     //    USE THIS METHOD WHEN PLAYING ONLINE, FOR SETTING PROJECTILE VELOCITY
     // ******************************************************

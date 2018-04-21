@@ -100,8 +100,8 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 	{
 		super.onStop();
 		gameHelper.onStop();
-		leaveRoom();
-		stopKeepingScreenOn();
+		//leaveRoom();
+		//stopKeepingScreenOn();
 	}
 
 	@Override
@@ -205,7 +205,18 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 		if (currentRoomId != null) {
 			Games.RealTimeMultiplayer.leave(gameHelper.getApiClient(), this, currentRoomId);
 			currentRoomId = null;
-			gameListener.goToMain();
+			try {
+				Gdx.app.postRunnable(new Runnable() {
+					@Override
+					public void run() {
+						gameListener.goToMain();
+					}
+				});
+			}catch (Exception e) {
+				System.out.println("Exception caught");
+				e.printStackTrace();
+			}
+
 		}
 	}
 
@@ -313,7 +324,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 					playerData.setHost(host);
 				}else{
 					playerData.setHost(!host);
-					currentOpponentID = playerId;
+					currentOpponentID = participant.getParticipantId();
 				}
 				playerList.add(playerData);
 			}
@@ -499,8 +510,8 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 		// This usually happens due to a network error, leave the game.
 		// show error message and return to main screen
 		System.out.println("onDisconnectedFromRoom: ");
-		leaveRoom();
-		toast("Network Error");
+		//leaveRoom();
+		//toast("Network Error");
 	}
 
 	@Override
@@ -512,8 +523,8 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 	public void onPeersDisconnected(Room room, List<String> list) {
 		System.out.println("onPeersDisconnected: ");
 		//Not enough players are left for the game to go on, end the game and leave the room.
-		leaveRoom();
-		toast("Your opponent is disconnected from the room");
+		//leaveRoom();
+		// toast("Your opponent is disconnected from the room");
 	}
 
 	@Override
@@ -567,29 +578,42 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 			Gdx.app.debug(TAG, "onRealTimeMessageReceived: NetworkListener is null");
 			return;
 		}
+		System.out.println("MELDING MOTATT");
 		byte[] messageData = realTimeMessage.getMessageData();
 		String senderParticipantId = realTimeMessage.getSenderParticipantId();
 		int describeContents = realTimeMessage.describeContents();
+		System.out.println("RELIABLE?  " +realTimeMessage.isReliable());
 		if (realTimeMessage.isReliable()) {
+			System.out.println("PRØVER Å KALLE RELIABLE MESSAGE RECEIVED");
 			networkListener.onReliableMessageReceived(senderParticipantId, describeContents, messageData);
 		} else {
-			networkListener.onUnreliableMessageReceived(senderParticipantId, describeContents, messageData);
+			System.out.println("PRØVER Å KALLE UNRELIABLE MESSAGE RECEIVED");
+			try {
+				networkListener.onUnreliableMessageReceived(senderParticipantId, describeContents, messageData);
+			} catch (Exception e) {
+				System.out.println("NetworkListener.onUnReliableMessageReceived!!!!!!");
+				e.printStackTrace();
+			}
 		}
 	}
 
 	@Override
 	public void sendUnreliableMessageToOthers(byte[] messageData) {
-		if (currentRoomId == null) {return;}
-
-		/////WHAT??
-		if (gameHelper.isSignedIn()) {return;}
-		Games.RealTimeMultiplayer.sendUnreliableMessageToAll(gameHelper.getApiClient(), messageData, currentRoomId);
-
+		if (currentRoomId == null) {
+			return;
+		}
+		System.out.println("Your ID:" + currentPlayerID);
+		System.out.println("Opponent ID: " + currentOpponentID);
+		Games.RealTimeMultiplayer.sendUnreliableMessage(gameHelper.getApiClient(), messageData, currentRoomId,currentOpponentID);
+		System.out.println("OK");
 	}
 
 	public void sendReliableMessage(byte[] messageData){
-
+		System.out.println("TRY TO CALL SEND RELIABLE MESSAGE");
+		System.out.println("SJEKK: " + handleMessageSentCallback);
+		System.out.println("SENDER TIL: " + currentOpponentID);
 		Games.RealTimeMultiplayer.sendReliableMessage(gameHelper.getApiClient(),handleMessageSentCallback, messageData,currentRoomId, currentOpponentID);
+		System.out.println("SENDT");
 	}
 
 	////// ????????????????? ///////
@@ -602,6 +626,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 		@Override
 		public void onRealTimeMessageSent(int statusCode, int tokenId, String recipientId) {
 			// handle the message being sent.
+			System.out.println("HANDLE MESSAGE SENT CALLBACK EXISTS");
 			synchronized (this) {
 				pendingMessageSet.remove(tokenId);
 			}

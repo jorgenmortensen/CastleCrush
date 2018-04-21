@@ -1,6 +1,10 @@
 package models.entities;
 
+import com.badlogic.gdx.math.Vector2;
+import com.sun.org.apache.xpath.internal.SourceTree;
+
 import models.GameWorld;
+import models.OnlineMultiplayerWorld;
 
 
 public class OnlinePlayer extends Player {
@@ -10,8 +14,6 @@ public class OnlinePlayer extends Player {
     private boolean isSelf = false;
     private boolean isHost = false;
 
-
-    GameWorld world;
 
   /*  public OnlinePlayer(String id, GameWorld world *//**//*, boolean isYou*//**//*) {
         super(id, world);
@@ -34,9 +36,16 @@ public class OnlinePlayer extends Player {
         this.playerId = playerId;
     }
 
+
     @Override
-    public int hashCode() {
-        return participantId.hashCode();
+    public void fireCannon(Vector2 velocity){
+        if (this.isSelf()){
+            System.out.println("velocity: " + velocity);
+            ((OnlineMultiplayerWorld) world).fireProjectileAndMessage(velocity);
+        }else{
+            System.out.println("Fireprojectile skal kalles");
+            ((OnlineMultiplayerWorld) world).fireProjectile(velocity);
+        }
     }
 
     public static boolean equals(String currentPlayerId, String playerId) {
@@ -46,7 +55,7 @@ public class OnlinePlayer extends Player {
         return playerId;
     }
 
-    public void setWorld(GameWorld w) {
+    public void setWorld(OnlineMultiplayerWorld w) {
         super.setWorld(w);
     }
 

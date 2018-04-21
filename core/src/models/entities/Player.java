@@ -15,7 +15,7 @@ public class Player {
 
     private String id;
     private GameWinningObject gameWinningObject;
-    private GameWorld world;
+    protected GameWorld world;
 
     private Cannon cannon;
 
@@ -71,9 +71,9 @@ public class Player {
         return cannon;
     }
 
-    public void fireCannon(){
+    /*public void fireCannon(){
         world.fireProjectile();
-    }
+    }*/
 
     public void fireCannon(Vector2 velocity) {
         world.fireProjectile(velocity);

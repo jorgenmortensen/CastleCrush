@@ -8,6 +8,7 @@ import java.util.List;
 
 import models.entities.Cannon;
 import models.entities.OnlinePlayer;
+import models.entities.Player;
 import models.states.State;
 import models.states.menuStates.OnlineGameOverMenu;
 import models.states.playStates.OnlineMultiplayerState;
@@ -16,22 +17,36 @@ import views.game_world.GameWorldDrawer;
 
 public class OnlineMultiplayerWorld extends GameWorld {
 
-    List<OnlinePlayer> players;
-
     public OnlineMultiplayerWorld(SuperPlayState state, GameWorldDrawer drawer, float screenWidth, float screenHeight, List<OnlinePlayer> players) {
-        super((OnlineMultiplayerState)state, drawer, screenWidth, screenHeight);
-        this.players=players;
+        super((OnlineMultiplayerState)state, drawer, screenWidth, screenHeight,players);
+        System.out.println("OnlineMultiplayerWorld C finished");
+    }
 
+    public OnlineMultiplayerWorld(){
+        super();
     }
 
     @Override
     public void fireProjectile(Vector2 velocity) {
+        System.out.println("fireProj ....... OK");
         start = System.currentTimeMillis();
         time = 0;
         projectile.fire(velocity);
+        System.out.println("projectile fired");
         projectile.setFired(true);
+        System.out.println("projectile set fired=true");
         addToRenderList(projectile.getDrawable());
-        //((OnlineMultiplayerState) state).broadcastShotData(velocity);
+        System.out.println("Projectile added to renderlist");
+
+    }
+
+
+    public void fireProjectileAndMessage(Vector2 velocity) {
+        System.out.println("fireProj.....Message OK");
+        fireProjectile(velocity);
+        System.out.println("Fire OK");
+        ((OnlineMultiplayerState) state).broadcastShotData(velocity);
+        System.out.println("Broadcast OK");
     }
 
     @Override
@@ -44,7 +59,7 @@ public class OnlineMultiplayerWorld extends GameWorld {
             ((OnlineMultiplayerState) state).gameOver(true);
         }
     }
-
+/*
     @Override
     protected void createPlayerAndCannon(){
         Sprite powerbarSprite1 = new Sprite(new Texture(powerBarString));
@@ -56,9 +71,11 @@ public class OnlineMultiplayerWorld extends GameWorld {
         addToRenderList(powerbarSprite1);
         addToRenderList(powerbarSprite2);
 
-
+        System.out.println("PLAYERLIST");
         for (OnlinePlayer p : players){
+            System.out.println("PLAYERLIST1");
             p.setWorld(this);
+            System.out.println("PLAYERLIST2");
             if (p.isHost()){
                 player1=p;
             }else{
@@ -78,6 +95,6 @@ public class OnlineMultiplayerWorld extends GameWorld {
         activePlayer = player1;
         activeCannon = player1.getCannon();
         activeCannon.activate();
-    }
+    }*/
 
 }

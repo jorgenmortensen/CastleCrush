@@ -25,8 +25,17 @@ public class GameStateManager {
     }
 
     public void set(State state) {
-        states.pop();
-        states.push(state);
+        System.out.println("setting new state");
+        try {
+            if (!states.empty()){
+                states.pop();
+            }
+                states.push(state);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        System.out.println("new state set");
     }
 
     public void update(float dt) {

@@ -27,9 +27,11 @@ public class Splashscreen extends State {
 
     public Splashscreen(GameStateManager gsm) {
         super(gsm);
+        System.out.println("Splashscreen");
         this.am = new AssetManager();
         this.startTime = TimeUtils.millis();
         t = new Texture("splashscreen.png");
+        System.out.println("Splashscreen2");
     }
 
     @Override
@@ -38,9 +40,12 @@ public class Splashscreen extends State {
     @Override
     public void update(float dt) {
         handleInput();
+        System.out.println(TimeUtils.timeSinceMillis(startTime));
         if(am.update() && TimeUtils.timeSinceMillis(startTime) > 4000){
             try {
+                System.out.println("StartMenuCall");
                 gsm.set(new StartMenuScreen(gsm, true));
+                System.out.println("SSS2");
             } catch (Exception e) {
                 CastleCrush.playServices.toast("Something went wrong, unable to start the app");
                 e.printStackTrace();

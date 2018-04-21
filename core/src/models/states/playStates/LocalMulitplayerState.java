@@ -31,7 +31,7 @@ public class LocalMulitplayerState extends SuperPlayState {
         screenWidth = CastleCrush.WIDTH * SCALE;
         screenHeight = CastleCrush.HEIGHT * SCALE;
         gameWorldDrawer = new GameWorldDrawer(new SpriteBatch(), screenWidth, screenHeight);
-        world = new GameWorld(this, gameWorldDrawer, screenWidth, screenHeight);
+        world = new GameWorld(this, gameWorldDrawer, screenWidth, screenHeight, null);
         controller = new GameWorldController(world);
 
     }

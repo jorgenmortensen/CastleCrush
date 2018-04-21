@@ -2,7 +2,9 @@ package models.states.playStates;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.castlecrush.game.CastleCrush;
 
 import java.nio.ByteBuffer;
@@ -35,6 +37,7 @@ public class OnlineMultiplayerState extends SuperPlayState implements PlayServic
     private float screenWidth;
     private float screenHeight;
     private GameWorldController controller;
+    private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 
     public OnlineMultiplayerState(GameStateManager gsm, SpriteBatch batch) {
         super(gsm);
@@ -44,11 +47,11 @@ public class OnlineMultiplayerState extends SuperPlayState implements PlayServic
         screenHeight = CastleCrush.HEIGHT * SCALE;
         screenWidth = CastleCrush.WIDTH * SCALE;
         this.batch=batch;
+
         drawer = new GameWorldDrawer(batch, screenWidth, screenHeight);
-
-        world = new OnlineMultiplayerWorld(this, drawer, screenWidth, screenHeight, players);
-        controller = new GameWorldController(world);
-
+        //world = new OnlineMultiplayerWorld(this, drawer, screenWidth, screenHeight, players);
+        //world = new OnlineMultiplayerWorld();
+        //controller = new GameWorldController(world);
 
     }
 
@@ -59,19 +62,20 @@ public class OnlineMultiplayerState extends SuperPlayState implements PlayServic
 
 
     @Override
-    protected void handleInput() {
-        controller.handleInput();
-    }
+    protected void handleInput() {}
 
     @Override
     public void update(float dt) {
         world.update(dt);
+        controller.handleInput();
     }
 
 
     @Override
     public void render(SpriteBatch sb) {
+        System.out.println("render method");
         drawer.render();
+        debugRenderer.render(world.getPhysicsWorld(), cam.combined);
     }
 
     @Override
@@ -84,8 +88,12 @@ public class OnlineMultiplayerState extends SuperPlayState implements PlayServic
         buffer.put(MessageCodes.CANNON);
         buffer.putFloat(shotVelocity.x);
         buffer.putFloat(shotVelocity.y);
+        System.out.println("velocity x sendt: " + shotVelocity.x);
+        System.out.println("velocity y sendt: " + shotVelocity.y);
+
 
         CastleCrush.playServices.sendUnreliableMessageToOthers(buffer.array());
+        System.out.println("111");
     }
 
 
@@ -118,7 +126,7 @@ public class OnlineMultiplayerState extends SuperPlayState implements PlayServic
 
     @Override
     public void onUnreliableMessageReceived(String senderParticipantId, int describeContents, byte[] messageData) {
-        System.out.println("onReliableMessageReceived: " + senderParticipantId + "," + describeContents);
+        System.out.println("onUNReliableMessageReceived: " + senderParticipantId + "," + describeContents);
 
         ByteBuffer buffer = ByteBuffer.wrap(messageData);
         byte messageType = buffer.get();
@@ -126,8 +134,13 @@ public class OnlineMultiplayerState extends SuperPlayState implements PlayServic
         switch (messageType) {
             case MessageCodes.CANNON:
                 System.out.println("CANNON MESSAGE RECEIVED");
-                //XXXX HENT UT FRA BUFFER
-                //world.fireProjectile(velocity);
+                float x = buffer.getFloat();
+                //buffer.flip();
+                System.out.println("velocity x received: " + x);
+                float y = buffer.getFloat();
+                System.out.println("velocity y received: " + y);
+                Vector2 velocity = new Vector2(x,y);
+                world.fireProjectile(velocity);
                 break;
         }
     }
@@ -136,5 +149,11 @@ public class OnlineMultiplayerState extends SuperPlayState implements PlayServic
     public void onRoomReady(List<OnlinePlayer> players) {
         System.out.println("onRoomReady");
         this.players = players;
+        world = new OnlineMultiplayerWorld(this, drawer, screenWidth, screenHeight, players);
+        for (OnlinePlayer p: players){
+            p.setWorld(world);
+        }
+        controller = new GameWorldController(world);
+
     }
 }

@@ -156,7 +156,7 @@ public class Projectile implements Drawable {
 
     @Override
     public String toString() {
-        return "OldProjectile{" +
+        return "Projectile{" +
                 "position=" + position +
                 ", width=" + width +
                 ", height=" + height +
