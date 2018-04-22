@@ -59,7 +59,7 @@ public class LocalMulitplayerState extends SuperPlayState {
         @Override
     public void dispose () {
         gameWorldDrawer.dispose();
-        world.dispose(); // legges til i world?
+        world.dispose();
         debugRenderer.dispose();
     }
 
