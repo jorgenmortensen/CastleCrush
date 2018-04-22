@@ -48,7 +48,7 @@ public class GameWorld {
 
     private List<Fixture> bodiesToDestroy = new ArrayList<Fixture>();
 
-    private List<PhysicalGameObject> mockBoxes;
+    private List<PhysicalGameObject> physicalGameObjectList;
     private Box ground;
     private float screenWidth;
     private float screenHeight;
@@ -71,7 +71,6 @@ public class GameWorld {
     private String powerBarString= "powerBar.png";
     private String settingsButtonString = "settings_btn.png";
     private String homeButtonString = "homeBtn.png";
-    private List<PhysicalGameObject> physicalGameObjectList;
     float cannonWidth;
     float cannonHeight;
     float cannon1position;
@@ -95,7 +94,6 @@ public class GameWorld {
     public GameWorld(SuperPlayState state, GameWorldDrawer drawer, float screenWidth, float screenHeight, List<OnlinePlayer> players) {
         this.drawer = drawer;
         this.players = players;
-        mockBoxes = new ArrayList<PhysicalGameObject>();
         this.state = state;
         groundLevel = screenHeight/25;
         boxWidth = screenWidth/20;
@@ -113,8 +111,6 @@ public class GameWorld {
         cannon2position = screenWidth*2/3 - cannonWidth;
         createPlayerAndCannon();
         generateBodies();
-//        cannonWidth = screenWidth/30;
-//        cannonHeight = screenHeight/30;
         initiateButtons();
     }
 
@@ -172,17 +168,14 @@ public class GameWorld {
 
 
     private void generateBodies() {
-//        **********la stå intil videre*********
         createGround();
         makeCastle( screenWidth*0.2f, screenHeight*0.6f);
-      //  makeMirroredCastle(player1);
 
-//      lage det første prosjektilet, før changeplayer
+//      lage det første prosjektilet
         spawnProjectile();
 
         createOneWayWalls(player1.getCannon().getX() - projectile.getSprite().getWidth()/2);
         createOneWayWalls(player2.getCannon().getX() + player2.getCannon().getWidth()+ projectile.getSprite().getWidth()/2);
-//*****************************************************
     }
 
     public void makeCastle(float castleWidth, float castleHeight) {
@@ -192,7 +185,7 @@ public class GameWorld {
         float xPos1, yPos;
         Random ran = new Random();
 
-        //Creating structure for castle to the left
+        //Defining structure for castle to the left
         boxStrings = new  String[][] {
                 {gameWinningObjectString, normalBoxString, windowBoxString, roofBoxString},
                 {normalBoxString, normalBoxString, normalBoxString, windowBoxString, roofBoxString},
@@ -204,11 +197,13 @@ public class GameWorld {
 
         castleMatrix = new Box[boxStrings.length][];
         mirroredCastleMatrix = new Box[boxStrings.length][];
+
+//        Creating castles, both left and right
         for (int i = 0; i<boxStrings.length; i++){
             castleMatrix[i] = new Box[boxStrings[i].length];
             mirroredCastleMatrix[boxStrings.length-1-i] = new Box[boxStrings[i].length];
             for (int j=0; j<boxStrings[i].length; j++){
-                xPos1 = startPosX+i*boxWidth; //screenWidth - (startPosX + i * boxWidth);
+                xPos1 = startPosX+i*boxWidth;
                 yPos = groundLevel + j * boxHeight + boxHeight / 3;
                 if (boxStrings[i][j] == gameWinningObjectString){
                     //Setting castle to the left
@@ -318,6 +313,7 @@ public class GameWorld {
         body.setUserData(ground);
 
         addToRenderList(groundSprite);
+        //Doesn't need to be addded to list of objects in the world. No need to update position of sprite
     }
 
 
@@ -344,7 +340,6 @@ public class GameWorld {
         sprite.setSize(boxWidth, boxHeight);
         sprite.setOriginCenter();
         Box box = new Box(body, sprite);
-//        mockBoxes.add(box);
         body.setUserData(box);
 
         addToRenderList(sprite);
@@ -449,7 +444,6 @@ public class GameWorld {
         sprite.setSize(boxWidth, boxHeight);
         sprite.setOriginCenter();
         GameWinningObject gameWinningObject = new GameWinningObject(body, sprite);
-        mockBoxes.add(gameWinningObject);
         body.setUserData(gameWinningObject);
 
         physicalGameObjectList.add(gameWinningObject);
@@ -472,13 +466,12 @@ public class GameWorld {
         end = System.currentTimeMillis();
         oldTime = time;
         time = (int) Math.floor((end - start) / 1000);
-        if (time > oldTime) {
-//            System.out.println(time);
-        }
 
-        //if (time >= turnLimit && !getProjectile().isFired()) {
-            //switchPlayer();
-//            System.out.println("New active player " + activePlayer.getId());
+//        Outputs the time of the current time counter
+//        if (time > oldTime) {
+//            System.out.println(time);
+//        }
+
 
         // Time limit after shooting
         if ((projectile.isFired() && time > shootingTimeLimit && projectile.getAbsoluteSpeed() < 5) || time > turnLimit) {
@@ -557,8 +550,8 @@ public class GameWorld {
 
 
     public void removeBox(Box b){
-        if (mockBoxes.contains(b)){
-            mockBoxes.remove(b);
+        if (physicalGameObjectList.contains(b)){
+            physicalGameObjectList.remove(b);
         }
     }
 
@@ -611,35 +604,14 @@ public class GameWorld {
     }
 
 
-
-        //fiks marker
-
-
-    //        batch.draw(new Texture("powerBar.png"), cannonLeft.getX() + cannonLeft.getWidth(),
-    //                cannonLeft.getY() + cannonLeft.getHeight(),
-    //                (100 * cannonLeft.getWidth() * 4 / 5) / 100,
-    //                cannonLeft.getHeight() / 2);
-    //        // - cannonLeft.getHeight() / 8 is to get the marker correct
-    //        batch.draw(new Texture("marker.png"),cannonLeft.getX() + cannonLeft.getWidth() + (cannonLeft.getPower() * cannonLeft.getWidth() * 4 / 5) / 100 - cannonLeft.getHeight() / 8,
-    //                cannonLeft.getY()+cannonLeft.getHeight() + cannonLeft.getHeight() / 2,
-    //                cannonLeft.getHeight() / 4,cannonLeft.getHeight() / 4);
-//        if ( cannonLeft.getPower() > 0) {
-
-//    }
-//        if (cannonRight.getPower() > 0) {
-//        batch.draw(new Texture("powerBar.png"), cannonRight.getX(),
-//                cannonRight.getY() / 2,
-//                (cannonRight.getPower() * cannonRight.getWidth() * 4 / 5) / 100,
-//                cannonRight.getHeight() / 2);
-//    }
-
     public void input() {
         activeCannon.progressShootingSequence();
     }
 
 
 
-    /*public void fireProjectile() {
+    /* Initial method for firing projectile
+    public void fireProjectile() {
         start = System.currentTimeMillis();
         time = 0;
         Vector2 fireVelocity = new Vector2(
@@ -650,9 +622,7 @@ public class GameWorld {
         projectile.setFired(true);
         addToRenderList(projectile.getDrawable());
     }*/
-    // ******************************************************
-    //    USE THIS METHOD WHEN PLAYING ONLINE, FOR SETTING PROJECTILE VELOCITY
-    // ******************************************************
+
     public void fireProjectile(Vector2 velocity) {
         start = System.currentTimeMillis();
         time = 0;
@@ -660,7 +630,6 @@ public class GameWorld {
         projectile.setFired(true);
         addToRenderList(projectile.getSprite());
     }
-    // ******************************************************
 
     public Player getPlayer1() {
         return player1;
@@ -675,7 +644,7 @@ public class GameWorld {
     }
 
     protected void addToRenderList(Sprite sprite) {
-//        alle sprites that are shown on screen is added here
+//        all sprites that are shown on screen is added here
         drawer.addSprite(sprite);
     }
 
