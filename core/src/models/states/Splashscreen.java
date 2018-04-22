@@ -15,8 +15,6 @@ import models.states.menuStates.StartMenuScreen;
  * Created by erikkjernlie on 06/04/2018.
  */
 
-// Help from:
-// https://stackoverflow.com/questions/37448355/libgdx-how-to-create-a-splash-screen
 
 public class Splashscreen extends State {
 

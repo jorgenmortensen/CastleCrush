@@ -49,10 +49,6 @@ public class OnlineMultiplayerState extends SuperPlayState implements PlayServic
         this.batch=batch;
 
         drawer = new GameWorldDrawer(batch, screenWidth, screenHeight);
-        //world = new OnlineMultiplayerWorld(this, drawer, screenWidth, screenHeight, players);
-        //world = new OnlineMultiplayerWorld();
-        //controller = new GameWorldController(world);
-
     }
 
 
@@ -135,7 +131,6 @@ public class OnlineMultiplayerState extends SuperPlayState implements PlayServic
             case MessageCodes.CANNON:
                 System.out.println("CANNON MESSAGE RECEIVED");
                 float x = buffer.getFloat();
-                //buffer.flip();
                 System.out.println("velocity x received: " + x);
                 float y = buffer.getFloat();
                 System.out.println("velocity y received: " + y);
@@ -154,6 +149,5 @@ public class OnlineMultiplayerState extends SuperPlayState implements PlayServic
             p.setWorld(world);
         }
         controller = new GameWorldController(world, this);
-
     }
 }

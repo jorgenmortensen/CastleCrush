@@ -18,27 +18,23 @@ import views.game_world.GameWorldDrawer;
 public class OnlineMultiplayerWorld extends GameWorld {
 
     public OnlineMultiplayerWorld(SuperPlayState state, GameWorldDrawer drawer, float screenWidth, float screenHeight, List<OnlinePlayer> players) {
-        super((OnlineMultiplayerState)state, drawer, screenWidth, screenHeight,players);
+        super(state, drawer, screenWidth, screenHeight,players);
         System.out.println("OnlineMultiplayerWorld C finished");
     }
 
-    public OnlineMultiplayerWorld(){
-        super();
-    }
-
-    @Override
-    public void fireProjectile(Vector2 velocity) {
-        System.out.println("fireProj ....... OK");
-        start = System.currentTimeMillis();
-        time = 0;
-        projectile.fire(velocity);
-        System.out.println("projectile fired");
-        projectile.setFired(true);
-        System.out.println("projectile set fired=true");
-        addToRenderList(projectile.getSprite());
-        System.out.println("Projectile added to renderlist");
-
-    }
+//    @Override
+//    public void fireProjectile(Vector2 velocity) {
+//        System.out.println("fireProj ....... OK");
+//        start = System.currentTimeMillis();
+//        time = 0;
+//        projectile.fire(velocity);
+//        System.out.println("projectile fired");
+//        projectile.setFired(true);
+//        System.out.println("projectile set fired=true");
+//        addToRenderList(projectile.getSprite());
+//        System.out.println("Projectile added to renderlist");
+//
+//    }
 
 
     public void fireProjectileAndMessage(Vector2 velocity) {
@@ -66,43 +62,4 @@ public class OnlineMultiplayerWorld extends GameWorld {
             activeCannon.progressShootingSequence();
         }
     }
-
-/*
-    @Override
-    protected void createPlayerAndCannon(){
-        Sprite powerbarSprite1 = new Sprite(new Texture(powerBarString));
-        Sprite powerbarSprite2 = new Sprite(new Texture(powerBarString));
-        Sprite cannonSprite1 = new Sprite(new Texture(cannonString));
-        Sprite cannonSprite2 = new Sprite(new Texture(cannonString));
-        addToRenderList(cannonSprite1);
-        addToRenderList(cannonSprite2);
-        addToRenderList(powerbarSprite1);
-        addToRenderList(powerbarSprite2);
-
-        System.out.println("PLAYERLIST");
-        for (OnlinePlayer p : players){
-            System.out.println("PLAYERLIST1");
-            p.setWorld(this);
-            System.out.println("PLAYERLIST2");
-            if (p.isHost()){
-                player1=p;
-            }else{
-                player2=p;
-            }
-        }
-
-        cannon1 = new Cannon(player1, cannon1position,
-                groundLevel, cannonWidth, cannonHeight,
-                cannonSprite1,  powerbarSprite1, true);
-
-        cannon2 = new Cannon(player2, cannon2position,
-                groundLevel, cannonWidth, cannonHeight,
-                cannonSprite2, powerbarSprite2, false);
-        player1.setCannon(cannon1);
-        player2.setCannon(cannon2);
-        activePlayer = player1;
-        activeCannon = player1.getCannon();
-        activeCannon.activate();
-    }*/
-
 }

@@ -132,10 +132,10 @@ public class StartMenuScreen extends State {
         startMenuDrawer.render(sb);
     }
 
-    public long getStartTime(){
-
-        return this.startTime;
-    }
+//    public long getStartTime(){
+//
+//        return this.startTime;
+//    }
 
     @Override
     public void dispose() {

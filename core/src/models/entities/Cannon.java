@@ -19,10 +19,9 @@ public class Cannon {
     private float height;
     private Sprite cannonSprite;
     private Sprite powerBarSprite;
-    private boolean shotsFired, angleUp, powerUp;
+    private boolean hasFiredThisTurn, angleUp, powerUp;
     private float angleSpeed = 3f, powerSpeed = 4f, maxPower = 100;
     private float factor;
-    private boolean hasFiredThisTurn;
     private Player player;
 
     private float angle;
@@ -36,7 +35,6 @@ public class Cannon {
         this.height = height;
         this.cannonSprite = cannon;
         this.powerBarSprite = powerBarSprite;
-        this.shotsFired = true;
         this.angleUp = true;
         this.powerUp = false;
         this.angle = 90;
