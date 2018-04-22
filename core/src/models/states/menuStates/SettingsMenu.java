@@ -22,6 +22,8 @@ public class SettingsMenu extends State{
     protected SettingsMenuDrawer settingsDrawer;
     protected SettingsMenuController settingsController;
 
+    protected Button returnBtn;
+
     public SettingsMenu() {
         super();
         initFields();
@@ -35,14 +37,25 @@ public class SettingsMenu extends State{
     }
 
     public void initFields() {
-        btnSound = new Button(0, 0, CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
-                        CastleCrush.soundOn ? new Sprite(new Texture("sound_on.png")) :
-                        new Sprite(new Texture("sound_off.png")));
+        btnMusic = new Button(CastleCrush.WIDTH/2 - CastleCrush.WIDTH/8, CastleCrush.HEIGHT/3, CastleCrush.WIDTH / 4, CastleCrush.WIDTH / 15,
+                        CastleCrush.musicOn ? new Sprite(new Texture("music_on.png")) :
+                        new Sprite(new Texture("music_off.png")));
+        btnSound = new Button(CastleCrush.WIDTH/2 - CastleCrush.WIDTH/8, CastleCrush.HEIGHT*2/3, CastleCrush.WIDTH / 4, CastleCrush.WIDTH / 15,
+                CastleCrush.soundEffectsOn ? new Sprite(new Texture("sounds_on.png")) :
+                        new Sprite(new Texture("sounds_off.png")));
+        returnBtn = new Button(CastleCrush.WIDTH * 14 / 15 - CastleCrush.WIDTH/100, CastleCrush.WIDTH/100,
+                CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
+                new Sprite(new Texture(("returnBtn.png"))));
+    }
+
+    public void setMusic(){
+        btnMusic.setBtn(CastleCrush.musicOn ? new Sprite(new Texture("music_on.png")) :
+                new Sprite(new Texture("music_off.png")));
     }
 
     public void setSound() {
-        btnSound.setBtn(CastleCrush.soundOn ? new Sprite(new Texture("sound_on.png")) :
-                        new Sprite(new Texture("sound_off.png")));
+        btnSound.setBtn(CastleCrush.soundEffectsOn ? new Sprite(new Texture("sounds_on.png")) :
+                        new Sprite(new Texture("sounds_off.png")));
     }
 
     //Send to controller

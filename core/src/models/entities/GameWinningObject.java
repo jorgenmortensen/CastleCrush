@@ -18,8 +18,8 @@ public class GameWinningObject extends Box {
 
     // private int counter = 0;
 
-    public GameWinningObject(Body body, Sprite sprite, float width, float height, float density) {
-        super(body, sprite, width, height, density);
+    public GameWinningObject(Body body, Sprite sprite) {
+        super(body, sprite);
         CastleCrush.music.stop();
         CastleCrush.music = Gdx.audio.newMusic(Gdx.files.internal("win_song.mp3"));
         CastleCrush.music.setLooping(true);

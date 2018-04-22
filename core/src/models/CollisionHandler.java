@@ -26,12 +26,12 @@ import models.entities.Projectile;
  * Object b = contact.getFixtureA().getBody().getUserData() - even though they both return an object.
  */
 
-public class GameCollision implements ContactListener {
+public class CollisionHandler implements ContactListener {
 
     private GameWorld gameWorld;
     private boolean hasTurnedOfContact;
 
-    public GameCollision(GameWorld world) {
+    public CollisionHandler(GameWorld world) {
         this.gameWorld = world;
         this.hasTurnedOfContact = false;
     }
@@ -54,17 +54,17 @@ public class GameCollision implements ContactListener {
                     if (objectA instanceof Box) {
                         // Speed limitation. The value is set based on the gravity (which is 10 m/s^2).
                         if (getSpeed(bodyB.getLinearVelocity()) > 10) {
-                            ((Box) objectA).isHit(true);
+                            ((Box) objectA).setHit(true);
                             gameWorld.addBodyToDestroy(fa);
-                            Sprite sprite = ((Box) objectA).getDrawable();
+                            Sprite sprite = ((Box) objectA).getSprite();
                             gameWorld.removeFromRenderlist(sprite);
                         }
                     } else if (objectB instanceof Box) {
                         // Speed limitation. The value is set based on the gravity (which is 10 m/s^2).
                         if (getSpeed(bodyA.getLinearVelocity()) > 10) {
-                            ((Box) objectA).isHit(true);
+                            ((Box) objectA).setHit(true);
                             gameWorld.addBodyToDestroy(fb);
-                            Sprite sprite = ((Box) objectB).getDrawable();
+                            Sprite sprite = ((Box) objectB).getSprite();
                             gameWorld.removeFromRenderlist(sprite);
 
                         }

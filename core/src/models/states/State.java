@@ -35,6 +35,7 @@ public abstract class State {
     protected Button btnHome;
     protected Button btnSound;
     protected Button btnInvitationInbox;
+    protected Button btnMusic;
     protected Texture background1;
     protected Texture background2;
 
@@ -55,18 +56,20 @@ public abstract class State {
 
     //Initialize all the buttons
     private void initButtons() {
-        btnSettings = new Button(CastleCrush.WIDTH * 14 / 15, 0,
+        btnSettings = new Button(CastleCrush.WIDTH * 14 / 15 - CastleCrush.WIDTH/100, CastleCrush.WIDTH/100,
                 CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
                 new Sprite(new Texture("settings_btn.png")));
-        btnHome = new Button(CastleCrush.WIDTH * 14 / 15, 0,
+        btnHome = new Button(CastleCrush.WIDTH * 14 / 15 - CastleCrush.WIDTH/100, CastleCrush.WIDTH/100,
                 CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
                 new Sprite(new Texture(("homeBtn.png"))));
         btnSound = new Button(0, 0, CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
-                CastleCrush.soundOn ? new Sprite(new Texture("sound_on.png")) : new Sprite(new Texture("sound_off.png")));
-
-        btnInvitationInbox = new Button(0, 0,
+                CastleCrush.soundEffectsOn ? new Sprite(new Texture("sounds_on.png")) : new Sprite(new Texture("sounds_off.png")));
+        btnMusic = new Button(0, 0, CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
+                CastleCrush.musicOn ? new Sprite(new Texture("music_on.png")) : new Sprite(new Texture("music_off.png")));
+        btnInvitationInbox = new Button(CastleCrush.WIDTH/100,  CastleCrush.WIDTH/100,
                 CastleCrush.WIDTH / 15, CastleCrush.WIDTH / 15,
                 new Sprite(new Texture("invitationBtn.png")));
+
     }
 
     protected void makeMovingBackground(){

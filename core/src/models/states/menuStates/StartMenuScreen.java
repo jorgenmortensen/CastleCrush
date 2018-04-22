@@ -9,10 +9,8 @@ import com.castlecrush.game.CastleCrush;
 
 import controllers.menuStatesControllers.StartMenuController;
 import models.components.Button;
-import models.entities.Castle;
 import models.states.GameStateManager;
 import models.states.State;
-import models.states.TutorialState;
 import views.menuStatesViews.StartMenuDrawer;
 
 /**

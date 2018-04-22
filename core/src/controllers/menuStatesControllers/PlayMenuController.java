@@ -1,28 +1,12 @@
 package controllers.menuStatesControllers;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.castlecrush.game.CastleCrush;
 
 import models.states.GameStateManager;
-import models.states.TutorialState;
-import models.states.menuStates.MultiplayerMenu;
 import models.states.menuStates.PlayMenu;
 import models.states.menuStates.StartMenuScreen;
-import models.states.playStates.OnlineMultiplayerState;
-
-import static com.castlecrush.game.CastleCrush.playServices;
-import static com.castlecrush.game.CastleCrush.xCoordBg1;
-import static com.castlecrush.game.CastleCrush.xCoordBg2;
-import static models.states.menuStates.StartMenuScreen.changed_logo;
-import static models.states.menuStates.StartMenuScreen.crushed;
-import static models.states.menuStates.StartMenuScreen.little_crushed;
-import static models.states.menuStates.StartMenuScreen.startTime;
-import static models.states.menuStates.StartMenuScreen.with_u;
-import static models.states.menuStates.StartMenuScreen.without_castle;
+import models.states.playStates.LocalMulitplayerState;
 
 /**
  * Created by Jørgen on 19.04.2018.
@@ -39,11 +23,11 @@ public class PlayMenuController extends PlayMenu{
 
     public void handleInput() {
         if (Gdx.input.justTouched() && isOnButton(btnLocal)) {
-            System.out.println("Single pressed");
+            System.out.println("Local pressed");
             try {
-                gsm.set(new OnlineMultiplayerState(gsm, new SpriteBatch()));
+                gsm.set(new LocalMulitplayerState(gsm));
             } catch (Exception e) {
-                CastleCrush.playServices.toast("Unable to open online multiplayer!");
+                CastleCrush.playServices.toast("Unable to open local multiplayer!");
                 e.printStackTrace();
             }
             dispose();

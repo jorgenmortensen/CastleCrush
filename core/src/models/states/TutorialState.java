@@ -35,13 +35,13 @@ public class TutorialState extends State {
         fullScreenCam = new OrthographicCamera();
         cam.setToOrtho(false, CastleCrush.WIDTH / 4, CastleCrush.HEIGHT);
         fullScreenCam.setToOrtho(false, CastleCrush.WIDTH, CastleCrush.HEIGHT);
-        texture1 = new Texture("castle_1.png");
-        texture2 = new Texture("castle_2.png");
-        texture3 = new Texture("castle_3.png");
-        texture4 = new Texture("castle_4.png");
-        back = new Button(CastleCrush.WIDTH - CastleCrush.WIDTH / 8, CastleCrush.HEIGHT / 15,
-                CastleCrush.WIDTH / 10,
-                CastleCrush.HEIGHT / 10,
+        texture1 = new Texture("tutorial1.png");
+        texture2 = new Texture("tutorial2.png");
+        texture3 = new Texture("tutorial3.png");
+        texture4 = new Texture("tutorial4.png");
+        back = new Button(CastleCrush.WIDTH - CastleCrush.WIDTH / 8 - CastleCrush.WIDTH/30, CastleCrush.HEIGHT - CastleCrush.HEIGHT/10 - CastleCrush.HEIGHT/100,
+                CastleCrush.WIDTH / 15,
+                CastleCrush.HEIGHT / 15,
                 new Sprite(new Texture("return_menu.png")));
         sf = new SlidingObjectXdirection(-CastleCrush.HEIGHT/4, 3*CastleCrush.HEIGHT/4, CastleCrush.HEIGHT/4, CastleCrush.HEIGHT/4, new Sprite(new Texture("sliding_finger.png")),5*CastleCrush.WIDTH/4, -900);
         screenTouched = false;

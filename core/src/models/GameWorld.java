@@ -14,21 +14,21 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.castlecrush.game.CastleCrush;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import models.components.Button;
 import models.entities.Box;
 import models.entities.Cannon;
-import models.entities.Drawable;
 import models.entities.GameWinningObject;
 import models.entities.OneWayWall;
 import models.entities.OnlinePlayer;
+import models.entities.PhysicalGameObject;
 import models.entities.Player;
 import models.entities.Projectile;
-import models.states.State;
-import models.states.playStates.LocalMulitplayerState;
 import models.states.playStates.SuperPlayState;
 import views.game_world.GameWorldDrawer;
 
@@ -47,9 +47,8 @@ public class GameWorld {
     private float boxHeight;
 
     private List<Fixture> bodiesToDestroy = new ArrayList<Fixture>();
-    private TextureAtlas textureAtlas;
 
-    private List<Drawable> mockBoxes;
+    private List<PhysicalGameObject> mockBoxes;
     private Box ground;
     private float screenWidth;
     private float screenHeight;
@@ -66,11 +65,13 @@ public class GameWorld {
     private String windowBoxString= "window_box.png";
     private String normalBoxString= "normal_box.png";
     private String roofBoxString= "roof_box.png";
-    String cannonString= "cannon.png";
+    private String cannonString= "cannon.png";
     private String cannonBallString = "ball_cannon.png";
     private String gameWinningObjectString= "gwo3.png";
-    String powerBarString= "powerBar.png";
-    private List<Drawable> drawableList;
+    private String powerBarString= "powerBar.png";
+    private String settingsButtonString = "settings_btn.png";
+    private String homeButtonString = "homeBtn.png";
+    private List<PhysicalGameObject> physicalGameObjectList;
     float cannonWidth;
     float cannonHeight;
     float cannon1position;
@@ -80,6 +81,8 @@ public class GameWorld {
     int time;
     private int oldTime, turnLimit = 15, shootingTimeLimit = 5;
     long start, end;
+    public Button homeButton;
+    public Button settingsButton;
 
     protected SuperPlayState state;
     Projectile projectile;
@@ -92,17 +95,16 @@ public class GameWorld {
     public GameWorld(SuperPlayState state, GameWorldDrawer drawer, float screenWidth, float screenHeight, List<OnlinePlayer> players) {
         this.drawer = drawer;
         this.players = players;
-        mockBoxes = new ArrayList<Drawable>();
+        mockBoxes = new ArrayList<PhysicalGameObject>();
         this.state = state;
         groundLevel = screenHeight/25;
-        textureAtlas = new TextureAtlas("sprites.txt");
         boxWidth = screenWidth/20;
         boxHeight = screenWidth/20;
         Box2D.init();
         physicsWorld = new World(new Vector2(0, -10), true);
-        physicsWorld.setContactListener(new GameCollision(this));
+        physicsWorld.setContactListener(new CollisionHandler(this));
         this.drawer = drawer;
-        drawableList = new ArrayList<Drawable>();
+        physicalGameObjectList = new ArrayList<PhysicalGameObject>();
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         cannonWidth = screenWidth/30;
@@ -116,6 +118,23 @@ public class GameWorld {
         System.out.println("HAHA " + screenWidth + "divided by 3:" + screenWidth/3);
 //        cannonWidth = screenWidth/30;
 //        cannonHeight = screenHeight/30;
+        initiateButtons();
+    }
+
+    private void initiateButtons(){
+        homeButton = new Button(CastleCrush.WIDTH/100, CastleCrush.HEIGHT-CastleCrush.WIDTH/15  - CastleCrush.HEIGHT/100,
+                (int) CastleCrush.WIDTH / 15, (int) CastleCrush.WIDTH / 15,
+                new Sprite(new Texture((homeButtonString))));
+        homeButton.getBtn().setPosition(screenWidth/100, screenHeight - screenWidth / 15 - screenWidth/100);
+        homeButton.getBtn().setSize(screenWidth / 15, screenWidth / 15);
+        addToRenderList(homeButton.getBtn());
+        settingsButton = new Button(CastleCrush.WIDTH * 14 / 15 - CastleCrush.WIDTH/100, CastleCrush.HEIGHT-CastleCrush.WIDTH/15  - CastleCrush.HEIGHT/100,
+                (int) CastleCrush.WIDTH / 15, (int) CastleCrush.WIDTH / 15,
+                new Sprite(new Texture((settingsButtonString))));
+        settingsButton.getBtn().setPosition(screenWidth*14/15 - screenWidth/100, screenHeight - screenWidth / 15 - screenWidth/100);
+        settingsButton.getBtn().setSize(screenWidth / 15, screenWidth / 15);
+        addToRenderList(settingsButton.getBtn());
+
     }
 
     protected void createPlayerAndCannon(){
@@ -161,12 +180,13 @@ public class GameWorld {
         makeCastle( screenWidth*0.2f, screenHeight*0.6f);
       //  makeMirroredCastle(player1);
 
-
+        System.out.println("Spawn projectile");
 //      lage det første prosjektilet, før changeplayer
         spawnProjectile();
+        System.out.println("Projectile spawned");
 
-        createOneWayWalls(player1.getCannon().getX() - projectile.getDrawable().getWidth()/2);
-        createOneWayWalls(player2.getCannon().getX() + player2.getCannon().getWidth()+ projectile.getDrawable().getWidth()/2);
+        createOneWayWalls(player1.getCannon().getX() - projectile.getSprite().getWidth()/2);
+        createOneWayWalls(player2.getCannon().getX() + player2.getCannon().getWidth()+ projectile.getSprite().getWidth()/2);
 //*****************************************************
     }
 
@@ -179,7 +199,7 @@ public class GameWorld {
 
         boxStrings = new  String[][] {
                 {gameWinningObjectString, normalBoxString, windowBoxString, roofBoxString},
-                {normalBoxString, windowBoxString, normalBoxString, normalBoxString, roofBoxString},
+                {normalBoxString, normalBoxString, normalBoxString, windowBoxString, roofBoxString},
                 {normalBoxString, normalBoxString, normalBoxString, roofBoxString},
                 {normalBoxString, normalBoxString, windowBoxString, roofBoxString}
         };
@@ -298,7 +318,7 @@ public class GameWorld {
 
         Sprite groundSprite = new Sprite(new Texture(bottomGroundString));
         groundSprite.setSize(Gdx.graphics.getWidth(), groundHeight/2);
-        ground = new Box(body, groundSprite, 0, 0, 0);
+        ground = new Box(body, groundSprite);
         body.setUserData(ground);
 
         addToRenderList(groundSprite);
@@ -327,12 +347,12 @@ public class GameWorld {
         Sprite sprite = new Sprite(new Texture(spriteString));
         sprite.setSize(boxWidth, boxHeight);
         sprite.setOriginCenter();
-        Box box = new Box(body, sprite, boxWidth, boxHeight, density);
+        Box box = new Box(body, sprite);
 //        mockBoxes.add(box);
         body.setUserData(box);
 
         addToRenderList(sprite);
-        drawableList.add(box);
+        physicalGameObjectList.add(box);
 
         return box;
     }
@@ -363,10 +383,12 @@ public class GameWorld {
     }
 
     private Sprite createProjectileSprite(float xPos, float yPos, float radius) {
+        System.out.println("Creating projectile sprite");
         //setting the sprite of the ball and positioning it correctly
         Sprite sprite = new Sprite(new Texture(cannonBallString));
         sprite.setSize(radius * 2, radius * 2);
         sprite.setOriginCenter();
+        System.out.println("Returning projectile sprite");
         return sprite;
     }
 
@@ -385,8 +407,8 @@ public class GameWorld {
         projectile = Projectile.getInstance();
         projectile.init(body, sprite, this);
         body.setUserData(projectile);
-        if (!drawableList.contains(projectile)){
-            drawableList.add(projectile);
+        if (!physicalGameObjectList.contains(projectile)){
+            physicalGameObjectList.add(projectile);
         }
     }
 
@@ -432,11 +454,11 @@ public class GameWorld {
         shape.dispose();
         sprite.setSize(boxWidth, boxHeight);
         sprite.setOriginCenter();
-        GameWinningObject gameWinningObject = new GameWinningObject(body, sprite, boxWidth, boxHeight, density);
+        GameWinningObject gameWinningObject = new GameWinningObject(body, sprite);
         mockBoxes.add(gameWinningObject);
         body.setUserData(gameWinningObject);
 
-        drawableList.add(gameWinningObject);
+        physicalGameObjectList.add(gameWinningObject);
         addToRenderList(sprite);
         return gameWinningObject;
     }
@@ -492,24 +514,24 @@ public class GameWorld {
 //        }
         physicsWorld.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
         //set correct position of bodies that have a body
-        for (Drawable drawable: drawableList) {
-            if (drawable.getBody() != null){
-                float xPos = drawable.getBody().getPosition().x - drawable.getDrawable().getWidth()/2;
-                float yPos = drawable.getBody().getPosition().y - drawable.getDrawable().getHeight()/2;
-                float degrees = (float) Math.toDegrees(drawable.getBody().getAngle());
-                drawable.getDrawable().setPosition(xPos, yPos);
-                drawable.getDrawable().setRotation(degrees);
+        for (PhysicalGameObject gameObject: physicalGameObjectList) {
+            if (gameObject.getBody() != null){
+                float xPos = gameObject.getBody().getPosition().x - gameObject.getSprite().getWidth()/2;
+                float yPos = gameObject.getBody().getPosition().y - gameObject.getSprite().getHeight()/2;
+                float degrees = (float) Math.toDegrees(gameObject.getBody().getAngle());
+                gameObject.getSprite().setPosition(xPos, yPos);
+                gameObject.getSprite().setRotation(degrees);
             }
         }
 
     }
 
     protected void checkIfGameOver() {
-        if (getPlayer1().getGameWinningObject().getHit()) {
+        if (getPlayer1().getGameWinningObject().isHit()) {
 //            //TODO, Opponent wins, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
              state.gameOver();
 
-        } else if (getPlayer2().getGameWinningObject().getHit()) {
+        } else if (getPlayer2().getGameWinningObject().isHit()) {
 //            //TODO, You win, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
             state.gameOver();
 
@@ -527,10 +549,10 @@ public class GameWorld {
 
 
 
-    private void moveBox(Drawable box, float xPos, float yPos) {
-        box.getBody().setTransform(xPos, yPos, 0);
-        box.getDrawable().setPosition(xPos, yPos);
-    }
+//    private void moveBox(PhysicalGameObject box, float xPos, float yPos) {
+//        box.getBody().setTransform(xPos, yPos, 0);
+//        box.getDrawable().setPosition(xPos, yPos);
+//    }
 
 
     public World getPhysicsWorld() {
@@ -550,7 +572,7 @@ public class GameWorld {
 
     public void addBodyToDestroy(Fixture b){
         if (!bodiesToDestroy.contains(b)){
-//            ((Drawable)b.getBody().getUserData().setBodyToNull());
+//            ((PhysicalGameObject)b.getBody().getUserData().setBodyToNull());
             bodiesToDestroy.add(b);
         }
     }
@@ -592,7 +614,7 @@ public class GameWorld {
         //Activates variables
         activeCannon = activePlayer.getCannon();
         activeCannon.activate();
-        drawer.removeSprite(projectile.getDrawable());
+        drawer.removeSprite(projectile.getSprite());
         spawnProjectile();
     }
 
@@ -620,9 +642,7 @@ public class GameWorld {
 //    }
 
     public void input() {
-        if (((OnlinePlayer) activePlayer).isSelf()) {
-            activeCannon.progressShootingSequence();
-        }
+        activeCannon.progressShootingSequence();
     }
 
 
@@ -646,7 +666,7 @@ public class GameWorld {
         time = 0;
         projectile.fire(velocity);
         projectile.setFired(true);
-        addToRenderList(projectile.getDrawable());
+        addToRenderList(projectile.getSprite());
     }
     // ******************************************************
 
@@ -669,6 +689,15 @@ public class GameWorld {
 
     protected void removeFromRenderlist(Sprite sprite) {
         drawer.removeSprite(sprite);
+    }
+
+    public boolean isOnButton(Button button) {
+        if (((CastleCrush.HEIGHT - Gdx.input.getY()) > button.getYpos()) &&
+                ((CastleCrush.HEIGHT - Gdx.input.getY()) < (button.getYpos() + button.getBtnHeight())) &&
+                (Gdx.input.getX() > button.getXpos()) && (Gdx.input.getX() < (button.getXpos() + button.getBtnWidth()))) {
+            return true;
+        }
+        return false;
     }
 
 

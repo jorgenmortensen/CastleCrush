@@ -35,7 +35,7 @@ public class OnlineMultiplayerWorld extends GameWorld {
         System.out.println("projectile fired");
         projectile.setFired(true);
         System.out.println("projectile set fired=true");
-        addToRenderList(projectile.getDrawable());
+        addToRenderList(projectile.getSprite());
         System.out.println("Projectile added to renderlist");
 
     }
@@ -51,14 +51,22 @@ public class OnlineMultiplayerWorld extends GameWorld {
 
     @Override
     protected void checkIfGameOver() {
-        if (getPlayer1().getGameWinningObject().getHit()) {
+        if (getPlayer1().getGameWinningObject().isHit()) {
 //            //TODO, Opponent wins, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
             ((OnlineMultiplayerState) state).gameOver(false);
-        } else if (getPlayer2().getGameWinningObject().getHit()) {
+        } else if (getPlayer2().getGameWinningObject().isHit()) {
 //            //TODO, You win, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
             ((OnlineMultiplayerState) state).gameOver(true);
         }
     }
+
+    @Override
+    public void input() {
+        if (((OnlinePlayer) activePlayer).isSelf()) {
+            activeCannon.progressShootingSequence();
+        }
+    }
+
 /*
     @Override
     protected void createPlayerAndCannon(){

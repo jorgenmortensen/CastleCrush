@@ -4,24 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.castlecrush.game.CastleCrush;
 import controllers.menuStatesControllers.PlayMenuController;
-import models.components.Button;
 import models.components.GravityButton;
-import models.entities.Castle;
 import models.states.GameStateManager;
 import models.states.State;
-import models.states.playStates.OnlineMultiplayerState;
 import views.menuStatesViews.PlayMenuDrawer;
-import models.states.playStates.LocalMulitplayerState;
-
-import static models.states.menuStates.StartMenuScreen.changed_logo;
-import static models.states.menuStates.StartMenuScreen.crushed;
-import static models.states.menuStates.StartMenuScreen.little_crushed;
-import static models.states.menuStates.StartMenuScreen.startTime;
-import static models.states.menuStates.StartMenuScreen.with_u;
-import static models.states.menuStates.StartMenuScreen.without_castle;
 
 /**
  * Created by erikkjernlie on 05/04/2018.

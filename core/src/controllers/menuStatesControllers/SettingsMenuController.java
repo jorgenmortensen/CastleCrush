@@ -22,7 +22,7 @@ public class SettingsMenuController extends SettingsMenu {
     }
 
     public void handleInput() {
-        if (Gdx.input.justTouched() && isOnButton(btnHome)) {
+        if (Gdx.input.justTouched() && isOnButton(returnBtn)) {
             try {
                 this.gsm.pop();
             } catch (Exception e) {
@@ -30,16 +30,25 @@ public class SettingsMenuController extends SettingsMenu {
                 e.printStackTrace();
             }
         }
-        else if (Gdx.input.justTouched() && isOnButton(btnSound)) {
+        else if (Gdx.input.justTouched() && isOnButton(btnMusic)) {
             //Switch sound on if off and vice versa
-            if (CastleCrush.soundOn) {
+            if (CastleCrush.musicOn) {
                 CastleCrush.music.setVolume(0);
-                CastleCrush.soundOn = false;
-                btnSound.setBtn(new Sprite(new Texture("sound_off.png")));
+                CastleCrush.musicOn = false;
+                setMusic();
             } else {
                 CastleCrush.music.setVolume(0.5f);
-                CastleCrush.soundOn = true;
-                btnSound.setBtn(new Sprite(new Texture("sound_on.png")));
+                CastleCrush.musicOn = true;
+                setMusic();
+            }
+        } else if (Gdx.input.justTouched() && isOnButton(btnSound)) {
+            //Switch sound on if off and vice versa
+            if (CastleCrush.soundEffectsOn) {
+                CastleCrush.soundEffectsOn = false;
+                setSound();
+            } else {
+                CastleCrush.soundEffectsOn = true;
+                setSound();
             }
         }
     }

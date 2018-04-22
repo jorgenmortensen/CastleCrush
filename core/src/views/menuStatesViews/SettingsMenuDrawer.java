@@ -24,13 +24,12 @@ public class SettingsMenuDrawer extends SettingsMenu {
     public void update(float dt) {
         if (Gdx.input.justTouched() && isOnButton(btnSound)) {
             //Switch sound on if off and vice versa
-            if (CastleCrush.soundOn) {
-                btnSound.setBtn(new Sprite(new Texture("sound_off.png")));
-            } else {
-                btnSound.setBtn(new Sprite(new Texture("sound_on.png")));
-            }
+            setSound();
+        } else if (Gdx.input.justTouched() && isOnButton(btnMusic)) {
+            setMusic();
         }
     }
+
 
     public void render(SpriteBatch batch) {
         batch.begin();
@@ -38,12 +37,15 @@ public class SettingsMenuDrawer extends SettingsMenu {
         batch.draw(new Texture("background_without_ground.png"), 0, 0, CastleCrush.WIDTH, CastleCrush.HEIGHT);
 
         //Home button in bottom right corner
-        batch.draw(btnHome.getBtn(), btnHome.getXpos(), btnHome.getYpos(),
-                btnHome.getBtnWidth(), btnHome.getBtnHeight());
+        batch.draw(returnBtn.getBtn(), returnBtn.getXpos(), returnBtn.getYpos(),
+                returnBtn.getBtnWidth(), returnBtn.getBtnHeight());
 
         //Sound button in bottom left corner
         batch.draw(btnSound.getBtn(), btnSound.getXpos(), btnSound.getYpos(),
                 btnSound.getBtnWidth(), btnSound.getBtnHeight());
+
+        batch.draw(btnMusic.getBtn(), btnMusic.getXpos(), btnMusic.getYpos(),
+                btnMusic.getBtnWidth(), btnMusic.getBtnHeight());
 
         batch.end();
     }

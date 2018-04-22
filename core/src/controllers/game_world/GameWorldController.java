@@ -2,14 +2,14 @@ package controllers.game_world;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.castlecrush.game.CastleCrush;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import controllers.Controller;
 import models.GameWorld;
-import models.entities.Box;
-import models.entities.Castle;
+import models.states.playStates.SuperPlayState;
 import views.game_world.GameWorldDrawer;
 
 /**
@@ -18,10 +18,12 @@ import views.game_world.GameWorldDrawer;
 
 public class GameWorldController extends Controller {
 
-private GameWorld world;
+    private GameWorld world;
+    private SuperPlayState state;
 
-    public GameWorldController(GameWorld world) {
+    public GameWorldController(GameWorld world, SuperPlayState state) {
         this.world = world;
+        this.state = state;
     }
 
     public void handleOnlineMessage(/*PUT MESSAGE HERE*/) {
@@ -37,7 +39,22 @@ private GameWorld world;
 
     @Override
     public void handleInput() {
-        if (Gdx.input.justTouched()) {
+        if (Gdx.input.justTouched() && world.isOnButton(world.homeButton)){
+            try {
+                state.goToMainMenu();
+            } catch (Exception e) {
+                CastleCrush.playServices.toast("Unable to show settings");
+                e.printStackTrace();
+            }
+        } else if (Gdx.input.justTouched() && world.isOnButton(world.settingsButton)) {
+            try {
+                state.goToSettingsMenu();
+            } catch (Exception e) {
+                CastleCrush.playServices.toast("Unable to show settings");
+                e.printStackTrace();
+            }
+        } else if (Gdx.input.justTouched()) {
+
             world.input();
             System.out.println("press screeen");
 

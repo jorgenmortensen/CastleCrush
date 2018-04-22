@@ -19,7 +19,7 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 
 	private static final String TAG = CastleCrush.class.getName();
 	public static Music music;
-	public static boolean soundOn;
+	public static boolean musicOn;
 	public static boolean soundEffectsOn;
 	public static int WIDTH;
 	public static int HEIGHT;
@@ -51,7 +51,7 @@ public class CastleCrush extends ApplicationAdapter implements PlayServices.Game
 		xCoordBg2 = 0;
 		batch = new SpriteBatch();
 		gsm = new GameStateManager();
-		soundOn = true;
+		musicOn = true;
 		soundEffectsOn = true;
 		music = Gdx.audio.newMusic(Gdx.files.internal("gameMusic.mp3"));
 		music.setLooping(true);

@@ -2,11 +2,9 @@ package controllers.menuStatesControllers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.castlecrush.game.CastleCrush;
 
-import models.entities.Castle;
 import models.states.GameStateManager;
 import models.states.TutorialState;
 import models.states.menuStates.PlayMenu;

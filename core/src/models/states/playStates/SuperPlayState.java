@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import models.states.GameStateManager;
 import models.states.State;
+import models.states.menuStates.PlayMenu;
+import models.states.menuStates.SettingsMenu;
 
 /**
  * Created by Jørgen on 12.03.2018.
@@ -38,4 +40,13 @@ public class SuperPlayState extends State{
     public void dispose() {
 
     }
+
+    public void goToMainMenu(){
+        gsm.set(new PlayMenu(gsm));
+    }
+
+    public void goToSettingsMenu(){
+        gsm.push(new SettingsMenu(gsm));
+    }
+
 }

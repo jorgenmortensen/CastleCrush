@@ -153,7 +153,7 @@ public class OnlineMultiplayerState extends SuperPlayState implements PlayServic
         for (OnlinePlayer p: players){
             p.setWorld(world);
         }
-        controller = new GameWorldController(world);
+        controller = new GameWorldController(world, this);
 
     }
 }
