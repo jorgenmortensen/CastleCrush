@@ -25,7 +25,6 @@ public class GameStateManager {
     }
 
     public void set(State state) {
-        System.out.println("setting new state");
         try {
             if (!states.empty()){
                 states.pop();
@@ -34,8 +33,6 @@ public class GameStateManager {
         }catch(Exception e){
             e.printStackTrace();
         }
-
-        System.out.println("new state set");
     }
 
     public void update(float dt) {
