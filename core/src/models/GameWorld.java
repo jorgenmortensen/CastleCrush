@@ -102,6 +102,8 @@ public class GameWorld {
         physicsWorld = new World(new Vector2(0, -10), true);
         physicsWorld.setContactListener(new CollisionHandler(this));
         this.drawer = drawer;
+
+        //List of all objects that need to update the position of it's sprite
         physicalGameObjectList = new ArrayList<PhysicalGameObject>();
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
