@@ -11,33 +11,13 @@ import models.states.menuStates.SettingsMenu;
  * Created by Jørgen on 12.03.2018.
  */
 
-public class SuperPlayState extends State{
+public abstract class SuperPlayState extends State{
 
-    protected SuperPlayState(GameStateManager gsm) {
+    protected  SuperPlayState(GameStateManager gsm) {
         super(gsm);
     }
 
     public void gameOver(){
-
-    }
-
-    @Override
-    protected void handleInput() {
-
-    }
-
-    @Override
-    public void update(float dt) {
-
-    }
-
-    @Override
-    public void render(SpriteBatch sb) {
-
-    }
-
-    @Override
-    public void dispose() {
 
     }
 

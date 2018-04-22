@@ -111,11 +111,8 @@ public class GameWorld {
         cannonHeight = screenHeight/30;
         cannon1position = screenWidth/3;
         cannon2position = screenWidth*2/3 - cannonWidth;
-        System.out.println("GG1");
         createPlayerAndCannon();
-        System.out.println("GG2");
         generateBodies();
-        System.out.println("HAHA " + screenWidth + "divided by 3:" + screenWidth/3);
 //        cannonWidth = screenWidth/30;
 //        cannonHeight = screenHeight/30;
         initiateButtons();
@@ -150,7 +147,7 @@ public class GameWorld {
             player1 = new Player("player1", this);
             player2 = new Player("player2", this);
         }else{
-            System.out.println("Setting online players");
+            //System.out.println("Setting online players");
             for (OnlinePlayer p : players){
                 if (p.isHost()){
                     player1=p;
@@ -180,10 +177,8 @@ public class GameWorld {
         makeCastle( screenWidth*0.2f, screenHeight*0.6f);
       //  makeMirroredCastle(player1);
 
-        System.out.println("Spawn projectile");
 //      lage det første prosjektilet, før changeplayer
         spawnProjectile();
-        System.out.println("Projectile spawned");
 
         createOneWayWalls(player1.getCannon().getX() - projectile.getSprite().getWidth()/2);
         createOneWayWalls(player2.getCannon().getX() + player2.getCannon().getWidth()+ projectile.getSprite().getWidth()/2);
@@ -197,6 +192,7 @@ public class GameWorld {
         float xPos1, yPos;
         Random ran = new Random();
 
+        //Creating structure for castle to the left
         boxStrings = new  String[][] {
                 {gameWinningObjectString, normalBoxString, windowBoxString, roofBoxString},
                 {normalBoxString, normalBoxString, normalBoxString, windowBoxString, roofBoxString},
@@ -215,16 +211,16 @@ public class GameWorld {
                 xPos1 = startPosX+i*boxWidth; //screenWidth - (startPosX + i * boxWidth);
                 yPos = groundLevel + j * boxHeight + boxHeight / 3;
                 if (boxStrings[i][j] == gameWinningObjectString){
+                    //Setting castle to the left
                     Sprite sprite = new Sprite(new Texture(gameWinningObjectString));
                     GameWinningObject gameWinningObject = createGameWinningObject(xPos1, yPos, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, sprite);
                     player1.setGameWinningObject(gameWinningObject);
                     castleMatrix[i][j] = gameWinningObject;
 
+                    //Mirroring castle to the right
                     Sprite sprite2 = new Sprite(new Texture(gameWinningObjectString));
                     GameWinningObject gameWinningObject2 = createGameWinningObject(screenWidth-xPos1, yPos, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, sprite2);
                     player2.setGameWinningObject(gameWinningObject2);
-                    System.out.println(mirroredCastleMatrix.length+", "+i);
-                    System.out.println(mirroredCastleMatrix[boxStrings.length-1-i].length);
                     mirroredCastleMatrix[boxStrings.length-1-i][j] = gameWinningObject2;
                 } else if (boxStrings[i][j] == normalBoxString){
                     castleMatrix[i][j] = createBox(xPos1, yPos, boxWidth, boxHeight, (numVerticalBoxes - j) * 10, normalBoxString);
@@ -240,7 +236,7 @@ public class GameWorld {
         }
     }
 
-//
+//    Keep commented out, may be used later
 //    public void makeRandomCastle(float startPosX, float castleWidth, float castleHeight, Player player) {
 //        int numHorizontalBoxes = (int) Math.floor((castleWidth / boxWidth));
 //        int numVerticalBoxes = (int) Math.floor((castleHeight / boxHeight));
@@ -267,7 +263,7 @@ public class GameWorld {
 //    }
 
 
-
+//    Keep commented out, may be used later
 //    private void makeMirroredCastle(Player player) {
 //        for (int i = mockBoxes.size()- 1; i >= 0; i--) {
 //            float boxXpos, boxYpos;
@@ -383,12 +379,10 @@ public class GameWorld {
     }
 
     private Sprite createProjectileSprite(float xPos, float yPos, float radius) {
-        System.out.println("Creating projectile sprite");
         //setting the sprite of the ball and positioning it correctly
         Sprite sprite = new Sprite(new Texture(cannonBallString));
         sprite.setSize(radius * 2, radius * 2);
         sprite.setOriginCenter();
-        System.out.println("Returning projectile sprite");
         return sprite;
     }
 
@@ -546,9 +540,7 @@ public class GameWorld {
     // GameWinningObject is like a box, just with another texture
     // If we want to add functionality to the GameWinningObject - we can use this method and the GameWinningObject-class
 
-
-
-
+//    This method may be used later, keep commented out
 //    private void moveBox(PhysicalGameObject box, float xPos, float yPos) {
 //        box.getBody().setTransform(xPos, yPos, 0);
 //        box.getDrawable().setPosition(xPos, yPos);

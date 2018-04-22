@@ -28,17 +28,11 @@ public class LocalMulitplayerState extends SuperPlayState {
 
     public LocalMulitplayerState(GameStateManager gsm) {
         super(gsm);
-        System.out.println("Initiating local multiplayerstate");
         screenWidth = CastleCrush.WIDTH * SCALE;
         screenHeight = CastleCrush.HEIGHT * SCALE;
-        System.out.println("Setting drawer");
         gameWorldDrawer = new GameWorldDrawer(new SpriteBatch(), screenWidth, screenHeight);
-        System.out.println("Drawer set");
-        System.out.println("Setting world");
         world = new GameWorld(this, gameWorldDrawer, screenWidth, screenHeight, null);
-        System.out.println("World set");
         controller = new GameWorldController(world, this);
-        System.out.println("Controller set");
     }
 
     @Override
