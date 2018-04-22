@@ -24,13 +24,17 @@ public class OnlineGameOverMenu extends State {
     private boolean winnerScreen;
     private boolean isHost;
 
-    public OnlineGameOverMenu(GameStateManager gsm, boolean winner) {
+    public OnlineGameOverMenu(GameStateManager gsm, int i) {
         super(gsm);
-        background = new Texture(Gdx.files.internal("loop_background_castles.png"));
-        this.winnerScreen = winner;
-        this.winner = new Texture("winner.png");
-        this.loser = new Texture("loser.png");
-        this.isHost = isHost;
+
+        //int i = 0, player1 wins
+        //int i= 1, player2 wins
+        if (i==0) {
+            background = new Texture(Gdx.files.internal("player1win.png"));
+        }else{
+            background = new Texture(Gdx.files.internal("player2win.png"));
+        }
+
         //Initialize buttons
         initButtons();
 

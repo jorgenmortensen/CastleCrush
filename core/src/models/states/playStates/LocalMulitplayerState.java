@@ -41,12 +41,13 @@ public class LocalMulitplayerState extends SuperPlayState {
     }
 
     @Override
-    public void gameOver () {
-            gsm.set(new OnlineGameOverMenu(gsm, false));
-        }
+    public void gameOver () {}
 
-    public void gameOver(Player winningPlayer, Player loosingPLayer) {
-        gsm.set(new LocalGameOverMenu(gsm, winningPlayer, loosingPLayer));
+    @Override
+    public void gameOver(int i) {
+        //int i = 0, player1 wins
+        //int i= 1, player2 wins
+        gsm.set(new OnlineGameOverMenu(gsm, i));
     }
 
     Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();

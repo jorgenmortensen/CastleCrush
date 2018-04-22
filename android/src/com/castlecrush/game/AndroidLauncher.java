@@ -510,8 +510,8 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 		// This usually happens due to a network error, leave the game.
 		// show error message and return to main screen
 		System.out.println("onDisconnectedFromRoom: ");
-		//leaveRoom();
-		//toast("Network Error");
+		leaveRoom();
+		toast("Network Error");
 	}
 
 	@Override
@@ -523,8 +523,8 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 	public void onPeersDisconnected(Room room, List<String> list) {
 		System.out.println("onPeersDisconnected: ");
 		//Not enough players are left for the game to go on, end the game and leave the room.
-		//leaveRoom();
-		// toast("Your opponent is disconnected from the room");
+		leaveRoom();
+		toast("Your opponent is disconnected from the room");
 	}
 
 	@Override

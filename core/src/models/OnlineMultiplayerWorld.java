@@ -53,10 +53,10 @@ public class OnlineMultiplayerWorld extends GameWorld {
     protected void checkIfGameOver() {
         if (getPlayer1().getGameWinningObject().isHit()) {
 //            //TODO, Opponent wins, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
-            ((OnlineMultiplayerState) state).gameOver(false);
+            ((OnlineMultiplayerState) state).gameOver(0);
         } else if (getPlayer2().getGameWinningObject().isHit()) {
 //            //TODO, You win, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
-            ((OnlineMultiplayerState) state).gameOver(true);
+            ((OnlineMultiplayerState) state).gameOver(1);
         }
     }
 

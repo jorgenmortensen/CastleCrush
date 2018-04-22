@@ -56,7 +56,7 @@ public class OnlineMultiplayerState extends SuperPlayState implements PlayServic
     }
 
 
-    public void gameOver(boolean win){
+    public void gameOver(int win){
         gsm.set(new OnlineGameOverMenu(gsm, win));
     }
 

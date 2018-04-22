@@ -2,6 +2,7 @@ package models.states.playStates;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import models.entities.Player;
 import models.states.GameStateManager;
 import models.states.State;
 import models.states.menuStates.PlayMenu;
@@ -17,9 +18,9 @@ public abstract class SuperPlayState extends State{
         super(gsm);
     }
 
-    public void gameOver(){
+    public void gameOver(){}
 
-    }
+    public void gameOver(int i) {}
 
     public void goToMainMenu(){
         gsm.set(new PlayMenu(gsm));

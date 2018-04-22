@@ -523,11 +523,11 @@ public class GameWorld {
     protected void checkIfGameOver() {
         if (getPlayer1().getGameWinningObject().isHit()) {
 //            //TODO, Opponent wins, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
-             state.gameOver();
+             state.gameOver(1);
 
         } else if (getPlayer2().getGameWinningObject().isHit()) {
 //            //TODO, You win, isHost MUST BE CHANGED WHEN MERGED WITH GPS!!
-            state.gameOver();
+            state.gameOver(0);
 
         }
     }

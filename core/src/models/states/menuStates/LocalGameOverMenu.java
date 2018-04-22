@@ -17,7 +17,7 @@ public class LocalGameOverMenu extends OnlineGameOverMenu {
 
 
     public LocalGameOverMenu(GameStateManager gsm, Player winningPlayer, Player loosingPLayer) {
-        super(gsm, true);
+        super(gsm, 1);
         string = winningPlayer.getId()+" wins!!!!!\n"+loosingPLayer.getId()+" looses.....";
     }
 
